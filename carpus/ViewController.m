@@ -10,6 +10,7 @@
 #import "Camera.h"
 #import "Simulation.h"
 #import "Source.h"
+#import "GraphicsQuad.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -30,6 +31,25 @@ enum
     NUM_ATTRIBUTES
 };
 
+// Add texture coordinates to Vertex structure as follows
+typedef struct {
+    float Position[3];
+    float Color[4];
+    float TexCoord[2]; // New
+} Vertex;
+
+// Add texture coordinates to Vertices as follows
+const Vertex Vertices[] = {
+    {{1, -1, 0}, {1, 0, 0, 1}, {1, 0}},
+    {{1, 1, 0}, {1, 0, 0, 1}, {1, 1}},
+    {{-1, 1, 0}, {0, 1, 0, 1}, {0, 1}},
+    {{-1, -1, 0}, {0, 1, 0, 1}, {0, 0}},
+    {{1, -1, -1}, {1, 0, 0, 1}, {1, 0}},
+    {{1, 1, -1}, {1, 0, 0, 1}, {1, 1}},
+    {{-1, 1, -1}, {0, 1, 0, 1}, {0, 1}},
+    {{-1, -1, -1}, {0, 1, 0, 1}, {0, 0}}
+};
+
 @interface ViewController () {
     GLuint _program;
     GLuint cameraProg;
@@ -42,10 +62,18 @@ enum
     GLuint fboHandle;
     GLuint texId;
     
+    GLuint floorTexture;
+    GLuint fishTexture;
+    GLuint texCoordSlot;
+    GLuint textureUniform;
+    
     Camera* camera;
     
     Simulation * simulation;
+    
+    GraphicsQuad* quad;
 }
+
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) GLKBaseEffect *effect;
 
@@ -114,6 +142,8 @@ enum
 {
     [EAGLContext setCurrentContext:self.context];
     
+    floorTexture = [self setupTexture:@"tile_floor.png"];
+    //fishTexture = [self setupTexture:@"item_powerup_fish.png"];
     
     self.effect = [[GLKBaseEffect alloc] init];
     
@@ -123,7 +153,12 @@ enum
     float y = h * 0.5;
     camera = [[Camera alloc] initWithCenterAndSize:x y:y w:w h:h];
     
-    [camera loadShaders:@"Shader" fshFile:@"Shader" program:&cameraProg];
+    //[camera loadShaders:@"Shader" fshFile:@"Shader" program:&cameraProg];
+    
+    //GLuint test;
+    //[camera loadShaders:@"basic" fshFile:@"basic" program:&test];
+    
+    //[camera loadPrivateShaders];
     
     glEnable(GL_DEPTH_TEST);
     
@@ -131,17 +166,10 @@ enum
     // the simulation class to decouple object loading from rendering
     [simulation.sources addObject:[[Source alloc] initWithPositionSizeAndSpeed:100 y:100 w:50 h:25 theta:0 speed:10]];
     
-    /*// to test texturing
-    GLubyte tex[] = {255, 0, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 255, 0, 0, 255};
-    glActiveTexture(GL_TEXTURE0);
-    glGenTextures(1, &texId);
-    glBindTexture(GL_TEXTURE_2D, texId);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex);
-    glBindTexture(GL_TEXTURE_2D, 0);*/
+    quad = [[GraphicsQuad alloc] initWithPoints:[[Vector2D alloc] initWithXY:0 y:0]
+                                             p2:[[Vector2D alloc] initWithXY:w y:0]
+                                             p3:[[Vector2D alloc] initWithXY:w y:h]
+                                             p4:[[Vector2D alloc] initWithXY:0 y:h]];
     
 }
 
@@ -173,30 +201,86 @@ enum
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
+    [camera startRenderFBO];
+    glUseProgram([camera basicShader]);
+    [camera translateObject:0 y:0 z:0];
+    [simulation draw:camera];
+    //[camera endRenderFBO];
+    
+    //[camera startRenderFBO];
+    glUseProgram([camera hBlurShader]);
+    //glUseProgram([camera textureShader]);
+    [camera translateObject:0 y:0 z:0];
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
+    //glBindTexture(GL_TEXTURE_2D, floorTexture);
+    [quad draw];
+    
+    glUseProgram([camera vBlurShader]);
+    //glUseProgram([camera textureShader]);
+    [camera translateObject:0 y:0 z:0];
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
+    //glBindTexture(GL_TEXTURE_2D, floorTexture);
+    [quad draw];
+    [camera endRenderFBO];
+    
+    [((GLKView *) self.view) bindDrawable];
+
     glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    glDepthMask(false);
+    //glDepthMask(false);
     
-    
-    // Render the object with GLKit
-    // standard opengl-like rendering
-    //[self.effect prepareToDraw];
-    
-    //[camera translateObject:0 y:0 z:-1.5];
-    
+    //glUseProgram([camera basicShader]);
+    //[camera translateObject:0 y:0 z:0];
     //[simulation draw:camera];
     
-    // Render the object again with ES2...do the funky shit
-    glUseProgram(cameraProg);
     
-    [camera translateObject:0 y:0 z:-1.5];
+    glUseProgram([camera textureShader]);
+    [camera translateObject:0 y:0 z:0];
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
+    //glBindTexture(GL_TEXTURE_2D, floorTexture);
+    [quad draw];
+}
+
+- (GLuint)setupTexture:(NSString *)fileName {
+    // 1
+    CGImageRef spriteImage = [UIImage imageNamed:fileName].CGImage;
+    if (!spriteImage) {
+        NSLog(@"Failed to load image %@", fileName);
+        exit(1);
+    }
     
-    [simulation draw:camera];
-   
+    // 2
+    size_t width = CGImageGetWidth(spriteImage);
+    size_t height = CGImageGetHeight(spriteImage);
+    
+    GLubyte * spriteData = (GLubyte *) calloc(width*height*4, sizeof(GLubyte));
+    
+    CGContextRef spriteContext = CGBitmapContextCreate(spriteData, width, height, 8, width*4,
+                                                       CGImageGetColorSpace(spriteImage), kCGImageAlphaPremultipliedLast);
+    
+    // 3
+    CGContextDrawImage(spriteContext, CGRectMake(0, 0, width, height), spriteImage);
+    
+    CGContextRelease(spriteContext);
+    
+    // 4
+    GLuint texName;
+    glGenTextures(1, &texName);
+    glBindTexture(GL_TEXTURE_2D, texName);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, spriteData);
+    
+    free(spriteData);        
+    return texName;    
 }
 
 @end

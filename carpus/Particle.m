@@ -159,7 +159,6 @@ enum
 };
 
 - (BOOL) lineCollision:(Vector2D*)p1 p2:(Vector2D*)p2 {
-
     return false;
 }
 
@@ -173,11 +172,11 @@ enum
 
 - (void) draw:(Camera*)camera {
     
-    [camera translateObject:0 y:0 z:0];
+    [camera translateObject:0 y:0 z:-1];
     
     [graphicsTrace draw];
     
-    [camera translateObject:self.x y:self.y z:0];
+    [camera translateObject:self.x y:self.y z:-1];
     
     [graphicsCircle draw];
     

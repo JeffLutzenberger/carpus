@@ -34,7 +34,15 @@
 		BCDBAFDF18CEE92E00058B7E /* Simulation.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFDE18CEE92E00058B7E /* Simulation.m */; };
 		BCDBB02B18CFA6A200058B7E /* Camera.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB02A18CFA6A200058B7E /* Camera.m */; };
 		BCDBB02E18CFC59F00058B7E /* GraphicsTrace.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB02D18CFC59F00058B7E /* GraphicsTrace.m */; };
-		BCDBB03018CFE93900058B7E /* blur.fsh in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB02F18CFE93900058B7E /* blur.fsh */; };
+		BCDBB03818D1758E00058B7E /* basic.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB03518D1758E00058B7E /* basic.fsh */; };
+		BCDBB03918D1758E00058B7E /* basic.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB03618D1758E00058B7E /* basic.vsh */; };
+		BCDBB03A18D1758E00058B7E /* hblur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB03718D1758E00058B7E /* hblur.fsh */; };
+		BCDBB03C18D2107D00058B7E /* basicTexture.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB03B18D2107D00058B7E /* basicTexture.fsh */; };
+		BCDBB03E18D2109700058B7E /* basicTexture.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB03D18D2109700058B7E /* basicTexture.vsh */; };
+		BCDBB04118D219A400058B7E /* GraphicsQuad.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB04018D219A400058B7E /* GraphicsQuad.m */; };
+		BCDBB04318D21EB800058B7E /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB04218D21EB800058B7E /* tile_floor.png */; };
+		BCDBB04518D25B7B00058B7E /* blur.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB04418D25B7B00058B7E /* blur.vsh */; };
+		BCDBB04718D25F3E00058B7E /* vblur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB04618D25F3E00058B7E /* vblur.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,7 +97,16 @@
 		BCDBB02A18CFA6A200058B7E /* Camera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Camera.m; sourceTree = "<group>"; };
 		BCDBB02C18CFC59F00058B7E /* GraphicsTrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsTrace.h; sourceTree = "<group>"; };
 		BCDBB02D18CFC59F00058B7E /* GraphicsTrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsTrace.m; sourceTree = "<group>"; };
-		BCDBB02F18CFE93900058B7E /* blur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = blur.fsh; sourceTree = "<group>"; };
+		BCDBB03518D1758E00058B7E /* basic.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.fsh; path = Shaders/basic.fsh; sourceTree = "<group>"; };
+		BCDBB03618D1758E00058B7E /* basic.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = basic.vsh; path = Shaders/basic.vsh; sourceTree = "<group>"; };
+		BCDBB03718D1758E00058B7E /* hblur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = hblur.fsh; path = Shaders/hblur.fsh; sourceTree = "<group>"; };
+		BCDBB03B18D2107D00058B7E /* basicTexture.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basicTexture.fsh; sourceTree = "<group>"; };
+		BCDBB03D18D2109700058B7E /* basicTexture.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basicTexture.vsh; sourceTree = "<group>"; };
+		BCDBB03F18D219A400058B7E /* GraphicsQuad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsQuad.h; sourceTree = "<group>"; };
+		BCDBB04018D219A400058B7E /* GraphicsQuad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsQuad.m; sourceTree = "<group>"; };
+		BCDBB04218D21EB800058B7E /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
+		BCDBB04418D25B7B00058B7E /* blur.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = blur.vsh; sourceTree = "<group>"; };
+		BCDBB04618D25F3E00058B7E /* vblur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = vblur.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +138,7 @@
 		BC1B38C818CE2D87004CA208 = {
 			isa = PBXGroup;
 			children = (
+				BCDBB04218D21EB800058B7E /* tile_floor.png */,
 				BC1B38DE18CE2D87004CA208 /* carpus */,
 				BC1B390118CE2D87004CA208 /* carpusTests */,
 				BC1B38D318CE2D87004CA208 /* Frameworks */,
@@ -153,12 +171,18 @@
 		BC1B38DE18CE2D87004CA208 /* carpus */ = {
 			isa = PBXGroup;
 			children = (
+				BCDBB03B18D2107D00058B7E /* basicTexture.fsh */,
+				BCDBB03D18D2109700058B7E /* basicTexture.vsh */,
+				BCDBB03518D1758E00058B7E /* basic.fsh */,
+				BCDBB03618D1758E00058B7E /* basic.vsh */,
+				BCDBB03718D1758E00058B7E /* hblur.fsh */,
+				BCDBB04618D25F3E00058B7E /* vblur.fsh */,
+				BCDBB04418D25B7B00058B7E /* blur.vsh */,
+				BC1B38ED18CE2D87004CA208 /* Shader.fsh */,
+				BC1B38EF18CE2D87004CA208 /* Shader.vsh */,
 				BC1B38E718CE2D87004CA208 /* AppDelegate.h */,
 				BC1B38E818CE2D87004CA208 /* AppDelegate.m */,
 				BC1B38EA18CE2D87004CA208 /* Main.storyboard */,
-				BC1B38ED18CE2D87004CA208 /* Shader.fsh */,
-				BC1B38EF18CE2D87004CA208 /* Shader.vsh */,
-				BCDBB02F18CFE93900058B7E /* blur.fsh */,
 				BC1B38F118CE2D87004CA208 /* ViewController.h */,
 				BC1B38F218CE2D87004CA208 /* ViewController.m */,
 				BC1B38F418CE2D87004CA208 /* Images.xcassets */,
@@ -213,6 +237,8 @@
 				BCDBAFDB18CEA0FD00058B7E /* GraphicsRectangle.m */,
 				BCDBB02C18CFC59F00058B7E /* GraphicsTrace.h */,
 				BCDBB02D18CFC59F00058B7E /* GraphicsTrace.m */,
+				BCDBB03F18D219A400058B7E /* GraphicsQuad.h */,
+				BCDBB04018D219A400058B7E /* GraphicsQuad.m */,
 			);
 			name = GraphicsObjects;
 			path = ..;
@@ -307,11 +333,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCDBB04718D25F3E00058B7E /* vblur.fsh in Resources */,
+				BCDBB04518D25B7B00058B7E /* blur.vsh in Resources */,
+				BCDBB03E18D2109700058B7E /* basicTexture.vsh in Resources */,
+				BCDBB03C18D2107D00058B7E /* basicTexture.fsh in Resources */,
+				BCDBB03918D1758E00058B7E /* basic.vsh in Resources */,
+				BCDBB03A18D1758E00058B7E /* hblur.fsh in Resources */,
+				BCDBB03818D1758E00058B7E /* basic.fsh in Resources */,
 				BC1B38F018CE2D87004CA208 /* Shader.vsh in Resources */,
 				BC1B38F518CE2D87004CA208 /* Images.xcassets in Resources */,
 				BC1B38EE18CE2D87004CA208 /* Shader.fsh in Resources */,
 				BC1B38E318CE2D87004CA208 /* InfoPlist.strings in Resources */,
 				BC1B38EC18CE2D87004CA208 /* Main.storyboard in Resources */,
+				BCDBB04318D21EB800058B7E /* tile_floor.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,9 +368,9 @@
 				BCDBAFDC18CEA0FD00058B7E /* GraphicsRectangle.m in Sources */,
 				BCDBB02E18CFC59F00058B7E /* GraphicsTrace.m in Sources */,
 				BC1B38F318CE2D87004CA208 /* ViewController.m in Sources */,
+				BCDBB04118D219A400058B7E /* GraphicsQuad.m in Sources */,
 				BC1B38E918CE2D87004CA208 /* AppDelegate.m in Sources */,
 				BCDBAFD418CE928B00058B7E /* Source.m in Sources */,
-				BCDBB03018CFE93900058B7E /* blur.fsh in Sources */,
 				BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */,
 				BCDBB02B18CFA6A200058B7E /* Camera.m in Sources */,
 				BC1B391318CE34AC004CA208 /* GraphicsCircle.m in Sources */,

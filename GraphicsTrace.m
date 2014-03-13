@@ -65,7 +65,7 @@
 }
 
 - (void) draw {
-    glColor4f(0.5f,0.5f,1.0f,1.0f);
+    //glColor4f(0.5f,0.5f,1.0f,1.0f);
     glEnable(GL_LINE_SMOOTH);
     glLineWidth(2);
     glBindVertexArrayOES(vertexArray);

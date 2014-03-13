@@ -8,6 +8,8 @@
 
 #import "Source.h"
 #import "GraphicsRectangle.h"
+#import "GraphicsQuad.h"
+#import "GraphicsCircle.h"
 
 // Uniform index.
 enum
@@ -30,6 +32,8 @@ enum
     float lastAddTime;
     float addPeriod; //ms per particle
     GraphicsRectangle* rect;
+    GraphicsQuad* quad;
+    GraphicsCircle* circle;
 }
 
 - (id) initWithPositionSizeAndSpeed:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta speed:(float)speed {
@@ -41,6 +45,10 @@ enum
         addPeriod = 100; //ms
         self.particles = [[NSMutableArray alloc] init];
         rect = [[GraphicsRectangle alloc] initWithPoints:self.p1 p2:self.p2 p3:self.p3 p4:self.p4];
+        quad = [[GraphicsQuad alloc] initWithPoints:self.p1 p2:self.p2 p3:self.p3 p4:self.p4];
+        float innerColor[] = {1.0, 0.0, 0.0, 1.0};
+        float outerColor[] = {1.0, 0.0, 0.0, 0.25};
+        circle = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:100 innerColor:innerColor outerColor:outerColor];
     }
     return self;
 }
@@ -93,6 +101,12 @@ enum
     [camera translateObject:0 y:0 z:0];
     
     [rect draw];
+    
+    [quad draw];
+    
+    //[camera translateObject:self.x y:self.y z:0];
+    
+    //[circle draw];
 
 }
 

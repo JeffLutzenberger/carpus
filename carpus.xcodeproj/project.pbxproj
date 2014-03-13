@@ -25,6 +25,16 @@
 		BC1B38FE18CE2D87004CA208 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC1B38D818CE2D87004CA208 /* UIKit.framework */; };
 		BC1B390618CE2D87004CA208 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC1B390418CE2D87004CA208 /* InfoPlist.strings */; };
 		BC1B390818CE2D87004CA208 /* carpusTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B390718CE2D87004CA208 /* carpusTests.m */; };
+		BC1B391318CE34AC004CA208 /* GraphicsCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B391218CE34AC004CA208 /* GraphicsCircle.m */; };
+		BC1B391618CE367B004CA208 /* Particle.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B391518CE367B004CA208 /* Particle.m */; };
+		BC1B391918CE3744004CA208 /* Vector2D.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B391818CE3744004CA208 /* Vector2D.m */; };
+		BCDBAFD418CE928B00058B7E /* Source.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFD318CE928A00058B7E /* Source.m */; };
+		BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFD618CE92E000058B7E /* Rectangle.m */; };
+		BCDBAFDC18CEA0FD00058B7E /* GraphicsRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFDB18CEA0FD00058B7E /* GraphicsRectangle.m */; };
+		BCDBAFDF18CEE92E00058B7E /* Simulation.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFDE18CEE92E00058B7E /* Simulation.m */; };
+		BCDBB02B18CFA6A200058B7E /* Camera.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB02A18CFA6A200058B7E /* Camera.m */; };
+		BCDBB02E18CFC59F00058B7E /* GraphicsTrace.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB02D18CFC59F00058B7E /* GraphicsTrace.m */; };
+		BCDBB03018CFE93900058B7E /* blur.fsh in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB02F18CFE93900058B7E /* blur.fsh */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +71,25 @@
 		BC1B390318CE2D87004CA208 /* carpusTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "carpusTests-Info.plist"; sourceTree = "<group>"; };
 		BC1B390518CE2D87004CA208 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BC1B390718CE2D87004CA208 /* carpusTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = carpusTests.m; sourceTree = "<group>"; };
+		BC1B391118CE34AC004CA208 /* GraphicsCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphicsCircle.h; path = carpus/GraphicsCircle.h; sourceTree = "<group>"; };
+		BC1B391218CE34AC004CA208 /* GraphicsCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphicsCircle.m; path = carpus/GraphicsCircle.m; sourceTree = "<group>"; };
+		BC1B391418CE367B004CA208 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		BC1B391518CE367B004CA208 /* Particle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Particle.m; sourceTree = "<group>"; };
+		BC1B391718CE3744004CA208 /* Vector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector2D.h; sourceTree = "<group>"; };
+		BC1B391818CE3744004CA208 /* Vector2D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vector2D.m; sourceTree = "<group>"; };
+		BCDBAFD218CE928A00058B7E /* Source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Source.h; sourceTree = "<group>"; };
+		BCDBAFD318CE928A00058B7E /* Source.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Source.m; sourceTree = "<group>"; };
+		BCDBAFD518CE92E000058B7E /* Rectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rectangle.h; sourceTree = "<group>"; };
+		BCDBAFD618CE92E000058B7E /* Rectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Rectangle.m; sourceTree = "<group>"; };
+		BCDBAFDA18CEA0FD00058B7E /* GraphicsRectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsRectangle.h; sourceTree = "<group>"; };
+		BCDBAFDB18CEA0FD00058B7E /* GraphicsRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsRectangle.m; sourceTree = "<group>"; };
+		BCDBAFDD18CEE92E00058B7E /* Simulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simulation.h; sourceTree = "<group>"; };
+		BCDBAFDE18CEE92E00058B7E /* Simulation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Simulation.m; sourceTree = "<group>"; };
+		BCDBB02918CFA6A200058B7E /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		BCDBB02A18CFA6A200058B7E /* Camera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Camera.m; sourceTree = "<group>"; };
+		BCDBB02C18CFC59F00058B7E /* GraphicsTrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsTrace.h; sourceTree = "<group>"; };
+		BCDBB02D18CFC59F00058B7E /* GraphicsTrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsTrace.m; sourceTree = "<group>"; };
+		BCDBB02F18CFE93900058B7E /* blur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = blur.fsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,10 +158,19 @@
 				BC1B38EA18CE2D87004CA208 /* Main.storyboard */,
 				BC1B38ED18CE2D87004CA208 /* Shader.fsh */,
 				BC1B38EF18CE2D87004CA208 /* Shader.vsh */,
+				BCDBB02F18CFE93900058B7E /* blur.fsh */,
 				BC1B38F118CE2D87004CA208 /* ViewController.h */,
 				BC1B38F218CE2D87004CA208 /* ViewController.m */,
 				BC1B38F418CE2D87004CA208 /* Images.xcassets */,
 				BC1B38DF18CE2D87004CA208 /* Supporting Files */,
+				BCDBAFD918CEA0BC00058B7E /* GameObjects */,
+				BCDBAFD818CEA08C00058B7E /* GraphicsObjects */,
+				BC1B391718CE3744004CA208 /* Vector2D.h */,
+				BC1B391818CE3744004CA208 /* Vector2D.m */,
+				BCDBAFDD18CEE92E00058B7E /* Simulation.h */,
+				BCDBAFDE18CEE92E00058B7E /* Simulation.m */,
+				BCDBB02918CFA6A200058B7E /* Camera.h */,
+				BCDBB02A18CFA6A200058B7E /* Camera.m */,
 			);
 			path = carpus;
 			sourceTree = "<group>";
@@ -164,6 +202,33 @@
 				BC1B390418CE2D87004CA208 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BCDBAFD818CEA08C00058B7E /* GraphicsObjects */ = {
+			isa = PBXGroup;
+			children = (
+				BC1B391118CE34AC004CA208 /* GraphicsCircle.h */,
+				BC1B391218CE34AC004CA208 /* GraphicsCircle.m */,
+				BCDBAFDA18CEA0FD00058B7E /* GraphicsRectangle.h */,
+				BCDBAFDB18CEA0FD00058B7E /* GraphicsRectangle.m */,
+				BCDBB02C18CFC59F00058B7E /* GraphicsTrace.h */,
+				BCDBB02D18CFC59F00058B7E /* GraphicsTrace.m */,
+			);
+			name = GraphicsObjects;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		BCDBAFD918CEA0BC00058B7E /* GameObjects */ = {
+			isa = PBXGroup;
+			children = (
+				BC1B391418CE367B004CA208 /* Particle.h */,
+				BC1B391518CE367B004CA208 /* Particle.m */,
+				BCDBAFD518CE92E000058B7E /* Rectangle.h */,
+				BCDBAFD618CE92E000058B7E /* Rectangle.m */,
+				BCDBAFD218CE928A00058B7E /* Source.h */,
+				BCDBAFD318CE928A00058B7E /* Source.m */,
+			);
+			name = GameObjects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,8 +330,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCDBAFDF18CEE92E00058B7E /* Simulation.m in Sources */,
+				BCDBAFDC18CEA0FD00058B7E /* GraphicsRectangle.m in Sources */,
+				BCDBB02E18CFC59F00058B7E /* GraphicsTrace.m in Sources */,
 				BC1B38F318CE2D87004CA208 /* ViewController.m in Sources */,
 				BC1B38E918CE2D87004CA208 /* AppDelegate.m in Sources */,
+				BCDBAFD418CE928B00058B7E /* Source.m in Sources */,
+				BCDBB03018CFE93900058B7E /* blur.fsh in Sources */,
+				BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */,
+				BCDBB02B18CFA6A200058B7E /* Camera.m in Sources */,
+				BC1B391318CE34AC004CA208 /* GraphicsCircle.m in Sources */,
+				BC1B391618CE367B004CA208 /* Particle.m in Sources */,
+				BC1B391918CE3744004CA208 /* Vector2D.m in Sources */,
 				BC1B38E518CE2D87004CA208 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -476,6 +551,7 @@
 				BC1B390D18CE2D87004CA208 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BC1B390E18CE2D87004CA208 /* Build configuration list for PBXNativeTarget "carpusTests" */ = {
 			isa = XCConfigurationList;
@@ -484,6 +560,7 @@
 				BC1B391018CE2D87004CA208 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

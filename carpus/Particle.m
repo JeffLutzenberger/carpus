@@ -40,7 +40,7 @@ enum
     if (self) {
         self.x = x;
         self.y = y;
-        self.color =color;
+        self.color = color;
         self.age = 0;
     }
     return self;
@@ -50,8 +50,12 @@ enum
 
 @implementation Particle {
     NSMutableArray* trail;
-    GraphicsCircle* graphicsCircle;
-    GraphicsTrace* graphicsTrace;
+    GraphicsCircle* circle1;
+    GraphicsCircle* circle2;
+    GraphicsCircle* circle3;
+    
+    GraphicsTrace* trace1;
+    GraphicsTrace* trace2;
 }
 
 - (id) initWithPositionAndColor:(float)x y:(float)y r:(float)r color:(float*)color {
@@ -76,14 +80,34 @@ enum
                                                                        y:self.y
                                                                    color:self.color] atIndex:i];
         }
-        float innerColor[] = {1.0, 0.0, 0.0, 1.0};
-        float outerColor[] = {1.0, 0.0, 0.0, 0.25};
-        graphicsCircle = [[GraphicsCircle alloc] initWithPositionAndRadius:0
-                                                                         y:0
-                                                                    radius:self.radius
-                                                                innerColor:innerColor
-                                                                outerColor:outerColor];
-        graphicsTrace = [[GraphicsTrace alloc] initWithTrailAndColor:trail color:self.color];
+        float innerColor1[] = {1.0, 0.0, 0.0, 0.25};
+        float outerColor1[] = {1.0, 0.0, 0.0, 0.25};
+        circle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
+                                                                  y:0
+                                                            radius:2 * self.radius
+                                                        innerColor:innerColor1
+                                                        outerColor:outerColor1];
+        float innerColor2[] = {1.0, 0.0, 0.0, 1.0};
+        float outerColor2[] = {1.0, 0.0, 0.0, 1.0};
+        circle2 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
+                                                                  y:0
+                                                             radius:self.radius
+                                                         innerColor:innerColor2
+                                                         outerColor:outerColor2];
+        float innerColor3[] = {1.0, 1.0, 1.0, 1.0};
+        float outerColor3[] = {1.0, 1.0, 1.0, 1.0};
+        circle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
+                                                                  y:0
+                                                             radius:0.5 * self.radius
+                                                         innerColor:innerColor3
+                                                         outerColor:outerColor3];
+        
+        float traceColor1[] = {1.0, 0.0, 0.0, 0.25};
+        trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:2 * self.traceWidth color:traceColor1];
+        
+        float traceColor2[] = {1.0, 0.0, 0.0, 0.25};
+        trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:self.traceWidth color:traceColor2];
+
 
     }
     return self;
@@ -114,7 +138,9 @@ enum
         [trail removeLastObject];
     }
     
-    [graphicsTrace updateCoordinates:trail];
+    [trace1 updateCoordinates:trail];
+    
+    [trace2 updateCoordinates:trail];
 }
 
 - (void) update:(float)dt {
@@ -173,12 +199,19 @@ enum
 - (void) draw:(Camera*)camera {
     
     [camera translateObject:0 y:0 z:-1];
+    [trace1 draw];
     
-    [graphicsTrace draw];
+    [camera translateObject:0 y:0 z:-0.5];
+    [trace2 draw];
     
     [camera translateObject:self.x y:self.y z:-1];
+    [circle1 draw];
     
-    [graphicsCircle draw];
+    [camera translateObject:self.x y:self.y z:-0.5];
+    [circle2 draw];
+    
+    [camera translateObject:self.x y:self.y z:-0.25];
+    [circle3 draw];
     
 }
 

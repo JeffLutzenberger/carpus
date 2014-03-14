@@ -12,60 +12,11 @@
 #import "Source.h"
 #import "GraphicsQuad.h"
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
-
-// Uniform index.
-enum
-{
-    UNIFORM_MODELVIEWPROJECTION_MATRIX,
-    UNIFORM_NORMAL_MATRIX,
-    NUM_UNIFORMS
-};
-GLint uniforms[NUM_UNIFORMS];
-
-// Attribute index.
-enum
-{
-    ATTRIB_VERTEX,
-    ATTRIB_NORMAL,
-    NUM_ATTRIBUTES
-};
-
-// Add texture coordinates to Vertex structure as follows
-typedef struct {
-    float Position[3];
-    float Color[4];
-    float TexCoord[2]; // New
-} Vertex;
-
-// Add texture coordinates to Vertices as follows
-const Vertex Vertices[] = {
-    {{1, -1, 0}, {1, 0, 0, 1}, {1, 0}},
-    {{1, 1, 0}, {1, 0, 0, 1}, {1, 1}},
-    {{-1, 1, 0}, {0, 1, 0, 1}, {0, 1}},
-    {{-1, -1, 0}, {0, 1, 0, 1}, {0, 0}},
-    {{1, -1, -1}, {1, 0, 0, 1}, {1, 0}},
-    {{1, 1, -1}, {1, 0, 0, 1}, {1, 1}},
-    {{-1, 1, -1}, {0, 1, 0, 1}, {0, 1}},
-    {{-1, -1, -1}, {0, 1, 0, 1}, {0, 0}}
-};
-
 @interface ViewController () {
     GLuint _program;
     GLuint cameraProg;
     
-    GLuint fbo_width;
-    GLuint fbo_height;
-    GLuint fboTex;
-    GLint defaultFBO;
-    GLuint depthBuffer;
-    GLuint fboHandle;
-    GLuint texId;
-    
     GLuint floorTexture;
-    GLuint fishTexture;
-    GLuint texCoordSlot;
-    GLuint textureUniform;
     
     Camera* camera;
     
@@ -80,10 +31,6 @@ const Vertex Vertices[] = {
 - (void)setupGL;
 - (void)tearDownGL;
 
-//- (BOOL)loadShaders;
-//- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
-//- (BOOL)linkProgram:(GLuint)prog;
-//- (BOOL)validateProgram:(GLuint)prog;
 @end
 
 @implementation ViewController
@@ -153,18 +100,11 @@ const Vertex Vertices[] = {
     float y = h * 0.5;
     camera = [[Camera alloc] initWithCenterAndSize:x y:y w:w h:h];
     
-    //[camera loadShaders:@"Shader" fshFile:@"Shader" program:&cameraProg];
-    
-    //GLuint test;
-    //[camera loadShaders:@"basic" fshFile:@"basic" program:&test];
-    
-    //[camera loadPrivateShaders];
-    
     glEnable(GL_DEPTH_TEST);
     
     //NOTE: opengl context must exist before we can add objects...should add a "setupGL" method to
     // the simulation class to decouple object loading from rendering
-    [simulation.sources addObject:[[Source alloc] initWithPositionSizeAndSpeed:100 y:100 w:50 h:25 theta:0 speed:10]];
+    [simulation.sources addObject:[[Source alloc] initWithPositionSizeAndSpeed:100 y:100 w:12.5 h:12.5 theta:0 speed:10]];
     
     quad = [[GraphicsQuad alloc] initWithPoints:[[Vector2D alloc] initWithXY:0 y:0]
                                              p2:[[Vector2D alloc] initWithXY:w y:0]
@@ -201,51 +141,50 @@ const Vertex Vertices[] = {
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    [camera startRenderFBO];
-    glUseProgram([camera basicShader]);
-    [camera translateObject:0 y:0 z:0];
-    [simulation draw:camera];
-    //[camera endRenderFBO];
+    bool bShowBlur = false;
+    if (bShowBlur) {
+        [camera startRenderFBO];
+        glUseProgram([camera basicShader]);
+        [camera translateObject:0 y:0 z:0];
+        [simulation draw:camera];
+        
+        glUseProgram([camera hBlurShader]);
+        [camera translateObject:0 y:0 z:0];
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
+        [quad draw];
     
-    //[camera startRenderFBO];
-    glUseProgram([camera hBlurShader]);
-    //glUseProgram([camera textureShader]);
-    [camera translateObject:0 y:0 z:0];
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
-    //glBindTexture(GL_TEXTURE_2D, floorTexture);
-    [quad draw];
+        glUseProgram([camera vBlurShader]);
+        [camera translateObject:0 y:0 z:0];
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
+        [quad draw];
+        [camera endRenderFBO];
     
-    glUseProgram([camera vBlurShader]);
-    //glUseProgram([camera textureShader]);
-    [camera translateObject:0 y:0 z:0];
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
-    //glBindTexture(GL_TEXTURE_2D, floorTexture);
-    [quad draw];
-    [camera endRenderFBO];
+        [((GLKView *) self.view) bindDrawable];
+    }
     
-    [((GLKView *) self.view) bindDrawable];
-
     glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    //glDepthMask(false);
-    
-    //glUseProgram([camera basicShader]);
-    //[camera translateObject:0 y:0 z:0];
-    //[simulation draw:camera];
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    glDisable(GL_DEPTH_TEST);
     
     
-    glUseProgram([camera textureShader]);
+    if (bShowBlur) {
+        glUseProgram([camera textureShader]);
+        [camera translateObject:0 y:0 z:-2];
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
+        //glBindTexture(GL_TEXTURE_2D, floorTexture);
+        [quad draw];
+    }
+    
+    glUseProgram([camera basicShader]);
     [camera translateObject:0 y:0 z:0];
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
-    //glBindTexture(GL_TEXTURE_2D, floorTexture);
-    [quad draw];
+    [simulation draw:camera];
 }
 
 - (GLuint)setupTexture:(NSString *)fileName {

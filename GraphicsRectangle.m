@@ -12,19 +12,41 @@
 
 @implementation GraphicsRectangle {
     int vertexCount;
-    float buffer[4 * 10];
+    float buffer[10 * 12];
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    Vector2D* p1;
+    Vector2D* p2;
+    Vector2D* p3;
+    Vector2D* p4;
+    Vector2D* p5;
+    Vector2D* p6;
+    Vector2D* p7;
+    Vector2D* p8;
 }
 
-- (id) initWithPoints:(Vector2D*)p1 p2:(Vector2D*)p2 p3:(Vector2D*)p3 p4:(Vector2D*)p4 {
+- (id) initWithPositionAndSize:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta lineWidth:(float)lineWidth color:(float*)color {
     self = [super init];
     if (self) {
-        vertexCount = 4;
-        self.p1 = p1;
-        self.p2 = p2;
-        self.p3 = p3;
-        self.p4 = p4;
+        vertexCount = 10;
+        self.lineWidth = lineWidth;
+        self.color = color;
+        float xlin = -(w - lineWidth) * 0.5;
+        float xrin = (w - lineWidth) * 0.5;
+        float ytin = -(h - lineWidth) * 0.5;
+        float ybin = (h - lineWidth) * 0.5;
+        float xlout = -(w + lineWidth) * 0.5;
+        float xrout = (w + lineWidth) * 0.5;
+        float ytout = -(h + lineWidth) * 0.5;
+        float ybout = (h + lineWidth) * 0.5;
+        p1 = [Vector2D rotateXY:xlout y:ytout theta:theta];
+        p2 = [Vector2D rotateXY:xlin y:ytin theta:theta];
+        p3 = [Vector2D rotateXY:xrout y:ytout theta:theta];
+        p4 = [Vector2D rotateXY:xrin y:ytin theta:theta];
+        p5 = [Vector2D rotateXY:xrout y:ybout theta:theta];
+        p6 = [Vector2D rotateXY:xrin y:ybin theta:theta];
+        p7 = [Vector2D rotateXY:xlout y:ybout theta:theta];
+        p8 = [Vector2D rotateXY:xlin y:ybin theta:theta];
         [self makeObject];
     }
     return self;
@@ -32,58 +54,168 @@
 
 - (void) makeObject {
     int idx = 0;
-    buffer[idx++] = self.p1.x;
-    buffer[idx++] = self.p1.y;
+    //position
+    buffer[idx++] = p1.x;
+    buffer[idx++] = p1.y;
+    buffer[idx++] = 0;
+    //normal
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    //color
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
+    //texture
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    
+    //position
+    buffer[idx++] = p2.x;
+    buffer[idx++] = p2.y;
+    buffer[idx++] = 0;
+    //normal
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    //color
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
+    //texture
+    buffer[idx++] = 1;
+    buffer[idx++] = 1;
+    
+    buffer[idx++] = p3.x;
+    buffer[idx++] = p3.y;
     buffer[idx++] = 0;
     
     buffer[idx++] = 0;
     buffer[idx++] = 0;
     buffer[idx++] = 1;
     
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 1.0;
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
     
-    buffer[idx++] = self.p2.x;
-    buffer[idx++] = self.p2.y;
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = p4.x;
+    buffer[idx++] = p4.y;
     buffer[idx++] = 0;
     
     buffer[idx++] = 0;
     buffer[idx++] = 0;
     buffer[idx++] = 1;
     
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 1.0;
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
     
-    buffer[idx++] = self.p3.x;
-    buffer[idx++] = self.p3.y;
+    buffer[idx++] = 1;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = p5.x;
+    buffer[idx++] = p5.y;
     buffer[idx++] = 0;
     
     buffer[idx++] = 0;
     buffer[idx++] = 0;
     buffer[idx++] = 1;
     
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 1.0;
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
     
-    buffer[idx++] = self.p4.x;
-    buffer[idx++] = self.p4.y;
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+
+    buffer[idx++] = p6.x;
+    buffer[idx++] = p6.y;
     buffer[idx++] = 0;
     
     buffer[idx++] = 0;
     buffer[idx++] = 0;
     buffer[idx++] = 1;
     
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 1.0;
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
     
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+
+    buffer[idx++] = p7.x;
+    buffer[idx++] = p7.y;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = p8.x;
+    buffer[idx++] = p8.y;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+
+    buffer[idx++] = p1.x;
+    buffer[idx++] = p1.y;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+
+    buffer[idx++] = p2.x;
+    buffer[idx++] = p2.y;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    
+    buffer[idx++] = _color[0];
+    buffer[idx++] = _color[1];
+    buffer[idx++] = _color[2];
+    buffer[idx++] = _color[3];
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+
     glGenVertexArraysOES(1, &_vertexArray);
     glBindVertexArrayOES(_vertexArray);
     
@@ -92,21 +224,21 @@
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 40, BUFFER_OFFSET(0));
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 4 * 12, BUFFER_OFFSET(0));
     glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 40, BUFFER_OFFSET(12));
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 4 * 12, BUFFER_OFFSET(12));
     glEnableVertexAttribArray(GLKVertexAttribColor);
-    glVertexAttribPointer(GLKVertexAttribColor, 4, GL_FLOAT, GL_FALSE, 40, BUFFER_OFFSET(24));
+    glVertexAttribPointer(GLKVertexAttribColor, 4, GL_FLOAT, GL_FALSE, 4 * 12, BUFFER_OFFSET(24));
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 4 * 12, BUFFER_OFFSET(40));
     
     glBindVertexArrayOES(0);
     
 }
 
 - (void) draw {
-    glEnable(GL_LINE_SMOOTH);
-    glLineWidth(5);
     glBindVertexArrayOES(_vertexArray);
-    glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, vertexCount);
 }
 
 

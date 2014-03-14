@@ -15,14 +15,16 @@
     int vertexCount;
     float _buffer[30 * 7];
     //float* _buffer;
-    
+    float _lineWidth;
     GLuint vertexArray;
     GLuint vertexBuffer;
 }
 
-- (id) initWithTrailAndColor:(NSMutableArray*)trail color:(float *)color {
+- (id) initWithTrailAndColor:(NSMutableArray*)trail lineWidth:(float)lineWidth color:(float *)color{
     self = [super init];
     if (self) {
+        _lineWidth = lineWidth;
+        self.color = color;
         vertexCount = [trail count];
         vertexArray = 0;
         //_buffer = (float *)malloc(vertexCount * 7 * sizeof(float));
@@ -40,10 +42,11 @@
         _buffer[idx++] = t.y;
         _buffer[idx++] = 0;
         
-        _buffer[idx++] = 1.0;
-        _buffer[idx++] = 0.0;
-        _buffer[idx++] = 0.0;
-        _buffer[idx++] = alpha;
+        _buffer[idx++] = _color[0];
+        _buffer[idx++] = _color[1];
+        _buffer[idx++] = _color[2];
+        _buffer[idx++] = alpha;//_color[3] * alpha;
+        
     }
     if (vertexArray <= 0) {
         glGenVertexArraysOES(1, &vertexArray);
@@ -67,7 +70,7 @@
 - (void) draw {
     //glColor4f(0.5f,0.5f,1.0f,1.0f);
     glEnable(GL_LINE_SMOOTH);
-    glLineWidth(2);
+    glLineWidth(_lineWidth);
     glBindVertexArrayOES(vertexArray);
     glDrawArrays(GL_LINE_STRIP, 0, vertexCount);
 }

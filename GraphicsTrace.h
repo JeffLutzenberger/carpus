@@ -11,7 +11,9 @@
 
 @interface GraphicsTrace : NSObject
 
-- (id) initWithTrailAndColor:(NSMutableArray*)trail color:(float *)color;
+@property float* color;
+
+- (id) initWithTrailAndColor:(NSMutableArray*)trail lineWidth:(float)lineWidth color:(float *)color;
 
 - (void) updateCoordinates:(NSMutableArray*)trail;
 

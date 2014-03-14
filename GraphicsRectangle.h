@@ -12,13 +12,10 @@
 
 @interface GraphicsRectangle : NSObject
 
-@property Vector2D* p1;
-@property Vector2D* p2;
-@property Vector2D* p3;
-@property Vector2D* p4;
 @property float* color;
+@property int lineWidth;
 
-- (id) initWithPoints:(Vector2D*)p1 p2:(Vector2D*)p2 p3:(Vector2D*)p3 p4:(Vector2D*)p4;
+- (id) initWithPositionAndSize:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta lineWidth:(float)lineWidth color:(float*)color;
 
 - (void) draw;
 

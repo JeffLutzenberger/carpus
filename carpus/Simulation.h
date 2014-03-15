@@ -14,6 +14,7 @@
 @property float maxParticleAge;
 @property int missed;
 @property NSMutableArray* sources;
+@property NSMutableArray* sinks;
 
 - (void) update:(float)dt;
 

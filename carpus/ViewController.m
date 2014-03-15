@@ -10,6 +10,7 @@
 #import "Camera.h"
 #import "Simulation.h"
 #import "Source.h"
+#import "Sink.h"
 #import "GraphicsQuad.h"
 
 @interface ViewController () {
@@ -106,6 +107,9 @@
     // the simulation class to decouple object loading from rendering
     [simulation.sources addObject:[[Source alloc] initWithPositionSizeAndSpeed:100 y:100 w:12.5 h:12.5 theta:0 speed:10]];
     
+    [simulation.sinks addObject:[[Sink alloc] initWithPositionSizeForceAndSpeed:100 y:300 radius:15 force:5 speed:5]];
+    
+    
     quad = [[GraphicsQuad alloc] initWithPoints:[[Vector2D alloc] initWithXY:0 y:0]
                                              p2:[[Vector2D alloc] initWithXY:w y:0]
                                              p3:[[Vector2D alloc] initWithXY:w y:h]
@@ -141,8 +145,10 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    bool bShowBlur = false;
+    bool bShowBlur = true;
     if (bShowBlur) {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         [camera startRenderFBO];
         glUseProgram([camera basicShader]);
         [camera translateObject:0 y:0 z:0];
@@ -172,6 +178,9 @@
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDisable(GL_DEPTH_TEST);
     
+    glUseProgram([camera basicShader]);
+    [camera translateObject:0 y:0 z:0];
+    [simulation draw:camera];
     
     if (bShowBlur) {
         glUseProgram([camera textureShader]);
@@ -181,10 +190,6 @@
         //glBindTexture(GL_TEXTURE_2D, floorTexture);
         [quad draw];
     }
-    
-    glUseProgram([camera basicShader]);
-    [camera translateObject:0 y:0 z:0];
-    [simulation draw:camera];
 }
 
 - (GLuint)setupTexture:(NSString *)fileName {

@@ -80,13 +80,13 @@ enum
                                                                        y:self.y
                                                                    color:self.color] atIndex:i];
         }
-        float innerColor1[] = {1.0, 0.0, 0.0, 0.25};
-        float outerColor1[] = {1.0, 0.0, 0.0, 0.25};
-        circle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
-                                                                  y:0
-                                                            radius:2 * self.radius
-                                                        innerColor:innerColor1
-                                                        outerColor:outerColor1];
+        //float innerColor1[] = {1.0, 0.0, 0.0, 0.25};
+        //float outerColor1[] = {1.0, 0.0, 0.0, 0.25};
+        //circle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
+        //                                                          y:0
+        //                                                    radius:2 * self.radius
+        //                                                innerColor:innerColor1
+        //                                                outerColor:outerColor1];
         float innerColor2[] = {1.0, 0.0, 0.0, 1.0};
         float outerColor2[] = {1.0, 0.0, 0.0, 1.0};
         circle2 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
@@ -98,15 +98,15 @@ enum
         float outerColor3[] = {1.0, 1.0, 1.0, 1.0};
         circle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
                                                                   y:0
-                                                             radius:0.5 * self.radius
+                                                             radius:0.25 * self.radius
                                                          innerColor:innerColor3
                                                          outerColor:outerColor3];
         
-        float traceColor1[] = {1.0, 0.0, 0.0, 0.25};
-        trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:2 * self.traceWidth color:traceColor1];
+        //float traceColor1[] = {1.0, 0.0, 0.0, 0.25};
+        //trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:2 * self.traceWidth color:traceColor1];
         
-        float traceColor2[] = {1.0, 0.0, 0.0, 0.25};
-        trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:self.traceWidth color:traceColor2];
+        //float traceColor2[] = {1.0, 0.0, 0.0, 0.25};
+        //trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:self.traceWidth color:traceColor2];
 
 
     }
@@ -198,20 +198,21 @@ enum
 
 - (void) draw:(Camera*)camera {
     
-    [camera translateObject:0 y:0 z:-1];
-    [trace1 draw];
+    //[camera translateObject:0 y:0 z:-1];
+    //[trace1 draw];
     
-    [camera translateObject:0 y:0 z:-0.5];
-    [trace2 draw];
+    //[camera translateObject:0 y:0 z:-0.5];
+    //[trace2 draw];
     
-    [camera translateObject:self.x y:self.y z:-1];
-    [circle1 draw];
+    //[camera translateObject:self.x y:self.y z:-1];
+    //[circle1 draw];
     
     [camera translateObject:self.x y:self.y z:-0.5];
     [circle2 draw];
     
     [camera translateObject:self.x y:self.y z:-0.25];
     [circle3 draw];
+    
     
 }
 

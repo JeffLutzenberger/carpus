@@ -25,7 +25,7 @@
     if (self) {
         _lineWidth = lineWidth;
         self.color = color;
-        vertexCount = [trail count];
+        vertexCount = (int)[trail count];
         vertexArray = 0;
         //_buffer = (float *)malloc(vertexCount * 7 * sizeof(float));
         [self updateCoordinates:trail];

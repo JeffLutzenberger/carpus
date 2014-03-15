@@ -12,22 +12,6 @@
 #import "GraphicsCircle.h"
 
 // Uniform index.
-enum
-{
-    UNIFORM_MODELVIEWPROJECTION_MATRIX,
-    UNIFORM_NORMAL_MATRIX,
-    NUM_UNIFORMS
-};
-GLint uniforms[NUM_UNIFORMS];
-
-// Attribute index.
-enum
-{
-    ATTRIB_VERTEX,
-    ATTRIB_NORMAL,
-    NUM_ATTRIBUTES
-};
-
 @implementation Source {
     float lastAddTime;
     float addPeriod; //ms per particle
@@ -35,8 +19,6 @@ enum
     GraphicsRectangle* rect2;
     GraphicsRectangle* rect3;
     GraphicsRectangle* rect4;
-    GraphicsQuad* quad;
-    GraphicsCircle* circle;
 }
 
 - (id) initWithPositionSizeAndSpeed:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta speed:(float)speed {
@@ -47,27 +29,17 @@ enum
         lastAddTime = 0;
         addPeriod = 100; //ms
         self.particles = [[NSMutableArray alloc] init];
-        float color1[] = {1.0, 0.0, 0.0, 0.25};
-        rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:10 color:color1];
+        float color1[] = {1.0, 0.0, 0.0, 1.0};
+        rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:3 color:color1];
+        
+        //float color1[] = {1.0, 0.0, 0.0, 0.25};
+        //rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:10 color:color1];
         float color2[] = {1.0, 0.0, 0.0, 0.5};
         rect2 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:color2];
         float color3[] = {1.0, 1.0, 1.0, 0.9};
         rect3 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:1 color:color3];
         float color4[] = {1.0, 0.0, 0.0, 0.15};
         rect4 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:15 color:color4];
-        /*[[GraphicsRectangle alloc] initWithPoints:self.p1 p2:self.p2 p3:self.p3 p4:self.p4 lineWidth:20 color:color1];
-        float color2[] = {1.0, 0.0, 0.0, 0.5};
-        rect2 = [[GraphicsRectangle alloc] initWithPoints:self.p1 p2:self.p2 p3:self.p3 p4:self.p4 lineWidth:10 color:color2];
-        float color3[] = {1.0, 1.0, 1.0, 0.9};
-        rect3 = [[GraphicsRectangle alloc] initWithPoints:self.p1 p2:self.p2 p3:self.p3 p4:self.p4 lineWidth:2 color:color3];
-        //float color4[] = {1.0, 0.0, 0.0, 0.25};
-        //rect1 = [[GraphicsRectangle alloc] initWithPoints:self.p1 p2:self.p2 p3:self.p3 p4:self.p4 lineWidth:10 color:color1];
-         */
-        quad = [[GraphicsQuad alloc] initWithPoints:self.p1 p2:self.p2 p3:self.p3 p4:self.p4];
-        
-        float innerColor[] = {1.0, 0.0, 0.0, 1.0};
-        float outerColor[] = {1.0, 0.0, 0.0, 0.25};
-        circle = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:100 innerColor:innerColor outerColor:outerColor];
     }
     return self;
 }
@@ -117,24 +89,15 @@ enum
 
 - (void) draw:(Camera*)camera; {
     
-    //[camera translateObject:0 y:0 z:-0.5];
-    //[quad draw];
-    
     [camera translateObject:self.x y:self.y z:-0.5];
     [rect1 draw];
-    [camera translateObject:self.x y:self.y z:-0.6];
-    [rect2 draw];
+    //[camera translateObject:self.x y:self.y z:-0.6];
+    //[rect2 draw];
     [camera translateObject:self.x y:self.y z:-0.4];
     [rect3 draw];
-    [camera translateObject:self.x y:self.y z:-0.3];
-    [rect4 draw];
+    //[camera translateObject:self.x y:self.y z:-0.3];
+    //[rect4 draw];
     
-    
-    
-    //[camera translateObject:self.x y:self.y z:0];
-    
-    //[circle draw];
-
 }
 
 @end

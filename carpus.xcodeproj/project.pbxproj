@@ -43,6 +43,9 @@
 		BCDBB04318D21EB800058B7E /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB04218D21EB800058B7E /* tile_floor.png */; };
 		BCDBB04518D25B7B00058B7E /* blur.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB04418D25B7B00058B7E /* blur.vsh */; };
 		BCDBB04718D25F3E00058B7E /* vblur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCDBB04618D25F3E00058B7E /* vblur.fsh */; };
+		BCDBB04A18D2F26100058B7E /* Sink.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB04918D2F26100058B7E /* Sink.m */; };
+		BCDBB04D18D3955500058B7E /* GraphicsCircleOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB04C18D3955500058B7E /* GraphicsCircleOutline.m */; };
+		BCDBB05018D3A4BE00058B7E /* GraphicsArc.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBB04F18D3A4BE00058B7E /* GraphicsArc.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +110,12 @@
 		BCDBB04218D21EB800058B7E /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
 		BCDBB04418D25B7B00058B7E /* blur.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = blur.vsh; sourceTree = "<group>"; };
 		BCDBB04618D25F3E00058B7E /* vblur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = vblur.fsh; sourceTree = "<group>"; };
+		BCDBB04818D2F26100058B7E /* Sink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sink.h; sourceTree = "<group>"; };
+		BCDBB04918D2F26100058B7E /* Sink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sink.m; sourceTree = "<group>"; };
+		BCDBB04B18D3955500058B7E /* GraphicsCircleOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsCircleOutline.h; sourceTree = "<group>"; };
+		BCDBB04C18D3955500058B7E /* GraphicsCircleOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsCircleOutline.m; sourceTree = "<group>"; };
+		BCDBB04E18D3A4BE00058B7E /* GraphicsArc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsArc.h; sourceTree = "<group>"; };
+		BCDBB04F18D3A4BE00058B7E /* GraphicsArc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsArc.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,12 +242,16 @@
 			children = (
 				BC1B391118CE34AC004CA208 /* GraphicsCircle.h */,
 				BC1B391218CE34AC004CA208 /* GraphicsCircle.m */,
+				BCDBB04B18D3955500058B7E /* GraphicsCircleOutline.h */,
+				BCDBB04C18D3955500058B7E /* GraphicsCircleOutline.m */,
 				BCDBAFDA18CEA0FD00058B7E /* GraphicsRectangle.h */,
 				BCDBAFDB18CEA0FD00058B7E /* GraphicsRectangle.m */,
 				BCDBB02C18CFC59F00058B7E /* GraphicsTrace.h */,
 				BCDBB02D18CFC59F00058B7E /* GraphicsTrace.m */,
 				BCDBB03F18D219A400058B7E /* GraphicsQuad.h */,
 				BCDBB04018D219A400058B7E /* GraphicsQuad.m */,
+				BCDBB04E18D3A4BE00058B7E /* GraphicsArc.h */,
+				BCDBB04F18D3A4BE00058B7E /* GraphicsArc.m */,
 			);
 			name = GraphicsObjects;
 			path = ..;
@@ -251,6 +264,8 @@
 				BC1B391518CE367B004CA208 /* Particle.m */,
 				BCDBAFD518CE92E000058B7E /* Rectangle.h */,
 				BCDBAFD618CE92E000058B7E /* Rectangle.m */,
+				BCDBB04818D2F26100058B7E /* Sink.h */,
+				BCDBB04918D2F26100058B7E /* Sink.m */,
 				BCDBAFD218CE928A00058B7E /* Source.h */,
 				BCDBAFD318CE928A00058B7E /* Source.m */,
 			);
@@ -301,7 +316,7 @@
 		BC1B38C918CE2D87004CA208 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Jeff.Lutzenberger;
 				TargetAttributes = {
 					BC1B38F918CE2D87004CA208 = {
@@ -372,11 +387,14 @@
 				BC1B38E918CE2D87004CA208 /* AppDelegate.m in Sources */,
 				BCDBAFD418CE928B00058B7E /* Source.m in Sources */,
 				BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */,
+				BCDBB04A18D2F26100058B7E /* Sink.m in Sources */,
+				BCDBB04D18D3955500058B7E /* GraphicsCircleOutline.m in Sources */,
 				BCDBB02B18CFA6A200058B7E /* Camera.m in Sources */,
 				BC1B391318CE34AC004CA208 /* GraphicsCircle.m in Sources */,
 				BC1B391618CE367B004CA208 /* Particle.m in Sources */,
 				BC1B391918CE3744004CA208 /* Vector2D.m in Sources */,
 				BC1B38E518CE2D87004CA208 /* main.m in Sources */,
+				BCDBB05018D3A4BE00058B7E /* GraphicsArc.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,7 +448,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -469,7 +486,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -527,7 +543,6 @@
 		BC1B390F18CE2D87004CA208 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/carpus.app/carpus";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -550,7 +565,6 @@
 		BC1B391018CE2D87004CA208 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/carpus.app/carpus";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

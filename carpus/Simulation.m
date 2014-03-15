@@ -8,6 +8,7 @@
 
 #import "Simulation.h"
 #import "Source.h"
+#import "Sink.h"
 
 @implementation Simulation {
     
@@ -19,6 +20,7 @@
         self.maxParticleAge = 5000; //ms
         self.missed = 0;
         self.sources = [[NSMutableArray alloc] init];
+        self.sinks = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -62,6 +64,8 @@
     
     [self drawSources:camera];
     
+    [self drawSinks:camera];
+    
 }
 
 - (void) drawParticles:(Camera*)camera {
@@ -78,4 +82,11 @@
         [[self.sources objectAtIndex:i] draw:camera];
     }
 }
+
+- (void) drawSinks:(Camera*)camera {
+    for (int i = 0; i < [self.sinks count]; i++) {
+        [[self.sinks objectAtIndex:i] draw:camera];
+    }
+}
+
 @end

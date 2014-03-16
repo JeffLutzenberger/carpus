@@ -1,7 +1,7 @@
 uniform sampler2D Texture; // this should hold the texture rendered by the horizontal blur pass
 varying lowp vec2 vTexCoord;
 
-const highp float blurSize = 1.0/512.0;
+const highp float blurSize = 1.0/(0.75 * 568.0);
 
 void main(void)
 {

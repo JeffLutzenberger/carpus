@@ -36,10 +36,10 @@
         //rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:10 color:color1];
         float color2[] = {1.0, 0.0, 0.0, 0.5};
         rect2 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:color2];
-        float color3[] = {1.0, 1.0, 1.0, 0.9};
+        float color3[] = {1.0, 1.0, 1.0, 0.7};
         rect3 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:1 color:color3];
         float color4[] = {1.0, 0.0, 0.0, 0.15};
-        rect4 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:15 color:color4];
+        rect4 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:8 color:color4];
     }
     return self;
 }
@@ -95,8 +95,8 @@
     //[rect2 draw];
     [camera translateObject:self.x y:self.y z:-0.4];
     [rect3 draw];
-    //[camera translateObject:self.x y:self.y z:-0.3];
-    //[rect4 draw];
+    [camera translateObject:self.x y:self.y z:-0.3];
+    [rect4 draw];
     
 }
 

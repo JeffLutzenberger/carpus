@@ -42,9 +42,9 @@
         _buffer[idx++] = t.y;
         _buffer[idx++] = 0;
         
-        _buffer[idx++] = _color[0];
-        _buffer[idx++] = _color[1];
-        _buffer[idx++] = _color[2];
+        _buffer[idx++] = 1.0;//_color[0];
+        _buffer[idx++] = 0.0;//_color[1];
+        _buffer[idx++] = 0.0;//_color[2];
         _buffer[idx++] = alpha;//_color[3] * alpha;
         
     }

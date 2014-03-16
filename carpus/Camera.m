@@ -65,7 +65,7 @@ enum
         [self loadShaders:@"basic" fshFile:@"hblur" program:&_hBlurShader];
         [self loadShaders:@"basic" fshFile:@"vblur" program:&_vBlurShader];
         
-        [self setupFBO:w * 0.5 height:h * 0.5];
+        [self setupFBO:w    height:h];
     }
     return self;
 }

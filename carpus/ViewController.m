@@ -145,7 +145,7 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    bool bShowBlur = true;
+    bool bShowBlur = false;
     if (bShowBlur) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -184,7 +184,7 @@
     
     if (bShowBlur) {
         glUseProgram([camera textureShader]);
-        [camera translateObject:0 y:0 z:-2];
+        [camera translateObject:0 y:0 z:-0.1];
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, [camera fboTexture]);
         //glBindTexture(GL_TEXTURE_2D, floorTexture);

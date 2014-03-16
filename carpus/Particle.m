@@ -66,7 +66,8 @@ enum
         self.prevx = x;
         self.prevy = y;
         self.radius = r;
-        self.color = color;
+        float c[] = {1.0, 0.0, 0.0, 1.0};
+        self.color = c;
         self.age = 0;
         self.dir = [[Vector2D alloc] initWithXY:1 y:0];
         self.vel = [[Vector2D alloc] initWithXY:0 y:0.1];
@@ -102,11 +103,11 @@ enum
                                                          innerColor:innerColor3
                                                          outerColor:outerColor3];
         
-        //float traceColor1[] = {1.0, 0.0, 0.0, 0.25};
-        //trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:2 * self.traceWidth color:traceColor1];
+        float traceColor1[] = {1.0, 0.0, 0.0, 0.25};
+        trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:2 * self.traceWidth color:traceColor1];
         
-        //float traceColor2[] = {1.0, 0.0, 0.0, 0.25};
-        //trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:self.traceWidth color:traceColor2];
+        float traceColor2[] = {1.0, 0.0, 0.0, 0.25};
+        trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:self.traceWidth color:traceColor2];
 
 
     }
@@ -198,21 +199,21 @@ enum
 
 - (void) draw:(Camera*)camera {
     
-    //[camera translateObject:0 y:0 z:-1];
-    //[trace1 draw];
+    [camera translateObject:0 y:0 z:-1];
+    [trace1 draw];
     
-    //[camera translateObject:0 y:0 z:-0.5];
-    //[trace2 draw];
+    [camera translateObject:0 y:0 z:-0.5];
+    [trace2 draw];
     
     //[camera translateObject:self.x y:self.y z:-1];
     //[circle1 draw];
     
+    ///
     [camera translateObject:self.x y:self.y z:-0.5];
     [circle2 draw];
     
     [camera translateObject:self.x y:self.y z:-0.25];
     [circle3 draw];
-    
     
 }
 

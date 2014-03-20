@@ -11,6 +11,7 @@ attribute vec4 position;
 attribute vec3 normal;
 attribute vec4 color;
 attribute vec2 texcoord;
+//attribute vec2 texcoord0;
 
 
 varying lowp vec2 vTexCoord;
@@ -37,4 +38,5 @@ void main()
     
     // pass to fragment shader
     vTexCoord = texcoord;
+    //vTexCoord = texcoord0; // New
 }

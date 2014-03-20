@@ -16,11 +16,12 @@
     float buffer[60 * 10];
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    float _color[4];
 
 }
 
 
-- (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth startTheta:(float)startTheta endTheta:(float)endTheta color:(float[4])color {
+- (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth startTheta:(float)startTheta endTheta:(float)endTheta color:(float*)color {
     self = [super init];
     if (self) {
         vertexCount = 60;
@@ -30,15 +31,20 @@
         self.lineWidth = lineWidth;
         self.startTheta = startTheta;
         self.endTheta = endTheta;
-        self.color = color;
-        [self makeObject];
+        //self.color = color;
+        _color[0] = color[0];
+        _color[1] = color[1];
+        _color[2] = color[2];
+        _color[3] = color[3];
+        [self updateArc:endTheta];
+        
     }
     return self;
 }
 
-- (void) makeObject {
-    
+- (void) updateArc:(float)endTheta {
     int idx = 0;
+    self.endTheta = endTheta;
     float rout = self.radius + self.lineWidth * 0.5;
     float rin = self.radius - self.lineWidth * 0.5;
     float radius = rout;
@@ -60,10 +66,10 @@
         buffer[idx++] = 0;
         buffer[idx++] = 1;
         
-        buffer[idx++] = self.color[0];
-        buffer[idx++] = self.color[1];
-        buffer[idx++] = self.color[2];
-        buffer[idx++] = self.color[3];
+        buffer[idx++] = _color[0];
+        buffer[idx++] = _color[1];
+        buffer[idx++] = _color[2];
+        buffer[idx++] = _color[3];
         
         radius = rin;
         x = self.x + radius * cos(rad);
@@ -77,16 +83,24 @@
         buffer[idx++] = 0;
         buffer[idx++] = 1;
         
-        buffer[idx++] = self.color[0];
-        buffer[idx++] = self.color[1];
-        buffer[idx++] = self.color[2];
-        buffer[idx++] = self.color[3];
+        buffer[idx++] = _color[0];
+        buffer[idx++] = _color[1];
+        buffer[idx++] = _color[2];
+        buffer[idx++] = _color[3];
     }
     
-    glGenVertexArraysOES(1, &_vertexArray);
-    glBindVertexArrayOES(_vertexArray);
+    if (_vertexArray <= 0) {
+        glGenVertexArraysOES(1, &_vertexArray);
+        glBindVertexArrayOES(_vertexArray);
+        glGenBuffers(1, &_vertexBuffer);
+    } else {
+        glBindVertexArrayOES(_vertexArray);
+    }
+
+    //glGenVertexArraysOES(1, &_vertexArray);
+    //glBindVertexArrayOES(_vertexArray);
     
-    glGenBuffers(1, &_vertexBuffer);
+    //glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     

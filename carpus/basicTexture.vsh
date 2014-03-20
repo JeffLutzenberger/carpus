@@ -7,11 +7,11 @@ uniform mat4 modelViewProjectionMatrix;
 uniform mat3 normalMatrix;
 
 
-attribute vec2 texcoord0; // New
+attribute vec2 texcoord; // New
 varying vec2 vTexCoord; // New
 
 void main(void) {
     vDstColor = color;
     gl_Position = modelViewProjectionMatrix * position;
-    vTexCoord = texcoord0; // New
+    vTexCoord = texcoord; // New
 }

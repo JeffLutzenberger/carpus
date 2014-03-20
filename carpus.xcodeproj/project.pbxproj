@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC0AC37B18DA558900EDC64A /* glow.png in Resources */ = {isa = PBXBuildFile; fileRef = BC0AC37A18DA558900EDC64A /* glow.png */; };
+		BC0AC37D18DA714F00EDC64A /* item_powerup_fish.png in Resources */ = {isa = PBXBuildFile; fileRef = BC0AC37C18DA714F00EDC64A /* item_powerup_fish.png */; };
 		BC1B38D518CE2D87004CA208 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC1B38D418CE2D87004CA208 /* Foundation.framework */; };
 		BC1B38D718CE2D87004CA208 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC1B38D618CE2D87004CA208 /* CoreGraphics.framework */; };
 		BC1B38D918CE2D87004CA208 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC1B38D818CE2D87004CA208 /* UIKit.framework */; };
@@ -28,6 +30,15 @@
 		BC1B391318CE34AC004CA208 /* GraphicsCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B391218CE34AC004CA208 /* GraphicsCircle.m */; };
 		BC1B391618CE367B004CA208 /* Particle.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B391518CE367B004CA208 /* Particle.m */; };
 		BC1B391918CE3744004CA208 /* Vector2D.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1B391818CE3744004CA208 /* Vector2D.m */; };
+		BC688B0218D664140093E33B /* Influencer.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B0118D664140093E33B /* Influencer.m */; };
+		BC688B0418D8B9770093E33B /* fastblur.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BC688B0318D8B9770093E33B /* fastblur.vsh */; };
+		BC688B0618D8B9950093E33B /* fastblur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BC688B0518D8B9950093E33B /* fastblur.fsh */; };
+		BC688B0918D904EE0093E33B /* BackgroundGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B0818D904EE0093E33B /* BackgroundGrid.m */; };
+		BC688B0C18D906460093E33B /* Bucket.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B0B18D906460093E33B /* Bucket.m */; };
+		BC688B0F18D90E670093E33B /* GraphicsBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B0E18D90E670093E33B /* GraphicsBucket.m */; };
+		BC688B1518D950CB0093E33B /* ParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B1418D950CB0093E33B /* ParticleSystem.m */; };
+		BC688B1818D9518A0093E33B /* GameColor.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B1718D9518A0093E33B /* GameColor.m */; };
+		BC688B1B18DA36B40093E33B /* GraphicsLine.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B1A18DA36B40093E33B /* GraphicsLine.m */; };
 		BCDBAFD418CE928B00058B7E /* Source.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFD318CE928A00058B7E /* Source.m */; };
 		BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFD618CE92E000058B7E /* Rectangle.m */; };
 		BCDBAFDC18CEA0FD00058B7E /* GraphicsRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFDB18CEA0FD00058B7E /* GraphicsRectangle.m */; };
@@ -59,6 +70,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BC0AC37A18DA558900EDC64A /* glow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glow.png; sourceTree = "<group>"; };
+		BC0AC37C18DA714F00EDC64A /* item_powerup_fish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = item_powerup_fish.png; sourceTree = "<group>"; };
 		BC1B38D118CE2D87004CA208 /* carpus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = carpus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC1B38D418CE2D87004CA208 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BC1B38D618CE2D87004CA208 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -88,6 +101,22 @@
 		BC1B391518CE367B004CA208 /* Particle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Particle.m; sourceTree = "<group>"; };
 		BC1B391718CE3744004CA208 /* Vector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector2D.h; sourceTree = "<group>"; };
 		BC1B391818CE3744004CA208 /* Vector2D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vector2D.m; sourceTree = "<group>"; };
+		BC688B0018D664140093E33B /* Influencer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Influencer.h; sourceTree = "<group>"; };
+		BC688B0118D664140093E33B /* Influencer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Influencer.m; sourceTree = "<group>"; };
+		BC688B0318D8B9770093E33B /* fastblur.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fastblur.vsh; path = ../fastblur.vsh; sourceTree = "<group>"; };
+		BC688B0518D8B9950093E33B /* fastblur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = fastblur.fsh; path = ../fastblur.fsh; sourceTree = "<group>"; };
+		BC688B0718D904EE0093E33B /* BackgroundGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundGrid.h; sourceTree = "<group>"; };
+		BC688B0818D904EE0093E33B /* BackgroundGrid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundGrid.m; sourceTree = "<group>"; };
+		BC688B0A18D906460093E33B /* Bucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bucket.h; sourceTree = "<group>"; };
+		BC688B0B18D906460093E33B /* Bucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bucket.m; sourceTree = "<group>"; };
+		BC688B0D18D90E670093E33B /* GraphicsBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsBucket.h; sourceTree = "<group>"; };
+		BC688B0E18D90E670093E33B /* GraphicsBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsBucket.m; sourceTree = "<group>"; };
+		BC688B1318D950CB0093E33B /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
+		BC688B1418D950CB0093E33B /* ParticleSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParticleSystem.m; sourceTree = "<group>"; };
+		BC688B1618D9518A0093E33B /* GameColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameColor.h; sourceTree = "<group>"; };
+		BC688B1718D9518A0093E33B /* GameColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameColor.m; sourceTree = "<group>"; };
+		BC688B1918DA36B40093E33B /* GraphicsLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsLine.h; sourceTree = "<group>"; };
+		BC688B1A18DA36B40093E33B /* GraphicsLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsLine.m; sourceTree = "<group>"; };
 		BCDBAFD218CE928A00058B7E /* Source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Source.h; sourceTree = "<group>"; };
 		BCDBAFD318CE928A00058B7E /* Source.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Source.m; sourceTree = "<group>"; };
 		BCDBAFD518CE92E000058B7E /* Rectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rectangle.h; sourceTree = "<group>"; };
@@ -147,8 +176,11 @@
 		BC1B38C818CE2D87004CA208 = {
 			isa = PBXGroup;
 			children = (
+				BC0AC37C18DA714F00EDC64A /* item_powerup_fish.png */,
+				BC0AC37A18DA558900EDC64A /* glow.png */,
 				BCDBB04218D21EB800058B7E /* tile_floor.png */,
 				BC1B38DE18CE2D87004CA208 /* carpus */,
+				BC1B38DF18CE2D87004CA208 /* Supporting Files */,
 				BC1B390118CE2D87004CA208 /* carpusTests */,
 				BC1B38D318CE2D87004CA208 /* Frameworks */,
 				BC1B38D218CE2D87004CA208 /* Products */,
@@ -180,30 +212,18 @@
 		BC1B38DE18CE2D87004CA208 /* carpus */ = {
 			isa = PBXGroup;
 			children = (
-				BCDBB03B18D2107D00058B7E /* basicTexture.fsh */,
-				BCDBB03D18D2109700058B7E /* basicTexture.vsh */,
-				BCDBB03518D1758E00058B7E /* basic.fsh */,
-				BCDBB03618D1758E00058B7E /* basic.vsh */,
-				BCDBB03718D1758E00058B7E /* hblur.fsh */,
-				BCDBB04618D25F3E00058B7E /* vblur.fsh */,
-				BCDBB04418D25B7B00058B7E /* blur.vsh */,
-				BC1B38ED18CE2D87004CA208 /* Shader.fsh */,
-				BC1B38EF18CE2D87004CA208 /* Shader.vsh */,
+				BC688AFF18D63BDD0093E33B /* iPad */,
 				BC1B38E718CE2D87004CA208 /* AppDelegate.h */,
 				BC1B38E818CE2D87004CA208 /* AppDelegate.m */,
 				BC1B38EA18CE2D87004CA208 /* Main.storyboard */,
 				BC1B38F118CE2D87004CA208 /* ViewController.h */,
 				BC1B38F218CE2D87004CA208 /* ViewController.m */,
 				BC1B38F418CE2D87004CA208 /* Images.xcassets */,
-				BC1B38DF18CE2D87004CA208 /* Supporting Files */,
+				BC688B1218D950060093E33B /* GameShaders */,
+				BC688B1118D94FBB0093E33B /* GameBase */,
+				BC688B1018D94F870093E33B /* GameEffects */,
 				BCDBAFD918CEA0BC00058B7E /* GameObjects */,
 				BCDBAFD818CEA08C00058B7E /* GraphicsObjects */,
-				BC1B391718CE3744004CA208 /* Vector2D.h */,
-				BC1B391818CE3744004CA208 /* Vector2D.m */,
-				BCDBAFDD18CEE92E00058B7E /* Simulation.h */,
-				BCDBAFDE18CEE92E00058B7E /* Simulation.m */,
-				BCDBB02918CFA6A200058B7E /* Camera.h */,
-				BCDBB02A18CFA6A200058B7E /* Camera.m */,
 			);
 			path = carpus;
 			sourceTree = "<group>";
@@ -217,6 +237,7 @@
 				BC1B38E618CE2D87004CA208 /* carpus-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			path = carpus;
 			sourceTree = "<group>";
 		};
 		BC1B390118CE2D87004CA208 /* carpusTests */ = {
@@ -237,6 +258,57 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		BC688AFF18D63BDD0093E33B /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = iPad;
+			sourceTree = "<group>";
+		};
+		BC688B1018D94F870093E33B /* GameEffects */ = {
+			isa = PBXGroup;
+			children = (
+				BC688B0718D904EE0093E33B /* BackgroundGrid.h */,
+				BC688B0818D904EE0093E33B /* BackgroundGrid.m */,
+				BC688B1318D950CB0093E33B /* ParticleSystem.h */,
+				BC688B1418D950CB0093E33B /* ParticleSystem.m */,
+			);
+			name = GameEffects;
+			sourceTree = "<group>";
+		};
+		BC688B1118D94FBB0093E33B /* GameBase */ = {
+			isa = PBXGroup;
+			children = (
+				BC1B391718CE3744004CA208 /* Vector2D.h */,
+				BC1B391818CE3744004CA208 /* Vector2D.m */,
+				BCDBB02918CFA6A200058B7E /* Camera.h */,
+				BCDBB02A18CFA6A200058B7E /* Camera.m */,
+				BCDBAFDD18CEE92E00058B7E /* Simulation.h */,
+				BCDBAFDE18CEE92E00058B7E /* Simulation.m */,
+				BC688B1618D9518A0093E33B /* GameColor.h */,
+				BC688B1718D9518A0093E33B /* GameColor.m */,
+			);
+			name = GameBase;
+			sourceTree = "<group>";
+		};
+		BC688B1218D950060093E33B /* GameShaders */ = {
+			isa = PBXGroup;
+			children = (
+				BCDBB03B18D2107D00058B7E /* basicTexture.fsh */,
+				BCDBB03D18D2109700058B7E /* basicTexture.vsh */,
+				BCDBB03518D1758E00058B7E /* basic.fsh */,
+				BCDBB03618D1758E00058B7E /* basic.vsh */,
+				BC688B0518D8B9950093E33B /* fastblur.fsh */,
+				BC688B0318D8B9770093E33B /* fastblur.vsh */,
+				BCDBB03718D1758E00058B7E /* hblur.fsh */,
+				BCDBB04618D25F3E00058B7E /* vblur.fsh */,
+				BCDBB04418D25B7B00058B7E /* blur.vsh */,
+				BC1B38ED18CE2D87004CA208 /* Shader.fsh */,
+				BC1B38EF18CE2D87004CA208 /* Shader.vsh */,
+			);
+			name = GameShaders;
+			sourceTree = "<group>";
+		};
 		BCDBAFD818CEA08C00058B7E /* GraphicsObjects */ = {
 			isa = PBXGroup;
 			children = (
@@ -252,6 +324,10 @@
 				BCDBB04018D219A400058B7E /* GraphicsQuad.m */,
 				BCDBB04E18D3A4BE00058B7E /* GraphicsArc.h */,
 				BCDBB04F18D3A4BE00058B7E /* GraphicsArc.m */,
+				BC688B0D18D90E670093E33B /* GraphicsBucket.h */,
+				BC688B0E18D90E670093E33B /* GraphicsBucket.m */,
+				BC688B1918DA36B40093E33B /* GraphicsLine.h */,
+				BC688B1A18DA36B40093E33B /* GraphicsLine.m */,
 			);
 			name = GraphicsObjects;
 			path = ..;
@@ -268,6 +344,10 @@
 				BCDBB04918D2F26100058B7E /* Sink.m */,
 				BCDBAFD218CE928A00058B7E /* Source.h */,
 				BCDBAFD318CE928A00058B7E /* Source.m */,
+				BC688B0018D664140093E33B /* Influencer.h */,
+				BC688B0118D664140093E33B /* Influencer.m */,
+				BC688B0A18D906460093E33B /* Bucket.h */,
+				BC688B0B18D906460093E33B /* Bucket.m */,
 			);
 			name = GameObjects;
 			sourceTree = "<group>";
@@ -349,9 +429,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCDBB04718D25F3E00058B7E /* vblur.fsh in Resources */,
+				BC0AC37D18DA714F00EDC64A /* item_powerup_fish.png in Resources */,
 				BCDBB04518D25B7B00058B7E /* blur.vsh in Resources */,
+				BC688B0618D8B9950093E33B /* fastblur.fsh in Resources */,
 				BCDBB03E18D2109700058B7E /* basicTexture.vsh in Resources */,
+				BC0AC37B18DA558900EDC64A /* glow.png in Resources */,
 				BCDBB03C18D2107D00058B7E /* basicTexture.fsh in Resources */,
+				BC688B0418D8B9770093E33B /* fastblur.vsh in Resources */,
 				BCDBB03918D1758E00058B7E /* basic.vsh in Resources */,
 				BCDBB03A18D1758E00058B7E /* hblur.fsh in Resources */,
 				BCDBB03818D1758E00058B7E /* basic.fsh in Resources */,
@@ -380,21 +464,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCDBAFDF18CEE92E00058B7E /* Simulation.m in Sources */,
+				BC688B1818D9518A0093E33B /* GameColor.m in Sources */,
 				BCDBAFDC18CEA0FD00058B7E /* GraphicsRectangle.m in Sources */,
 				BCDBB02E18CFC59F00058B7E /* GraphicsTrace.m in Sources */,
+				BC688B0218D664140093E33B /* Influencer.m in Sources */,
 				BC1B38F318CE2D87004CA208 /* ViewController.m in Sources */,
 				BCDBB04118D219A400058B7E /* GraphicsQuad.m in Sources */,
 				BC1B38E918CE2D87004CA208 /* AppDelegate.m in Sources */,
+				BC688B0918D904EE0093E33B /* BackgroundGrid.m in Sources */,
 				BCDBAFD418CE928B00058B7E /* Source.m in Sources */,
 				BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */,
+				BC688B0F18D90E670093E33B /* GraphicsBucket.m in Sources */,
 				BCDBB04A18D2F26100058B7E /* Sink.m in Sources */,
 				BCDBB04D18D3955500058B7E /* GraphicsCircleOutline.m in Sources */,
 				BCDBB02B18CFA6A200058B7E /* Camera.m in Sources */,
 				BC1B391318CE34AC004CA208 /* GraphicsCircle.m in Sources */,
+				BC688B0C18D906460093E33B /* Bucket.m in Sources */,
 				BC1B391618CE367B004CA208 /* Particle.m in Sources */,
 				BC1B391918CE3744004CA208 /* Vector2D.m in Sources */,
+				BC688B1518D950CB0093E33B /* ParticleSystem.m in Sources */,
 				BC1B38E518CE2D87004CA208 /* main.m in Sources */,
 				BCDBB05018D3A4BE00058B7E /* GraphicsArc.m in Sources */,
+				BC688B1B18DA36B40093E33B /* GraphicsLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,7 +613,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "carpus/carpus-Prefix.pch";
 				INFOPLIST_FILE = "carpus/carpus-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -535,7 +628,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "carpus/carpus-Prefix.pch";
 				INFOPLIST_FILE = "carpus/carpus-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

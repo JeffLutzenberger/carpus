@@ -41,7 +41,7 @@
 
 - (void) setPosition:(float)x y:(float)y;
 
-- (BOOL) bbHit:(Vector2D*)p;
+- (BOOL) bbHit:(Particle*)p;
 
 - (Vector2D*) hit:(Particle*)p;
 

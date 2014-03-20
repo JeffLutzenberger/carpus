@@ -25,16 +25,16 @@
         self.p2 = p2;
         self.p3 = p3;
         self.p4 = p4;
-        [self makeObject];
+        [self updateVertexBuffer:_p1 p2:_p2 p3:_p3 p4:_p4];
     }
     return self;
 }
 
-- (void) makeObject {
+- (void) updateVertexBuffer:(Vector2D*)p1 p2:(Vector2D*)p2 p3:(Vector2D*)p3 p4:(Vector2D*)p4 {
     int idx = 0;
     //position
-    buffer[idx++] = self.p1.x;
-    buffer[idx++] = self.p1.y;
+    buffer[idx++] = p1.x;
+    buffer[idx++] = p1.y;
     buffer[idx++] = 0;
     //normal
     buffer[idx++] = 0;
@@ -42,15 +42,15 @@
     buffer[idx++] = 1;
     //color
     buffer[idx++] = 1.0;
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 1.0;
+    buffer[idx++] = 0.0;
+    buffer[idx++] = 0.0;
     buffer[idx++] = 1.0;
     //texture
     buffer[idx++] = 0;
     buffer[idx++] = 1;
     
-    buffer[idx++] = self.p2.x;
-    buffer[idx++] = self.p2.y;
+    buffer[idx++] = p2.x;
+    buffer[idx++] = p2.y;
     buffer[idx++] = 0;
     
     buffer[idx++] = 0;
@@ -58,31 +58,15 @@
     buffer[idx++] = 1;
     
     buffer[idx++] = 1.0;
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 1.0;
+    buffer[idx++] = 0.0;
+    buffer[idx++] = 0.0;
     buffer[idx++] = 1.0;
     
     buffer[idx++] = 1;
     buffer[idx++] = 1;
     
-    buffer[idx++] = self.p4.x;
-    buffer[idx++] = self.p4.y;
-    buffer[idx++] = 0;
-    
-    buffer[idx++] = 0;
-    buffer[idx++] = 0;
-    buffer[idx++] = 1;
-    
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 1.0;
-    buffer[idx++] = 1.0;
-    
-    buffer[idx++] = 0;
-    buffer[idx++] = 0;
-    
-    buffer[idx++] = self.p3.x;
-    buffer[idx++] = self.p3.y;
+    buffer[idx++] = p4.x;
+    buffer[idx++] = p4.y;
     buffer[idx++] = 0;
     
     buffer[idx++] = 0;
@@ -90,17 +74,41 @@
     buffer[idx++] = 1;
     
     buffer[idx++] = 1.0;
+    buffer[idx++] = 0.0;
+    buffer[idx++] = 0.0;
     buffer[idx++] = 1.0;
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = p3.x;
+    buffer[idx++] = p3.y;
+    buffer[idx++] = 0;
+    
+    buffer[idx++] = 0;
+    buffer[idx++] = 0;
+    buffer[idx++] = 1;
+    
     buffer[idx++] = 1.0;
+    buffer[idx++] = 0.0;
+    buffer[idx++] = 0.0;
     buffer[idx++] = 1.0;
     
     buffer[idx++] = 1;
     buffer[idx++] = 0;
     
-    glGenVertexArraysOES(1, &_vertexArray);
-    glBindVertexArrayOES(_vertexArray);
+    if (_vertexArray <= 0) {
+        glGenVertexArraysOES(1, &_vertexArray);
+        glBindVertexArrayOES(_vertexArray);
+        glGenBuffers(1, &_vertexBuffer);
+    } else {
+        glBindVertexArrayOES(_vertexArray);
+    }
+
+    //glGenVertexArraysOES(1, &_vertexArray);
+    //glBindVertexArrayOES(_vertexArray);
     
-    glGenBuffers(1, &_vertexBuffer);
+    //glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     

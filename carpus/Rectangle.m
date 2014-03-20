@@ -51,10 +51,10 @@
     self.p4 = [[Vector2D alloc] initWithXY:(self.x + pl4.x) y:(self.y + pl4.y)];
     self.p5 = [[Vector2D alloc] initWithXY:(self.x + pl5.x) y:(self.y + pl5.y)];
     self.p6 = [[Vector2D alloc] initWithXY:(self.x + pl6.x) y:(self.y + pl6.y)];
-    self.n1 = [Vector2D subtract:self.p1 v2:self.p4];
-    self.n2 = [Vector2D subtract:self.p2 v2:self.p1];
-    self.n3 = [Vector2D subtract:self.p3 v2:self.p2];
-    self.n4 = [Vector2D subtract:self.p4 v2:self.p3];
+    self.n1 = [Vector2D normalize:[Vector2D subtract:self.p1 v2:self.p4]];
+    self.n2 = [Vector2D normalize:[Vector2D subtract:self.p2 v2:self.p1]];
+    self.n3 = [Vector2D normalize:[Vector2D subtract:self.p3 v2:self.p2]];
+    self.n4 = [Vector2D normalize:[Vector2D subtract:self.p4 v2:self.p3]];
 }
 
 

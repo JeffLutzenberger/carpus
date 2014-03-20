@@ -13,9 +13,10 @@ varying lowp vec4 colorVarying;
 
 void main()
 {
+    vTexCoord;
     //lowp vec4 texCol = texture2D(uSampler, vTexCoord);
     //gl_FragColor = vec4(texCol.rgb, 1.0);
-    vTexCoord;
+    //gl_FragColor = colorVarying * texture2D(Texture, vTexCoord); // New
     gl_FragColor = colorVarying;
     
 }

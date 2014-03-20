@@ -5,6 +5,6 @@ varying lowp vec2 vTexCoord; // New
 uniform sampler2D Texture; // New
 
 void main(void) {
-    vTexCoord;
+    //vTexCoord;
     gl_FragColor = colorVarying * texture2D(Texture, vTexCoord); // New
 }

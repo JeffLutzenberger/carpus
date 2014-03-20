@@ -30,12 +30,12 @@
         self.lineWidth = lineWidth;
         self.innerColor = innerColor;
         self.outerColor = outerColor;
-        [self makeObject];
+        [self updateCircle];
     }
     return self;
 }
 
-- (void) makeObject {
+- (void) updateCircle {
     
     int idx = 0;
     float rout = self.radius + self.lineWidth * 0.5;
@@ -82,10 +82,18 @@
         buffer[idx++] = self.innerColor[3];
     }
     
-    glGenVertexArraysOES(1, &_vertexArray);
-    glBindVertexArrayOES(_vertexArray);
+    if (_vertexArray <= 0) {
+        glGenVertexArraysOES(1, &_vertexArray);
+        glBindVertexArrayOES(_vertexArray);
+        glGenBuffers(1, &_vertexBuffer);
+    } else {
+        glBindVertexArrayOES(_vertexArray);
+    }
+
+    //glGenVertexArraysOES(1, &_vertexArray);
+    //glBindVertexArrayOES(_vertexArray);
     
-    glGenBuffers(1, &_vertexBuffer);
+    //glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     

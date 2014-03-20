@@ -19,6 +19,8 @@
 
 - (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth innerColor:(float[4])innerColor outerColor:(float[4])outerColor;
 
+- (void) updateCircle;
+
 - (void) draw;
 
 @end

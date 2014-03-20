@@ -16,9 +16,11 @@
 @property float lineWidth;
 @property float startTheta;
 @property float endTheta;
-@property float* color;
+//@property (retain) NSMutableArray* color;
 
-- (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth startTheta:(float)startTheta endTheta:(float)endTheta color:(float[4])color;
+- (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth startTheta:(float)startTheta endTheta:(float)endTheta color:(float*)color;
+
+- (void) updateArc:(float)endTheta;
 
 - (void) draw;
 

@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "Rectangle.h"
+#import "Vector2D.h"
 #import "Particle.h"
 #import "Camera.h"
+
 
 @interface Sink : Rectangle
 
@@ -23,11 +25,30 @@
 @property bool isGoal;
 @property int influenceEquation;
 @property bool influenceBound;
+@property bool localizeInfluence;
 @property int maxFill;
 @property int caught;
 @property Rectangle* grabber;
 
 - (id) initWithPositionSizeForceAndSpeed:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed;
+
+- (BOOL) checkIsFull;
+
+- (void) recycleParticle:(Particle*)p;
+
+- (void) influence:(Particle*)p dt:(float)dt maxSpeed:(float)maxSpeed;
+
+- (BOOL) sinkHit:(Particle*)p;
+
+- (BOOL) hitGrabber:(Particle*)p;
+
+- (void) moveGrabber:(Vector2D*)v;
+
+- (BOOL) insideInfluenceRing:(Particle*)p;
+
+- (Vector2D*) trap:(Particle*)p;
+
+- (Vector2D*) bounce:(Particle*)p;
 
 - (void) update:(float)dt;
 

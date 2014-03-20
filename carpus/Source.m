@@ -30,16 +30,16 @@
         addPeriod = 100; //ms
         self.particles = [[NSMutableArray alloc] init];
         float color1[] = {1.0, 0.0, 0.0, 1.0};
-        rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:3 color:color1];
+        rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:10 color:color1];
         
         //float color1[] = {1.0, 0.0, 0.0, 0.25};
         //rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:10 color:color1];
         float color2[] = {1.0, 0.0, 0.0, 0.5};
-        rect2 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:color2];
+        rect2 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:20 color:color2];
         float color3[] = {1.0, 1.0, 1.0, 0.7};
-        rect3 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:1 color:color3];
+        rect3 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:color3];
         float color4[] = {1.0, 0.0, 0.0, 0.15};
-        rect4 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:8 color:color4];
+        rect4 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:25 color:color4];
     }
     return self;
 }
@@ -53,7 +53,7 @@
     for (int i = 0; i < self.nparticles; i++) {
         x = self.p3.x + (float)drand48() * v.x;
         y = self.p3.y + (float)drand48() * v.y;
-        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:2 color:self.color];
+        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:4 color:self.color];
         p.source = self;
         [p recycle:x y:y vx:vx vy:vy color:self.color];
         [self.particles insertObject:p atIndex:i];
@@ -80,14 +80,14 @@
         float y = p1.y + (float)drand48() * v.y;
         float vx = self.speed * self.n3.x;
         float vy = self.speed * self.n3.y;
-        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:2 color:self.color];
+        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:4 color:self.color];
         p.source = self;
         [p recycle:x y:y vx:vx vy:vy color:self.color];
         [self.particles addObject:p];
     }
 }
 
-- (void) draw:(Camera*)camera; {
+- (void) draw:(Camera*)camera {
     
     [camera translateObject:self.x y:self.y z:-0.5];
     [rect1 draw];

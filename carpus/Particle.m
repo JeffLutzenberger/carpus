@@ -72,7 +72,7 @@ enum
         self.dir = [[Vector2D alloc] initWithXY:1 y:0];
         self.vel = [[Vector2D alloc] initWithXY:0 y:0.1];
         self.numTracers = 30;
-        self.traceWidth = 1;
+        self.traceWidth = 2;
         self.accel = -0.0003;
         trail = [[NSMutableArray alloc] initWithCapacity:self.numTracers];
         self.source = nil;
@@ -81,13 +81,13 @@ enum
                                                                        y:self.y
                                                                    color:self.color] atIndex:i];
         }
-        //float innerColor1[] = {1.0, 0.0, 0.0, 0.25};
-        //float outerColor1[] = {1.0, 0.0, 0.0, 0.25};
-        //circle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
-        //                                                          y:0
-        //                                                    radius:2 * self.radius
-        //                                                innerColor:innerColor1
-        //                                                outerColor:outerColor1];
+        float innerColor1[] = {1.0, 0.0, 0.0, 0.25};
+        float outerColor1[] = {1.0, 0.0, 0.0, 0.25};
+        circle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
+                                                                  y:0
+                                                            radius:2 * self.radius
+                                                        innerColor:innerColor1
+                                                        outerColor:outerColor1];
         float innerColor2[] = {1.0, 0.0, 0.0, 1.0};
         float outerColor2[] = {1.0, 0.0, 0.0, 1.0};
         circle2 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
@@ -99,7 +99,7 @@ enum
         float outerColor3[] = {1.0, 1.0, 1.0, 1.0};
         circle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
                                                                   y:0
-                                                             radius:0.25 * self.radius
+                                                             radius:0.5 * self.radius
                                                          innerColor:innerColor3
                                                          outerColor:outerColor3];
         
@@ -117,9 +117,8 @@ enum
 - (void) move:(float)dt {
     self.prevx = self.x;
     self.prevy = self.y;
-    //FIXME: the factor here is not consistent with the javascript version
-    self.x += self.vel.x * dt * 0.001;
-    self.y += self.vel.y * dt * 0.001;
+    self.x += self.vel.x * dt * 0.08;
+    self.y += self.vel.y * dt * 0.08;
     //NSLog(@"%0.2f", self.vel.y);
     self.age += dt;
 }
@@ -186,6 +185,25 @@ enum
 };
 
 - (BOOL) lineCollision:(Vector2D*)p1 p2:(Vector2D*)p2 {
+
+    Vector2D* LineA1 = [[Vector2D alloc] initWithXY:self.prevx y:self.prevy];
+    Vector2D* LineA2 = [[Vector2D alloc] initWithXY:self.x y:self.y];
+    Vector2D* LineB1 = [[Vector2D alloc] initWithXY:p1.x y:p1.y];
+    Vector2D* LineB2 = [[Vector2D alloc] initWithXY:p2.x y:p2.y];
+    float denom = (LineB2.y - LineB1.y) * (LineA2.x - LineA1.x) - (LineB2.x - LineB1.x) * (LineA2.y - LineA1.y);
+    
+    if (denom != 0.0) {
+        float ua = ((LineB2.x - LineB1.x) * (LineA1.y - LineB1.y) - (LineB2.y - LineB1.y) * (LineA1.x - LineB1.x)) / denom;
+        float ub = ((LineA2.x - LineA1.x) * (LineA1.y - LineB1.y) - (LineA2.y - LineA1.y) * (LineA1.x - LineB1.x)) / denom;
+        if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
+            return false;
+        }
+        self.x = LineA1.x + ua * (LineA2.x - LineA1.x);
+        self.y = LineA1.y + ua * (LineA2.y - LineA1.y);
+        self.prevx = self.x;
+        self.prevy = self.y;
+        return true;
+    }
     return false;
 }
 
@@ -208,7 +226,6 @@ enum
     //[camera translateObject:self.x y:self.y z:-1];
     //[circle1 draw];
     
-    ///
     [camera translateObject:self.x y:self.y z:-0.5];
     [circle2 draw];
     

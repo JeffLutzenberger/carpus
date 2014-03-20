@@ -12,9 +12,20 @@
 @interface Simulation : NSObject
 
 @property float maxParticleAge;
+@property float maxParticleSpeed;
 @property int missed;
+@property int caught;
+@property NSMutableArray* buckets;
 @property NSMutableArray* sources;
 @property NSMutableArray* sinks;
+@property NSMutableArray* touches;
+@property NSMutableArray* touchObjects;
+
+- (void) touchBegan:(UITouch*)touch;
+
+- (void) touchEnded:(UITouch*)touch;
+
+- (void) touchMoved:(UITouch*)touch;
 
 - (void) update:(float)dt;
 

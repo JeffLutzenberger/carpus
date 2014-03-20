@@ -60,12 +60,13 @@ enum
         
         modelViewProjectionMatrix = GLKMatrix4Multiply(self.projectionMatrix, self.baseModelViewMatrix);
         
+        [self loadShaders:@"fastblur" fshFile:@"fastblur" program:&_fastBlurShader];
         [self loadShaders:@"basic" fshFile:@"basic" program:&_basicShader];
         [self loadShaders:@"basic" fshFile:@"basicTexture" program:&_textureShader];
         [self loadShaders:@"basic" fshFile:@"hblur" program:&_hBlurShader];
         [self loadShaders:@"basic" fshFile:@"vblur" program:&_vBlurShader];
         
-        [self setupFBO:w    height:h];
+        [self setupFBO:w * 0.5   height:h * 0.5];
     }
     return self;
 }
@@ -145,6 +146,7 @@ enum
     uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(*program, "modelViewProjectionMatrix");
     uniforms[UNIFORM_NORMAL_MATRIX] = glGetUniformLocation(*program, "normalMatrix");
     uniforms[UNIFORM_TEXTURE] = glGetUniformLocation(*program, "Texture");
+    //uniforms[UNIFORM_TEXTURE] = glGetUniformLocation(*program, "Texture");
     //uniforms[UNIFORM_BLUR_TEXEL_SIZE] = glGetUniformLocation(*program, "TexelSize");
     //uniforms[UNIFORM_BLUR_ORIENTATION] = glGetUniformLocation(*program, "Orientation");
     //uniforms[UNIFORM_BLUR_AMOUNT] = glGetUniformLocation(*program, "BlurAmount");
@@ -275,10 +277,10 @@ enum
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glHint(GL_GENERATE_MIPMAP_HINT, GL_DONT_CARE);
+    //glHint(GL_GENERATE_MIPMAP_HINT, GL_DONT_CARE);
     
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _fboTexture, 0);
     

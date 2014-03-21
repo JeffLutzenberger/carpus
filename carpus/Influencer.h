@@ -7,7 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Rectangle.h"
+#import "Vector2D.h"
+#import "Particle.h"
+#import "Camera.h"
 
-@interface Influencer : NSObject
+@interface Influencer : Rectangle
+
+@property float radius;
+@property float force;
+@property float influenceRadius;
+@property int influenceEquation;
+@property bool influenceBound;
+@property bool localizeInfluence;
+@property bool deflectParticles;
+
+- (id) initWithPositionSizeAndForce:(float)x y:(float)y radius:(float)radius force:(float)force;
+
+- (void) influence:(Particle*)p dt:(float)dt maxSpeed:(float)maxSpeed;
+
+- (Vector2D*) bounce:(Particle*)p;
+
+//- (void) update:(float)dt;
+
+- (void) draw:(Camera*)camera;
 
 @end

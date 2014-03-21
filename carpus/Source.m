@@ -17,8 +17,6 @@
     float addPeriod; //ms per particle
     GraphicsRectangle* rect1;
     GraphicsRectangle* rect2;
-    GraphicsRectangle* rect3;
-    GraphicsRectangle* rect4;
 }
 
 - (id) initWithPositionSizeAndSpeed:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta speed:(float)speed {
@@ -29,19 +27,24 @@
         lastAddTime = 0;
         addPeriod = 100; //ms
         self.particles = [[NSMutableArray alloc] init];
-        float color1[] = {1.0, 0.0, 0.0, 1.0};
-        rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:10 color:color1];
-        
-        //float color1[] = {1.0, 0.0, 0.0, 0.25};
-        //rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:10 color:color1];
-        float color2[] = {1.0, 0.0, 0.0, 0.5};
-        rect2 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:20 color:color2];
-        float color3[] = {1.0, 1.0, 1.0, 0.7};
-        rect3 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:color3];
-        float color4[] = {1.0, 0.0, 0.0, 0.15};
-        rect4 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:25 color:color4];
+        [self setColor:RED];
+        const float* c = gGameColors[self.color];
+        float color1[] = {c[0], c[1], c[2], 1.0};
+        float color2[] = {1.0, 1.0, 1.0, 0.5};
+        rect1 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:color1];
+        rect2 = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:2 color:color2];
     }
     return self;
+}
+
+- (void)setSourceColor:(ETColor)c {
+    self.color = c;
+    //update the graphics rectangle
+    const float* gc = gGameColors[self.color];
+    float color1[] = {gc[0], gc[1], gc[2], 1.0};
+    float color2[] = {1.0, 1.0, 1.0, 0.5};
+    [rect1 setColor:color1];
+    [rect2 setColor:color2];
 }
 
 - (void) addParticles {
@@ -53,7 +56,7 @@
     for (int i = 0; i < self.nparticles; i++) {
         x = self.p3.x + (float)drand48() * v.x;
         y = self.p3.y + (float)drand48() * v.y;
-        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:4 color:self.color];
+        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:4 color:RED];
         p.source = self;
         [p recycle:x y:y vx:vx vy:vy color:self.color];
         [self.particles insertObject:p atIndex:i];
@@ -80,7 +83,7 @@
         float y = p1.y + (float)drand48() * v.y;
         float vx = self.speed * self.n3.x;
         float vy = self.speed * self.n3.y;
-        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:4 color:self.color];
+        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:4 color:RED];
         p.source = self;
         [p recycle:x y:y vx:vx vy:vy color:self.color];
         [self.particles addObject:p];
@@ -91,12 +94,8 @@
     
     [camera translateObject:self.x y:self.y z:-0.5];
     [rect1 draw];
-    //[camera translateObject:self.x y:self.y z:-0.6];
-    //[rect2 draw];
     [camera translateObject:self.x y:self.y z:-0.4];
-    [rect3 draw];
-    [camera translateObject:self.x y:self.y z:-0.3];
-    [rect4 draw];
+    [rect2 draw];
     
 }
 

@@ -16,6 +16,7 @@
 @property int missed;
 @property int caught;
 @property NSMutableArray* buckets;
+@property NSMutableArray* influencers;
 @property NSMutableArray* sources;
 @property NSMutableArray* sinks;
 @property NSMutableArray* touches;

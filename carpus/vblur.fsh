@@ -3,7 +3,7 @@ varying lowp vec2 vTexCoord;
 
 varying lowp vec4 colorVarying;
 
-const highp float blurSize = 1.0/(1024.0);//(0.75 * 568.0);
+const highp float blurSize = 1.0/(0.25*1024.0);//(0.75 * 568.0);
 
 void main(void)
 {

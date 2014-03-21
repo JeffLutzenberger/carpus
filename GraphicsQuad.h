@@ -23,6 +23,8 @@
 
 - (void) updateVertexBuffer:(Vector2D*)p1 p2:(Vector2D*)p2 p3:(Vector2D*)p3 p4:(Vector2D*)p4;
 
+- (void)updateColor:(GameColor*)color;
+
 - (void) draw;
 
 @end

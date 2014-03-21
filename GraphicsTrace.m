@@ -18,19 +18,27 @@
     float _lineWidth;
     GLuint vertexArray;
     GLuint vertexBuffer;
+    float _color[4];
 }
 
-- (id) initWithTrailAndColor:(NSMutableArray*)trail lineWidth:(float)lineWidth color:(float *)color{
+- (id) initWithTrailAndColor:(NSMutableArray*)trail lineWidth:(float)lineWidth color:(float[4])color{
     self = [super init];
     if (self) {
         _lineWidth = lineWidth;
-        self.color = color;
+        [self setColor:color];
         vertexCount = (int)[trail count];
         vertexArray = 0;
         //_buffer = (float *)malloc(vertexCount * 7 * sizeof(float));
         [self updateCoordinates:trail];
     }
     return self;
+}
+
+- (void) setColor:(float[4])color {
+    _color[0] = color[0];
+    _color[1] = color[1];
+    _color[2] = color[2];
+    _color[3] = color[3];
 }
 
 - (void)updateCoordinates:(NSMutableArray *)trail {
@@ -42,10 +50,10 @@
         _buffer[idx++] = t.y;
         _buffer[idx++] = 0;
         
-        _buffer[idx++] = 1.0;//_color[0];
-        _buffer[idx++] = 0.0;//_color[1];
-        _buffer[idx++] = 0.0;//_color[2];
-        _buffer[idx++] = alpha;//_color[3] * alpha;
+        _buffer[idx++] = _color[0];
+        _buffer[idx++] = _color[1];
+        _buffer[idx++] = _color[2];
+        _buffer[idx++] = _color[3] * alpha;
         
     }
     if (vertexArray <= 0) {

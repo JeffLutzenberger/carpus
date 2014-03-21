@@ -7,7 +7,6 @@
 //
 
 #import "Camera.h"
-#import <GLKit/GLKit.h>
 
 // Uniform index.
 enum
@@ -38,9 +37,12 @@ enum
     GLKMatrix3 normalMatrix;
     float fboWidth;
     float fboHeight;
-    GLuint fboHandle;
+    //GLuint fboHandle;
+    GLuint fbo1Handle;
+    GLuint fbo2Handle;
     GLint defaultFBO;
-    GLuint depthBuffer;
+    GLuint depthBuffer1;
+    GLuint depthBuffer2;
 }
 
 - (id) initWithCenterAndSize:(float)x y:(float)y w:(float)w h:(float)h {
@@ -66,7 +68,8 @@ enum
         [self loadShaders:@"basic" fshFile:@"hblur" program:&_hBlurShader];
         [self loadShaders:@"basic" fshFile:@"vblur" program:&_vBlurShader];
         
-        [self setupFBO:w * 0.5   height:h * 0.5];
+        [self setupFBO:w * 0.5 height:h * 0.5 fboHandle:&fbo1Handle depthBuffer:&depthBuffer1 fboTexture:&_fbo1Texture];
+        [self setupFBO:w * 0.5 height:h * 0.5 fboHandle:&fbo2Handle depthBuffer:&depthBuffer2 fboTexture:&_fbo2Texture];
     }
     return self;
 }
@@ -85,6 +88,32 @@ enum
     glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, normalMatrix.m);
 }
 
+- (void)rotateAndTranslateObject:(float)theta x:(float)x y:(float)y z:(float)z {
+    GLKMatrix4 modelViewMatrix1 = GLKMatrix4MakeTranslation(x, y, z);
+    modelViewMatrix1 = GLKMatrix4Multiply(self.baseModelViewMatrix, modelViewMatrix1);
+    GLKMatrix4 modelViewMatrix2 = GLKMatrix4MakeRotation(theta, 0.0f, 0.0f, 1.0f);
+    modelViewMatrix2 = GLKMatrix4Multiply(modelViewMatrix1, modelViewMatrix2);
+    
+    normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix2), NULL);
+    
+    modelViewProjectionMatrix = GLKMatrix4Multiply(self.projectionMatrix, modelViewMatrix2);
+    
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, modelViewProjectionMatrix.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, normalMatrix.m);
+}
+
+- (void)multiplyModelViewMatrix:(GLKMatrix4)modelViewMatrix {
+    
+    modelViewMatrix = GLKMatrix4Multiply(self.baseModelViewMatrix, modelViewMatrix);
+    
+    normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
+    
+    modelViewProjectionMatrix = GLKMatrix4Multiply(self.projectionMatrix, modelViewMatrix);
+    
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, modelViewProjectionMatrix.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, normalMatrix.m);
+    
+}
 #pragma mark -  OpenGL ES 2 shader compilation
 
 
@@ -250,19 +279,19 @@ enum
 #pragma mark - FBO
 
 // intialize FBO
-- (void)setupFBO:(float)width height:(float)height {
+- (void)setupFBO:(float)width height:(float)height fboHandle:(GLuint*)fboHandle depthBuffer:(GLuint*)depthBuffer fboTexture:(GLuint*)fboTexture {
     fboWidth = width;
     fboHeight = height;
     
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
     
-    glGenFramebuffers(1, &fboHandle);
-    glGenTextures(1, &_fboTexture);
-    glGenRenderbuffers(1, &depthBuffer);
+    glGenFramebuffers(1, fboHandle);
+    glGenTextures(1, fboTexture);
+    glGenRenderbuffers(1, depthBuffer);
     
-    glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
+    glBindFramebuffer(GL_FRAMEBUFFER, *fboHandle);
     
-    glBindTexture(GL_TEXTURE_2D, _fboTexture);
+    glBindTexture(GL_TEXTURE_2D, *fboTexture);
     glTexImage2D( GL_TEXTURE_2D,
                  0,
                  GL_RGBA,
@@ -282,12 +311,12 @@ enum
     
     //glHint(GL_GENERATE_MIPMAP_HINT, GL_DONT_CARE);
     
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _fboTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *fboTexture, 0);
     
-    glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, *depthBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24_OES, fboWidth, fboHeight);
     
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *depthBuffer);
     
     // FBO status check
     GLenum status;
@@ -310,7 +339,15 @@ enum
 }
 
 // render FBO
-- (void)startRenderFBO
+- (void)startRenderFBO1 {
+    [self startRenderFBO:fbo1Handle];
+}
+
+- (void)startRenderFBO2 {
+    [self startRenderFBO:fbo2Handle];
+}
+
+- (void)startRenderFBO:(GLuint)fboHandle
 {
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnable(GL_TEXTURE_2D);

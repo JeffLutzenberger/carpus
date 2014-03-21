@@ -21,7 +21,7 @@
 }
 
 
-- (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth startTheta:(float)startTheta endTheta:(float)endTheta color:(float*)color {
+- (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth startTheta:(float)startTheta endTheta:(float)endTheta color:(float[4])color {
     self = [super init];
     if (self) {
         vertexCount = 60;
@@ -31,15 +31,17 @@
         self.lineWidth = lineWidth;
         self.startTheta = startTheta;
         self.endTheta = endTheta;
-        //self.color = color;
-        _color[0] = color[0];
-        _color[1] = color[1];
-        _color[2] = color[2];
-        _color[3] = color[3];
+        [self setColor:color];
         [self updateArc:endTheta];
-        
     }
     return self;
+}
+
+- (void) setColor:(float[4])color {
+    _color[0] = color[0];
+    _color[1] = color[1];
+    _color[2] = color[2];
+    _color[3] = color[3];
 }
 
 - (void) updateArc:(float)endTheta {
@@ -97,10 +99,6 @@
         glBindVertexArrayOES(_vertexArray);
     }
 
-    //glGenVertexArraysOES(1, &_vertexArray);
-    //glBindVertexArrayOES(_vertexArray);
-    
-    //glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     

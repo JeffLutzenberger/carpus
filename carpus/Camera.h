@@ -24,16 +24,22 @@
 @property GLuint vBlurShader;
 @property GLuint fastBlurShader;
 
-@property GLuint fboTexture;
-
+@property GLuint fbo1Texture;
+@property GLuint fbo2Texture;
 
 - (id) initWithCenterAndSize:(float)x y:(float)y w:(float)w h:(float)h;
 
+- (void)multiplyModelViewMatrix:(GLKMatrix4)modelView;
+
 - (void)translateObject:(float)x y:(float)y z:(float)z;
+
+- (void)rotateAndTranslateObject:(float)theta x:(float)x y:(float)y z:(float)z;
 
 - (BOOL)loadShaders:(NSString*)vshFile fshFile:(NSString*)fshFile program:(GLuint*)program;
 
-- (void)startRenderFBO;
+- (void)startRenderFBO1;
+
+- (void)startRenderFBO2;
 
 - (void)endRenderFBO;
 

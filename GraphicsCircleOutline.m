@@ -18,6 +18,8 @@
     float buffer[80 * 10];
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    float _innerColor[4];
+    float _outerColor[4];
 }
 
 - (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius lineWidth:(float)lineWidth innerColor:(float[4])innerColor outerColor:(float[4])outerColor{
@@ -28,11 +30,21 @@
         self.y = y;
         self.radius = radius;
         self.lineWidth = lineWidth;
-        self.innerColor = innerColor;
-        self.outerColor = outerColor;
+        [self setColor:innerColor outerColor:outerColor];
         [self updateCircle];
     }
     return self;
+}
+
+- (void) setColor:(float[4])innerColor outerColor:(float[4])outerColor {
+    _innerColor[0] = innerColor[0];
+    _innerColor[1] = innerColor[1];
+    _innerColor[2] = innerColor[2];
+    _innerColor[3] = innerColor[3];
+    _outerColor[0] = outerColor[0];
+    _outerColor[1] = outerColor[1];
+    _outerColor[2] = outerColor[2];
+    _outerColor[3] = outerColor[3];
 }
 
 - (void) updateCircle {
@@ -59,10 +71,10 @@
         buffer[idx++] = 0;
         buffer[idx++] = 1;
         
-        buffer[idx++] = self.outerColor[0];
-        buffer[idx++] = self.outerColor[1];
-        buffer[idx++] = self.outerColor[2];
-        buffer[idx++] = self.outerColor[3];
+        buffer[idx++] = _outerColor[0];
+        buffer[idx++] = _outerColor[1];
+        buffer[idx++] = _outerColor[2];
+        buffer[idx++] = _outerColor[3];
         
         radius = rin;
         x = self.x + radius * cos(rad);
@@ -76,10 +88,10 @@
         buffer[idx++] = 0;
         buffer[idx++] = 1;
         
-        buffer[idx++] = self.innerColor[0];
-        buffer[idx++] = self.innerColor[1];
-        buffer[idx++] = self.innerColor[2];
-        buffer[idx++] = self.innerColor[3];
+        buffer[idx++] = _innerColor[0];
+        buffer[idx++] = _innerColor[1];
+        buffer[idx++] = _innerColor[2];
+        buffer[idx++] = _innerColor[3];
     }
     
     if (_vertexArray <= 0) {
@@ -90,10 +102,6 @@
         glBindVertexArrayOES(_vertexArray);
     }
 
-    //glGenVertexArraysOES(1, &_vertexArray);
-    //glBindVertexArrayOES(_vertexArray);
-    
-    //glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     
@@ -108,8 +116,6 @@
 }
 
 - (void) draw {
-    //glColor4f(0.5f,0.5f,1.0f,1.0f);
-    glEnable(GL_LINE_SMOOTH);
     glBindVertexArrayOES(_vertexArray);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, vertexCount);
 }

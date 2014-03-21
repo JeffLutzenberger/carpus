@@ -9,15 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "Vector2D.h"
 #import "Camera.h"
-
+#import "GameColor.h"
 @interface Tracer : NSObject
 
 @property float x;
 @property float y;
 @property float age;
-@property float* color;
+//@property GameColor* color;
+@property ETColor color;
 
-- (id) initWithPositionAndColor:(float)x y:(float)y color:(float*)color;
+- (id) initWithPositionAndColor:(float)x y:(float)y color:(ETColor)color;
 
 @end
 
@@ -31,13 +32,16 @@
 @property Vector2D* dir;
 @property Vector2D* vel;
 @property float radius;
-@property float* color;
+//@property GameColor* color;
+@property ETColor color;
 @property int numTracers;
 @property float traceWidth;
 @property float accel;
 @property id source;
 
-- (id) initWithPositionAndColor:(float)x y:(float)y r:(float)r color:(float*)color;
+- (id) initWithPositionAndColor:(float)x y:(float)y r:(float)r color:(ETColor)color;
+
+- (void)setParticleColor:(ETColor)color;
 
 - (void) move:(float)dt;
 
@@ -45,7 +49,7 @@
 
 - (void) update:(float)dt;
 
-- (void) recycle:(float)x y:(float)y vx:(float)vx vy:(float)vy color:(float*)color;
+- (void) recycle:(float)x y:(float)y vx:(float)vx vy:(float)vy color:(ETColor)color;
 
 - (void) bounce:(Vector2D*)n;
 

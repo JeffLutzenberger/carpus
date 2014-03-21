@@ -11,8 +11,6 @@
 #import "GraphicsRectangle.h"
 
 @implementation Bucket {
-    float _inColor[4];
-    float _outColor[4];
     GraphicsRectangle* _rectangle;
 }
 
@@ -23,11 +21,11 @@
         self.maxFill = 0;
         self.level = 0;
         self.hasBottom = true;
-        _inColor[0] = 1.0;
-        _inColor[1] = 0.0;
-        _inColor[2] = 0.0;
-        _inColor[3] = 1.0;
-        _rectangle = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:_inColor];
+        self.inColor = RED;
+        self.outColor = RED;
+        const float* c = gGameColors[self.inColor];
+        float color[4] ={c[0], c[1], c[2], 1.0};
+        _rectangle = [[GraphicsRectangle alloc] initWithPositionAndSize:0 y:0 w:w h:h theta:theta lineWidth:5 color:color];
         
     }
     return self;
@@ -75,22 +73,22 @@
     } else if([p lineCollision:self.p5 p2:self.p6]) {
         if ([Vector2D dot:p.vel v2:self.n1]) {
             //going from out color to in color...
-            if (p.color != _outColor) {
+            if (p.color != RED/*_outColor*/) {
                 //colors don't match so don't let the particle through
                 [p bounce:self.n3];
                 return self.n3;
             } else {
-                p.color = _inColor;
+                p.color = RED;//_inColor;
                 [p redirect:self.n1];
                 return self.n1;
             }
         } else {
-            if (p.color != _inColor) {
+            if (p.color != RED/*_inColor*/) {
                 //colors don't match so don't let the particle through
                 [p bounce:self.n1];
                 return self.n1;
             } else {
-                p.color = _outColor;
+                p.color = RED;//_outColor;
                 [p redirect:self.n3];
                 return self.n3;
             }

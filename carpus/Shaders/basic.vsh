@@ -29,12 +29,13 @@ void main()
     //float nDotVP = max(0.0, dot(eyeNormal, normalize(lightPosition)));
     position;
     normal;
+    color;
     
-    colorVarying = color;//gl_Color; //diffuseColor * nDotVP;
+    colorVarying = color; //color;//gl_Color; //diffuseColor * nDotVP;
     
     gl_Position = modelViewProjectionMatrix * position;
     
-    gl_PointSize = 6.0;
+    //gl_PointSize = 6.0;
     
     // pass to fragment shader
     vTexCoord = texcoord;

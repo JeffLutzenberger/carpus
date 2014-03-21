@@ -15,6 +15,7 @@
     float buffer[10 * 12];
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    float _color[4];
     Vector2D* p1;
     Vector2D* p2;
     Vector2D* p3;
@@ -30,7 +31,10 @@
     if (self) {
         vertexCount = 10;
         self.lineWidth = lineWidth;
-        self.color = color;
+        _color[0] = color[0];
+        _color[1] = color[1];
+        _color[2] = color[2];
+        _color[3] = color[3];
         float xlin = -(w - lineWidth) * 0.5;
         float xrin = (w - lineWidth) * 0.5;
         float ytin = -(h - lineWidth) * 0.5;
@@ -47,12 +51,20 @@
         p6 = [Vector2D rotateXY:xrin y:ybin theta:theta];
         p7 = [Vector2D rotateXY:xlout y:ybout theta:theta];
         p8 = [Vector2D rotateXY:xlin y:ybin theta:theta];
-        [self makeObject];
+        [self updateObject];
     }
     return self;
 }
 
-- (void) makeObject {
+- (void)setColor:(float [4])c {
+    _color[0] = c[0];
+    _color[1] = c[1];
+    _color[2] = c[2];
+    _color[3] = c[3];
+    [self updateObject];
+}
+
+- (void) updateObject {
     int idx = 0;
     //position
     buffer[idx++] = p1.x;
@@ -216,10 +228,14 @@
     buffer[idx++] = 0;
     buffer[idx++] = 0;
 
-    glGenVertexArraysOES(1, &_vertexArray);
-    glBindVertexArrayOES(_vertexArray);
+    if (_vertexArray <= 0) {
+        glGenVertexArraysOES(1, &_vertexArray);
+        glBindVertexArrayOES(_vertexArray);
+        glGenBuffers(1, &_vertexBuffer);
+    } else {
+        glBindVertexArrayOES(_vertexArray);
+    }
     
-    glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     

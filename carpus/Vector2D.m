@@ -43,9 +43,10 @@
 
 + (Vector2D*) normalize: (Vector2D*)v {
     float l = [Vector2D length:v];
-    v.x /= l;
-    v.y /= l;
-    return v;
+    //v.x /= l;
+    //v.y /= l;
+    //return v;
+    return [[Vector2D alloc] initWithXY:v.x / l y:v.y / l];
 }
 
 + (float) dot:(Vector2D*)v1 v2:(Vector2D*)v2 {

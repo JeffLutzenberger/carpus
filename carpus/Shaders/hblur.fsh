@@ -3,7 +3,7 @@ varying lowp vec2 vTexCoord;
 
 varying lowp vec4 colorVarying;
 
-const highp float blurSize = 1.0/(768.0);//(0.75 * 320.0); // I've chosen this size because this will result in that every step will be one pixel wide if the Texture texture is of size 512x512
+const highp float blurSize = 1.0/(0.25*768.0);//(0.75 * 320.0); // I've chosen this size because this will result in that every step will be one pixel wide if the Texture texture is of size 512x512
 
 void main(void)
 {

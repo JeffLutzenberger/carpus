@@ -14,10 +14,10 @@
 @property float x;
 @property float y;
 @property float radius;
-//@property float innerColor[4];
-//@property float* outerColor;
 
 - (id) initWithPositionAndRadius:(float)x y:(float)y radius:(float)radius innerColor:(float[4])innerColor outerColor:(float[4])outerColor;
+
+- (void) setColor:(float[4])innerColor outerColor:(float[4])outerColor;
 
 - (void) updateCircle;
 

@@ -10,6 +10,7 @@
 #import "Rectangle.h"
 #import "Particle.h"
 #import "Camera.h"
+#import "GameColor.h"
 
 @interface Source : Rectangle
 
@@ -18,6 +19,8 @@
 @property NSMutableArray* particles;
 
 - (id) initWithPositionSizeAndSpeed:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta speed:(float)speed;
+
+- (void) setSourceColor:(ETColor)color;
 
 - (void) addParticles;
 

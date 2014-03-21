@@ -25,6 +25,7 @@
         self.p2 = p2;
         self.p3 = p3;
         self.p4 = p4;
+        self.color = [[GameColor alloc] initWithRGBA:1.0 g:1.0 b:1.0 a:1.0];
         [self updateVertexBuffer:_p1 p2:_p2 p3:_p3 p4:_p4];
     }
     return self;
@@ -42,8 +43,8 @@
     buffer[idx++] = 1;
     //color
     buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
+    buffer[idx++] = 1.0;
+    buffer[idx++] = 1.0;
     buffer[idx++] = 1.0;
     //texture
     buffer[idx++] = 0;
@@ -58,8 +59,8 @@
     buffer[idx++] = 1;
     
     buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
+    buffer[idx++] = 1.0;
+    buffer[idx++] = 1.0;
     buffer[idx++] = 1.0;
     
     buffer[idx++] = 1;
@@ -74,8 +75,8 @@
     buffer[idx++] = 1;
     
     buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
+    buffer[idx++] = 1.0;
+    buffer[idx++] = 1.0;
     buffer[idx++] = 1.0;
     
     buffer[idx++] = 0;
@@ -90,8 +91,8 @@
     buffer[idx++] = 1;
     
     buffer[idx++] = 1.0;
-    buffer[idx++] = 0.0;
-    buffer[idx++] = 0.0;
+    buffer[idx++] = 1.0;
+    buffer[idx++] = 1.0;
     buffer[idx++] = 1.0;
     
     buffer[idx++] = 1;
@@ -125,6 +126,50 @@
     
 }
 
+- (void)updateColor:(GameColor*)color {
+    //color
+    _color.r = color.r;
+    _color.g = color.g;
+    _color.b = color.b;
+    _color.a = color.a;
+    
+    buffer[6] = _color.r;
+    buffer[7] = _color.g;
+    buffer[8] = _color.b;
+    buffer[9] = _color.a;
+    
+    buffer[18] = _color.r;
+    buffer[19] = _color.g;
+    buffer[20] = _color.b;
+    buffer[21] = _color.a;
+    
+    buffer[30] = _color.r;
+    buffer[31] = _color.g;
+    buffer[32] = _color.b;
+    buffer[33] = _color.a;
+    
+    buffer[42] = _color.r;
+    buffer[43] = _color.g;
+    buffer[44] = _color.b;
+    buffer[45] = _color.a;
+    
+    glBindVertexArrayOES(_vertexArray);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 48, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(GLKVertexAttribNormal);
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 48, BUFFER_OFFSET(12));
+    glEnableVertexAttribArray(GLKVertexAttribColor);
+    glVertexAttribPointer(GLKVertexAttribColor, 4, GL_FLOAT, GL_FALSE, 48, BUFFER_OFFSET(24));
+    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 48, BUFFER_OFFSET(40));
+    
+    glBindVertexArrayOES(0);
+
+}
 - (void) draw {
     //glColor4f(0.5f,0.5f,1.0f,1.0f);
     //glEnable(GL_LINE_SMOOTH);

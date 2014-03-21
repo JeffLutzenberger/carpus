@@ -27,17 +27,21 @@
         self.x = x;
         self.y = y;
         self.radius = radius;
-        _innerColor[0] = innerColor[0];
-        _innerColor[1] = innerColor[1];
-        _innerColor[2] = innerColor[2];
-        _innerColor[3] = innerColor[3];
-        _outerColor[0] = outerColor[0];
-        _outerColor[1] = outerColor[1];
-        _outerColor[2] = outerColor[2];
-        _outerColor[3] = outerColor[3];
+        [self setColor:innerColor outerColor:outerColor];
         [self updateCircle];
     }
     return self;
+}
+
+- (void) setColor:(float[4])innerColor outerColor:(float[4])outerColor {
+    _innerColor[0] = innerColor[0];
+    _innerColor[1] = innerColor[1];
+    _innerColor[2] = innerColor[2];
+    _innerColor[3] = innerColor[3];
+    _outerColor[0] = outerColor[0];
+    _outerColor[1] = outerColor[1];
+    _outerColor[2] = outerColor[2];
+    _outerColor[3] = outerColor[3];
 }
 
 - (void) updateCircle {
@@ -90,10 +94,6 @@
         glBindVertexArrayOES(_vertexArray);
     }
 
-    //glGenVertexArraysOES(1, &_vertexArray);
-    //glBindVertexArrayOES(_vertexArray);
-    
-    //glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     
@@ -108,7 +108,6 @@
 }
 
 - (void) draw {
-    //glColor4f(0.5f,0.5f,1.0f,1.0f);
     glBindVertexArrayOES(_vertexArray);
     glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
 }

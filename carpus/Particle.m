@@ -35,7 +35,7 @@ enum
 
 @implementation Tracer
 
-- (id) initWithPositionAndColor:(float)x y:(float)y color:(float *)color {
+- (id) initWithPositionAndColor:(float)x y:(float)y color:(ETColor)color {
     self = [super init];
     if (self) {
         self.x = x;
@@ -52,13 +52,12 @@ enum
     NSMutableArray* trail;
     GraphicsCircle* circle1;
     GraphicsCircle* circle2;
-    GraphicsCircle* circle3;
     
     GraphicsTrace* trace1;
     GraphicsTrace* trace2;
 }
 
-- (id) initWithPositionAndColor:(float)x y:(float)y r:(float)r color:(float*)color {
+- (id) initWithPositionAndColor:(float)x y:(float)y r:(float)r color:(ETColor)color {
     self = [super init];
     if(self) {
         self.x = x;
@@ -66,8 +65,7 @@ enum
         self.prevx = x;
         self.prevy = y;
         self.radius = r;
-        float c[] = {1.0, 0.0, 0.0, 1.0};
-        self.color = c;
+        self.color = color;
         self.age = 0;
         self.dir = [[Vector2D alloc] initWithXY:1 y:0];
         self.vel = [[Vector2D alloc] initWithXY:0 y:0.1];
@@ -81,32 +79,27 @@ enum
                                                                        y:self.y
                                                                    color:self.color] atIndex:i];
         }
-        float innerColor1[] = {1.0, 0.0, 0.0, 0.25};
-        float outerColor1[] = {1.0, 0.0, 0.0, 0.25};
+        const float* c = gGameColors[self.color];
+        float innerColor2[] = {c[0], c[1], c[2], 1.0};
+        float outerColor2[] = {c[0], c[1], c[2], 1.0};
         circle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
-                                                                  y:0
-                                                            radius:2 * self.radius
-                                                        innerColor:innerColor1
-                                                        outerColor:outerColor1];
-        float innerColor2[] = {1.0, 0.0, 0.0, 1.0};
-        float outerColor2[] = {1.0, 0.0, 0.0, 1.0};
-        circle2 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
                                                                   y:0
                                                              radius:self.radius
                                                          innerColor:innerColor2
                                                          outerColor:outerColor2];
-        float innerColor3[] = {1.0, 1.0, 1.0, 1.0};
-        float outerColor3[] = {1.0, 1.0, 1.0, 1.0};
-        circle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
+        const float* white = gGameColors[WHITE];
+        float innerColor3[] = {white[0], white[1], white[2], 0.7};
+        float outerColor3[] = {white[0], white[1], white[2], 0.7};
+        circle2 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
                                                                   y:0
                                                              radius:0.5 * self.radius
                                                          innerColor:innerColor3
                                                          outerColor:outerColor3];
         
-        float traceColor1[] = {1.0, 0.0, 0.0, 0.25};
+        float traceColor1[] = {c[0], c[1], c[2], 0.25};
         trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:2 * self.traceWidth color:traceColor1];
         
-        float traceColor2[] = {1.0, 0.0, 0.0, 0.25};
+        float traceColor2[] = {c[0], c[1], c[2], 0.25};
         trace1 = [[GraphicsTrace alloc] initWithTrailAndColor:trail lineWidth:self.traceWidth color:traceColor2];
 
 
@@ -148,7 +141,20 @@ enum
     self.age += dt;
 }
 
-- (void) recycle:(float)x y:(float)y vx:(float)vx vy:(float)vy color:(float*)color {
+- (void)setParticleColor:(ETColor)color {
+    self.color = color;
+    const float* c = gGameColors[self.color];
+    float c1[4] = {c[0], c[1], c[2], 1.0};
+    [circle1 setColor:c1 outerColor:c1];
+    [circle1 updateCircle];
+    [trace1 setColor:c1];
+    
+    for (Tracer* t in trail) {
+        [t setColor:color];
+    }
+}
+
+- (void) recycle:(float)x y:(float)y vx:(float)vx vy:(float)vy color:(ETColor)color {
     Tracer* t;
     self.x = x;
     self.y = y;
@@ -157,13 +163,14 @@ enum
     self.age = 0;
     self.vel.x = vx;
     self.vel.y = vy;
-    self.color = color;
+    [self setParticleColor:color];
     for (int i = 0; i < self.numTracers; i++) {
         t = [trail objectAtIndex:i];
         t.x = self.x;
         t.y = self.y;
-        t.color =self.color;
+        t.color = self.color;
     }
+    
 }
 
 - (void) bounce:(Vector2D*)n {
@@ -220,17 +227,14 @@ enum
     [camera translateObject:0 y:0 z:-1];
     [trace1 draw];
     
-    [camera translateObject:0 y:0 z:-0.5];
-    [trace2 draw];
-    
-    //[camera translateObject:self.x y:self.y z:-1];
-    //[circle1 draw];
+    //[camera translateObject:0 y:0 z:-0.5];
+    //[trace2 draw];
     
     [camera translateObject:self.x y:self.y z:-0.5];
-    [circle2 draw];
+    [circle1 draw];
     
     [camera translateObject:self.x y:self.y z:-0.25];
-    [circle3 draw];
+    [circle2 draw];
     
 }
 

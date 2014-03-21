@@ -7,6 +7,7 @@
 //
 
 #import "Simulation.h"
+#import "Influencer.h"
 #import "Source.h"
 #import "Sink.h"
 #import "Bucket.h"
@@ -21,10 +22,10 @@
         self.maxParticleSpeed = 2;
         self.missed = 0;
         self.caught = 0;
+        self.influencers = [[NSMutableArray alloc] init];
         self.buckets = [[NSMutableArray alloc] init];
         self.sources = [[NSMutableArray alloc] init];
         self.sinks = [[NSMutableArray alloc] init];
-        //self.touchInfluencers = [[NSMutableArray alloc] init];
         self.touches = [[NSMutableArray alloc] init];
         self.touchObjects = [[NSMutableArray alloc] init];
     }
@@ -33,8 +34,7 @@
 
 - (void) update:(float)dt {
 
-    for (int i = 0; i < [self.sources count]; i++) {
-        Source* s = [self.sources objectAtIndex:i];
+    for (Source* s in self.sources) {
         [s update:dt];
     }
     
@@ -51,9 +51,9 @@
 - (void) touchBegan:(UITouch*)touch {
     //touch event can be either a grabber or an interactable object...
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
-    Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:nil];
+    //Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:nil];
     //1. is this a grabber
-    for(Sink* s in self.sinks) {
+    /*for(Sink* s in self.sinks) {
         //if s.hit touch event then this touch event is a grabber move
         if ([s hitGrabber:p]) {
             s.grabberSelected = true;
@@ -62,43 +62,48 @@
             NSLog(@"hit grabber");
             return;
         }
-    }
-    Sink* influencer = nil;
+    }*/
+    Influencer* influencer = nil;
     [self.touches addObject:touch];
-    influencer = [[Sink alloc] initWithPositionSizeForceAndSpeed:pos.x y:pos.y radius:15 force:5 speed:5];
+    influencer = [[Influencer alloc] initWithPositionSizeAndForce:pos.x y:pos.y radius:15 force:5];
     influencer.enabled = true;
-    [self.touchObjects addObject:influencer];
+    //[self.touchObjects addObject:influencer];
+    [self.influencers addObject:influencer];
     return;
 }
 
 - (void) touchEnded:(UITouch*)touch {
     NSUInteger index = [self.touches indexOfObject:touch];
-    id obj = [self.touchObjects objectAtIndex:index];
-    Sink* influencer = (Sink*)obj;
+    //id obj = [self.touchObjects objectAtIndex:index];
+    id obj = [self.influencers objectAtIndex:index];
+    Influencer* influencer = (Influencer*)obj;
     influencer.grabberSelected = false;
     [self.touches removeObjectAtIndex:index];
-    [self.touchObjects removeObjectAtIndex:index];
+    //[self.touchObjects removeObjectAtIndex:index];
+    [self.influencers removeObjectAtIndex:index];
     
 }
 
 - (void) touchMoved:(UITouch*)touch {
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
     NSUInteger index = [self.touches indexOfObject:touch];
-    id obj = [self.touchObjects objectAtIndex:index];
-    Sink* influencer = (Sink*)obj;
-    if(influencer.grabberSelected) {
-        NSLog(@"Move grabber...");
-        Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
-        [influencer moveGrabber:v];
-    } else {
+    //id obj = [self.touchObjects objectAtIndex:index];
+    id obj = [self.influencers objectAtIndex:index];
+    Influencer* influencer = (Influencer*)obj;
+    //if(influencer.grabberSelected) {
+    //    NSLog(@"Move grabber...");
+    //    Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
+    //    [influencer moveGrabber:v];
+    //} else {
         influencer.x = pos.x;
         influencer.y = pos.y;
-    }
+    //}
 }
 
 - (void) moveParticles:(float)dt {
-    for (int i = 0; i < [self.sources count]; i++) {
-        Source* s = [self.sources objectAtIndex:i];
+    for (Source* s in self.sources) {
+    //for (int i = 0; i < [self.sources count]; i++) {
+        //Source* s = [self.sources objectAtIndex:i];
         for (int j = 0; j < [s.particles count]; j += 1) {
             Particle* p = [s.particles objectAtIndex:j];
             [self moveParticle:p dt:dt];
@@ -112,13 +117,15 @@
     
     [particle trace];
     
+    [self hitInfluencers:particle dt:dt];
+    
     [self hitSinks:particle dt:dt];
     
     [self hitBuckets:particle dt:dt];
 
-    for(Sink* s in self.touchObjects) {
-        [s influence:particle dt:dt maxSpeed:[self maxParticleSpeed]];
-    }
+    //for(Sink* s in self.touchObjects) {
+    //    [s influence:particle dt:dt maxSpeed:[self maxParticleSpeed]];
+    //}
     
     if (particle.age > self.maxParticleAge) {
         self.missed += 1;
@@ -139,6 +146,30 @@
     }
 }
 
+- (void) hitInfluencers:(Particle*)p dt:(float)dt {
+    for (Influencer* i in self.influencers) {
+        if (![i enabled]) {
+            continue;
+        }
+        if ([i localizeInfluence] /*&& ![s.grid sameTile:s particle:p]*/) {
+            continue;
+        }
+        if ([i influenceBound] /*&& ![s insideInfluenceRing:p]*/) {
+            continue;
+        }
+        
+        if (i.deflectParticles) {
+            Vector2D* n = [i bounce:p];
+            if (n) {
+                //move the particle outside the circle...
+                [p bounce:n];
+                [p move:dt];
+            }
+        }
+        
+        [i influence:p dt:dt maxSpeed:[self maxParticleSpeed]];
+    }
+}
 - (void) hitSinks:(Particle*)p dt:(float)dt {
     for (int i = 0; i < [self.sinks count]; i++) {
         Sink* s = [self.sinks objectAtIndex:i];
@@ -187,6 +218,8 @@
 
     [self drawBuckets:camera];
     
+    [self drawInfluencers:camera];
+    
     [self drawSources:camera];
     
     [self drawSinks:camera];
@@ -205,6 +238,12 @@
 - (void) drawBuckets:(Camera*)camera {
     for (Bucket* b in self.buckets) {
         [b draw:camera];
+    }
+}
+
+- (void) drawInfluencers:(Camera*)camera {
+    for (Influencer* i in self.influencers) {
+        [i draw:camera];
     }
 }
 

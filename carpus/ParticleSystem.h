@@ -18,9 +18,9 @@
 @property Vector2D* vel;
 @property Vector2D* dir;
 @property float theta;
-@property float speed;
+//@property float speed;
 @property float accel;
-@property float damping;
+//@property float damping;
 @property float age;
 @property float lifetime;
 @property Vector2D* scale;
@@ -30,6 +30,8 @@
 - (id) initWithPosition:(float)x y:(float)y texture:(GLuint)texture;
 
 - (void) update:(float)dt;
+
+- (void) spiralUpdate:(float)dt s:(Vector2D*)s;
 
 - (void) draw:(Camera*)camera;
 
@@ -46,6 +48,8 @@
 - (void) burst:(float)x y:(float)y burstRadius:(float)burstRadius speed:(float)speed accel:(float)accel nparticles:(int)nparticles lifetime:(float)lifetime;
 
 - (void) update:(float)dt;
+
+- (void) spiralUpdate:(float)dt s:(Vector2D*)s;
 
 - (void) draw:(Camera*)camera;
 

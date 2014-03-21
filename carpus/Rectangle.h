@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#include "Vector2D.h"
-#include "Particle.h"
+#import "Vector2D.h"
+#import "Particle.h"
+#import "GameColor.h"
 
 @interface Rectangle : NSObject
 
@@ -27,7 +28,7 @@
 @property Vector2D* n3;
 @property Vector2D* n4;
 @property float theta;
-@property float* color;
+@property (nonatomic) ETColor color;
 @property int stage;
 @property BOOL enabled;
 @property BOOL show;

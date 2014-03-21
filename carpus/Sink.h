@@ -11,7 +11,7 @@
 #import "Vector2D.h"
 #import "Particle.h"
 #import "Camera.h"
-
+#import "GameColor.h"
 
 @interface Sink : Rectangle
 
@@ -19,8 +19,8 @@
 @property float force;
 @property float influenceRadius;
 @property float speed;
-@property float* inColor;
-@property float* outColor;
+@property ETColor inColor;
+@property ETColor outColor;
 @property bool isSource;
 @property bool isGoal;
 @property int influenceEquation;
@@ -31,6 +31,8 @@
 @property Rectangle* grabber;
 
 - (id) initWithPositionSizeForceAndSpeed:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed;
+
+- (void) setSinkColor:(ETColor)inColor outColor:(ETColor)outColor;
 
 - (BOOL) checkIsFull;
 

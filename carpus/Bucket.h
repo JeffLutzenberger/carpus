@@ -9,9 +9,12 @@
 #import "Rectangle.h"
 #import "Particle.h"
 #import "Camera.h"
+#import "GameColor.h"
 
 @interface Bucket : Rectangle
 
+@property ETColor inColor;
+@property ETColor outColor;
 @property float caught;
 @property float maxFill;
 @property BOOL hasBottom;

@@ -1,8 +1,8 @@
 //varying lowp vec4 vDstColor;
 varying lowp vec4 colorVarying;
+varying lowp vec2 vTexCoord;
 
-varying lowp vec2 vTexCoord; // New
-uniform sampler2D Texture; // New
+uniform sampler2D Texture; 
 
 void main(void) {
     //vTexCoord;

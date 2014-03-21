@@ -7,7 +7,7 @@
 //
 
 #import "Sink.h"
-#import "Rectangle.h"
+#import "ParticleSystem.h"
 #import "GraphicsCircle.h"
 #import "GraphicsCircleOutline.h"
 #import "GraphicsArc.h"
@@ -31,6 +31,8 @@
     float flashLength;
     float ringPulseDt;
     float ringPulseLength;
+    ParticleSystem* particleSystem;
+    ParticleSystem* spiralParticleSystem;
 }
 
 
@@ -45,11 +47,9 @@
         self.localizeInfluence = false;
         self.isSource = true;
         self.maxFill = 100;
-        float inColor[] = {1.0, 0.0, 0.0, 1.0};
-        float outColor[] = {1.0, 0.0, 0.0, 1.0};
-        self.inColor = inColor;
-        self.outColor = outColor;
-        self.grabber = [[Rectangle alloc] initWithPositionAndSize:x + cos(self.theta) * self.influenceRadius y:y + sin(self.theta) * self.influenceRadius w:20 h:20 theta:0];
+        self.inColor = GREEN;
+        self.outColor = GREEN;
+        self.grabber = [[Rectangle alloc] initWithPositionAndSize:x + cos(self.theta) * self.influenceRadius y:y + sin(self.theta) * self.influenceRadius w:40 h:40 theta:0];
         grabberFadeDt = 0;
         grabberFadeLength = 0;
         pulseDt = 0;
@@ -58,11 +58,16 @@
         flashLength = 0;
         ringPulseDt = 0;
         ringPulseLength = 0;
-        float color1[] = {1.0, 0.0, 0.0, 1.0};
-        float color2[] = {1.0, 0.0, 0.0, 0.5};
-        float color3[] = {1.0, 0.0, 0.0, 0.0};
-        float color4[] = {1.0, 0.0, 0.0, 0.25};
-        float color5[] = {1.0, 1.0, 1.0, 1.0};
+        particleSystem = [[ParticleSystem alloc] initWithCoordsAndCapacity:self.x y:self.y capacity:300];
+        spiralParticleSystem = [[ParticleSystem alloc] initWithCoordsAndCapacity:self.x y:self.y capacity:300];
+        //[spiralParticleSystem burst:self.x y:self.y burstRadius:100 speed:0.005 accel:-0.0009 nparticles:10 lifetime:50000];
+        
+        const float* c = gGameColors[self.inColor];
+        float color1[] = {c[0], c[1], c[2], 0.8};
+        float color2[] = {c[0], c[1], c[2], 0.25};
+        float color3[] = {c[0], c[1], c[2], 0.0};
+        float color4[] = {c[0], c[1], c[2], 0.25};
+        float color5[] = {1.0, 1.0, 1.0, 0.7};
         float color6[] = {1.0, 1.0, 1.0, 0.0};
         gradient1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
                                                                            y:0
@@ -88,8 +93,8 @@
         innerCircle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
                                                                        y:0
                                                                   radius:radius * 1.5
-                                                              innerColor:color4
-                                                              outerColor:color4];
+                                                              innerColor:color1
+                                                              outerColor:color3];
         
         innerCircle2 = [[GraphicsCircle alloc] initWithPositionAndRadius:0
                                                                        y:0
@@ -105,11 +110,18 @@
                                                                 outerColor:color6];
         arc = [[GraphicsArc alloc] initWithPositionAndRadius:0 y:0 radius:self.influenceRadius lineWidth:14 startTheta:0 endTheta:3.14 * 0.5 color:color2];
         
-        grabberCircle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius innerColor:color1 outerColor:color3];
+        const float* cout = gGameColors[self.outColor];
+        float grabberColor1[] = {cout[0], cout[1], cout[2], 0.8};
+        float grabberColor2[] = {cout[0], cout[1], cout[2], 0.0};
+        float grabberColor3[] = {cout[0], cout[1], cout[2], 0.25};
+        float grabberColor4[] = {1.0, 1.0, 1.0, 0.7};
+        float grabberColor5[] = {1.0, 1.0, 1.0, 0.0};
         
-        grabberCircle2 = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0 y:0 radius:_radius lineWidth:_radius innerColor:color2 outerColor:color3];
+        grabberCircle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius innerColor:grabberColor1 outerColor:grabberColor2];
         
-        grabberCircle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius * 0.5 innerColor:color5 outerColor:color6];
+        grabberCircle2 = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0 y:0 radius:_radius lineWidth:_radius innerColor:grabberColor3 outerColor:grabberColor2];
+        
+        grabberCircle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius * 0.5 innerColor:grabberColor4 outerColor:grabberColor5];
     }
     return self;
 }
@@ -121,6 +133,51 @@
     self.h = radius;
 };
 
+- (void) setSinkColor:(ETColor)inColor outColor:(ETColor)outColor {
+    self.inColor = inColor;
+    self.outColor = outColor;
+    
+    const float* c = gGameColors[self.inColor];
+    float color1[] = {c[0], c[1], c[2], 0.8};
+    float color2[] = {c[0], c[1], c[2], 0.25};
+    float color3[] = {c[0], c[1], c[2], 0.0};
+    float color4[] = {c[0], c[1], c[2], 0.25};
+    float color5[] = {1.0, 1.0, 1.0, 0.7};
+    float color6[] = {1.0, 1.0, 1.0, 0.0};
+    
+    [gradient1 setColor:color2 outerColor:color3];
+    [gradient1 updateCircle];
+    [innerCircle1 setColor:color1 outerColor:color3];
+    [innerCircle1 updateCircle];
+    [innerCircle2 setColor:color5 outerColor:color4];
+    [innerCircle2 updateCircle];
+    [gradient2 setColor:color5 outerColor:color6];
+    [gradient2 updateCircle];
+    
+    [influenceCircle1 setColor:color1 outerColor:color1];
+    [influenceCircle1 updateCircle];
+    [influenceCircle2 setColor:color1 outerColor:color1];
+    [influenceCircle2 updateCircle];
+    
+    [arc setColor:color2];
+    [arc updateArc:arc.endTheta];
+    
+    const float* cout = gGameColors[self.outColor];
+    float grabberColor1[] = {cout[0], cout[1], cout[2], 0.8};
+    float grabberColor2[] = {cout[0], cout[1], cout[2], 0.0};
+    float grabberColor3[] = {cout[0], cout[1], cout[2], 0.25};
+    float grabberColor4[] = {1.0, 1.0, 1.0, 0.7};
+    float grabberColor5[] = {1.0, 1.0, 1.0, 0.0};
+    
+    [grabberCircle1 setColor:grabberColor1 outerColor:grabberColor2];
+    [grabberCircle1 updateCircle];
+    [grabberCircle2 setColor:grabberColor3 outerColor:grabberColor2];
+    [grabberCircle2 updateCircle];
+    [grabberCircle3 setColor:grabberColor4 outerColor:grabberColor5];
+    [grabberCircle3 updateCircle];
+    
+}
+
 - (BOOL) checkIsFull {
     return (self.caught >= self.maxFill);
 }
@@ -131,7 +188,9 @@
     p.y = self.y + sin(self.theta + dt) * (self.influenceRadius + 10);
     p.vel.x = cos(self.theta) * self.speed;
     p.vel.y = sin(self.theta) * self.speed;
-    p.color = self.outColor;
+    //p.color = self.outColor;
+    [p setParticleColor:self.outColor];
+    //[p setColor:self.outColor];
 };
 
 - (void) influence:(Particle*)p dt:(float)dt maxSpeed:(float)maxSpeed {
@@ -168,6 +227,8 @@
     hit = (d2 <= 2 * self.radius * self.radius);
     if (hit && ![self checkIsFull]) {
         self.caught += 1;
+        //[particleSystem burst:self.x y:self.y burstRadius:50 speed:0.5 accel:-0.0009 nparticles:10 lifetime:500];
+        
     }
     return hit;
 };
@@ -253,6 +314,9 @@
         ringPulseDt = 0;
     }
     //this.sparks.update(dt);
+    
+    [particleSystem update:dt];
+    [spiralParticleSystem spiralUpdate:dt s:[self position]];
 }
 
 - (void) draw:(Camera*)camera {
@@ -260,6 +324,9 @@
     //NSLog(@"%d", self.caught);
     [arc updateArc:f];
 
+    [particleSystem draw:camera];
+    [spiralParticleSystem draw:camera];
+    
     [camera translateObject:self.x y:self.y z:-1];
     [gradient1 draw];
     [influenceCircle1 draw];
@@ -272,7 +339,7 @@
     //[camera translateObject:self.x y:self.y z:-0.3];
     [gradient2 draw];
     
-    //if ([self checkIsFull] && self.isSource) {
+    if (self.isSource) {
         [camera translateObject:self.grabber.x y:self.grabber.y z:-0.25];
         [grabberCircle1 draw];
         [camera translateObject:self.grabber.x y:self.grabber.y z:-0.3];
@@ -285,7 +352,7 @@
         //alpha = this.grabberFadeDt / this.grabberFadeLength;
         //[self drawGrabber:camera];
         //this.drawGrabber(canvas, ParticleWorldColors[this.outColor], alpha);
-    //}
+    }
 
     
 }

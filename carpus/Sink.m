@@ -37,7 +37,7 @@
 
 
 - (id) initWithPositionSizeForceAndSpeed:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed {
-    self = [super initWithPositionAndSize:x y:y w:radius h:radius theta:0];
+    self = [super initWithPositionAndSize:x y:y w:radius h:radius theta:0 color:GREEN];
     if (self) {
         self.speed = speed;
         self.force = force;
@@ -49,7 +49,7 @@
         self.maxFill = 100;
         self.inColor = GREEN;
         self.outColor = GREEN;
-        self.grabber = [[Rectangle alloc] initWithPositionAndSize:x + cos(self.theta) * self.influenceRadius y:y + sin(self.theta) * self.influenceRadius w:40 h:40 theta:0];
+        self.grabber = [[Rectangle alloc] initWithPositionAndSize:x + cos(self.theta) * self.influenceRadius y:y + sin(self.theta) * self.influenceRadius w:40 h:40 theta:0 color:GREEN];
         grabberFadeDt = 0;
         grabberFadeLength = 0;
         pulseDt = 0;
@@ -188,10 +188,8 @@
     p.y = self.y + sin(self.theta + dt) * (self.influenceRadius + 10);
     p.vel.x = cos(self.theta) * self.speed;
     p.vel.y = sin(self.theta) * self.speed;
-    //p.color = self.outColor;
     [p setParticleColor:self.outColor];
-    //[p setColor:self.outColor];
-};
+}
 
 - (void) influence:(Particle*)p dt:(float)dt maxSpeed:(float)maxSpeed {
     Vector2D* v2 = [[Vector2D alloc] initWithXY:(self.x - p.x) y:(self.y - p.y)];

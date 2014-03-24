@@ -36,7 +36,8 @@
         _age = 0.0;
         _lifetime = 1000.0;
         _color = [[GameColor alloc] initWithRGBA:1.0 g:0.0 b:0.0 a:1.0];
-        _graphicsLine = [[GraphicsLine alloc] initWithCoordsAndColor:_pos.x y1:_pos.y x2:_prevPos.x y2:_prevPos.y lineWidth:3.0 color:_color];
+        float color[4] = {1.0, 0.0, 0.0, 1.0};
+        _graphicsLine = [[GraphicsLine alloc] initWithCoordsAndColor:_pos.x y1:_pos.y x2:_prevPos.x y2:_prevPos.y lineWidth:3.0 color:color];
         //p1 = [[Vector2D alloc] initWithXY:_pos.x - 10 y:_pos.y - 10];
         //p2 = [[Vector2D alloc] initWithXY:_pos.x + 10 y:_pos.y - 10];
         //p3 = [[Vector2D alloc] initWithXY:_pos.x + 10 y:_pos.y + 10];

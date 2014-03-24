@@ -10,6 +10,7 @@
 #import "Vector2D.h"
 #import "Particle.h"
 #import "GameColor.h"
+#import "Camera.h"
 
 @interface Rectangle : NSObject
 
@@ -17,6 +18,8 @@
 @property float y;
 @property float w;
 @property float h;
+@property (nonatomic) ETColor color;
+@property (nonatomic)float theta;
 @property Vector2D* p1;
 @property Vector2D* p2;
 @property Vector2D* p3;
@@ -27,8 +30,6 @@
 @property Vector2D* n2;
 @property Vector2D* n3;
 @property Vector2D* n4;
-@property float theta;
-@property (nonatomic) ETColor color;
 @property int stage;
 @property BOOL enabled;
 @property BOOL show;
@@ -36,7 +37,7 @@
 @property BOOL grabberSelected;
 @property BOOL interactable;
 
-- (id) initWithPositionAndSize:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta;
+- (id) initWithPositionAndSize:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta color:(ETColor)color;
 
 - (Vector2D*) position;
 
@@ -48,6 +49,6 @@
 
 - (BOOL) circleHit:(Vector2D*)p;
 
-- (void) draw;
+- (void) draw:(Camera*)camera;
 
 @end

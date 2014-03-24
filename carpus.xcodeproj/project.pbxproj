@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC01C1EC18DDF4D30056DB22 /* GameGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = BC01C1EB18DDF4D30056DB22 /* GameGrid.m */; };
+		BC01C1EF18DDF4FD0056DB22 /* GridWall.m in Sources */ = {isa = PBXBuildFile; fileRef = BC01C1EE18DDF4FD0056DB22 /* GridWall.m */; };
+		BC01C1F218DE4E230056DB22 /* Obstacle.m in Sources */ = {isa = PBXBuildFile; fileRef = BC01C1F118DE4E230056DB22 /* Obstacle.m */; };
+		BC01C1F518DF4D300056DB22 /* Portal.m in Sources */ = {isa = PBXBuildFile; fileRef = BC01C1F418DF4D300056DB22 /* Portal.m */; };
+		BC01C1F718DF78BB0056DB22 /* nebula.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BC01C1F618DF78BB0056DB22 /* nebula.fsh */; };
+		BC01C1F918DF7E960056DB22 /* fire.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BC01C1F818DF7E960056DB22 /* fire.fsh */; };
+		BC01C1FD18DFB60D0056DB22 /* PointMass.m in Sources */ = {isa = PBXBuildFile; fileRef = BC01C1FC18DFB60D0056DB22 /* PointMass.m */; };
 		BC0AC37B18DA558900EDC64A /* glow.png in Resources */ = {isa = PBXBuildFile; fileRef = BC0AC37A18DA558900EDC64A /* glow.png */; };
 		BC0AC37D18DA714F00EDC64A /* item_powerup_fish.png in Resources */ = {isa = PBXBuildFile; fileRef = BC0AC37C18DA714F00EDC64A /* item_powerup_fish.png */; };
 		BC1B38D518CE2D87004CA208 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC1B38D418CE2D87004CA208 /* Foundation.framework */; };
@@ -39,6 +46,8 @@
 		BC688B1518D950CB0093E33B /* ParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B1418D950CB0093E33B /* ParticleSystem.m */; };
 		BC688B1818D9518A0093E33B /* GameColor.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B1718D9518A0093E33B /* GameColor.m */; };
 		BC688B1B18DA36B40093E33B /* GraphicsLine.m in Sources */ = {isa = PBXBuildFile; fileRef = BC688B1A18DA36B40093E33B /* GraphicsLine.m */; };
+		BCAA521818DFB84A00CAF556 /* Spring.m in Sources */ = {isa = PBXBuildFile; fileRef = BCAA521718DFB84A00CAF556 /* Spring.m */; };
+		BCAA521B18E023B700CAF556 /* GraphicsWarpGridLine.m in Sources */ = {isa = PBXBuildFile; fileRef = BCAA521A18E023B700CAF556 /* GraphicsWarpGridLine.m */; };
 		BCDBAFD418CE928B00058B7E /* Source.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFD318CE928A00058B7E /* Source.m */; };
 		BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFD618CE92E000058B7E /* Rectangle.m */; };
 		BCDBAFDC18CEA0FD00058B7E /* GraphicsRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDBAFDB18CEA0FD00058B7E /* GraphicsRectangle.m */; };
@@ -70,6 +79,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BC01C1EA18DDF4D30056DB22 /* GameGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameGrid.h; sourceTree = "<group>"; };
+		BC01C1EB18DDF4D30056DB22 /* GameGrid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameGrid.m; sourceTree = "<group>"; };
+		BC01C1ED18DDF4FD0056DB22 /* GridWall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridWall.h; sourceTree = "<group>"; };
+		BC01C1EE18DDF4FD0056DB22 /* GridWall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridWall.m; sourceTree = "<group>"; };
+		BC01C1F018DE4E230056DB22 /* Obstacle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Obstacle.h; sourceTree = "<group>"; };
+		BC01C1F118DE4E230056DB22 /* Obstacle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Obstacle.m; sourceTree = "<group>"; };
+		BC01C1F318DF4D300056DB22 /* Portal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Portal.h; sourceTree = "<group>"; };
+		BC01C1F418DF4D300056DB22 /* Portal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Portal.m; sourceTree = "<group>"; };
+		BC01C1F618DF78BB0056DB22 /* nebula.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = nebula.fsh; sourceTree = "<group>"; };
+		BC01C1F818DF7E960056DB22 /* fire.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = fire.fsh; sourceTree = "<group>"; };
+		BC01C1FB18DFB60D0056DB22 /* PointMass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointMass.h; sourceTree = "<group>"; };
+		BC01C1FC18DFB60D0056DB22 /* PointMass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointMass.m; sourceTree = "<group>"; };
 		BC0AC37A18DA558900EDC64A /* glow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glow.png; sourceTree = "<group>"; };
 		BC0AC37C18DA714F00EDC64A /* item_powerup_fish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = item_powerup_fish.png; sourceTree = "<group>"; };
 		BC1B38D118CE2D87004CA208 /* carpus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = carpus.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +138,10 @@
 		BC688B1718D9518A0093E33B /* GameColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameColor.m; sourceTree = "<group>"; };
 		BC688B1918DA36B40093E33B /* GraphicsLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsLine.h; sourceTree = "<group>"; };
 		BC688B1A18DA36B40093E33B /* GraphicsLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsLine.m; sourceTree = "<group>"; };
+		BCAA521618DFB84A00CAF556 /* Spring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spring.h; sourceTree = "<group>"; };
+		BCAA521718DFB84A00CAF556 /* Spring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spring.m; sourceTree = "<group>"; };
+		BCAA521918E023B700CAF556 /* GraphicsWarpGridLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsWarpGridLine.h; sourceTree = "<group>"; };
+		BCAA521A18E023B700CAF556 /* GraphicsWarpGridLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsWarpGridLine.m; sourceTree = "<group>"; };
 		BCDBAFD218CE928A00058B7E /* Source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Source.h; sourceTree = "<group>"; };
 		BCDBAFD318CE928A00058B7E /* Source.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Source.m; sourceTree = "<group>"; };
 		BCDBAFD518CE92E000058B7E /* Rectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Rectangle.h; sourceTree = "<group>"; };
@@ -287,6 +312,12 @@
 				BCDBAFDE18CEE92E00058B7E /* Simulation.m */,
 				BC688B1618D9518A0093E33B /* GameColor.h */,
 				BC688B1718D9518A0093E33B /* GameColor.m */,
+				BC01C1ED18DDF4FD0056DB22 /* GridWall.h */,
+				BC01C1EE18DDF4FD0056DB22 /* GridWall.m */,
+				BC01C1FB18DFB60D0056DB22 /* PointMass.h */,
+				BC01C1FC18DFB60D0056DB22 /* PointMass.m */,
+				BCAA521618DFB84A00CAF556 /* Spring.h */,
+				BCAA521718DFB84A00CAF556 /* Spring.m */,
 			);
 			name = GameBase;
 			sourceTree = "<group>";
@@ -305,6 +336,8 @@
 				BCDBB04418D25B7B00058B7E /* blur.vsh */,
 				BC1B38ED18CE2D87004CA208 /* Shader.fsh */,
 				BC1B38EF18CE2D87004CA208 /* Shader.vsh */,
+				BC01C1F618DF78BB0056DB22 /* nebula.fsh */,
+				BC01C1F818DF7E960056DB22 /* fire.fsh */,
 			);
 			name = GameShaders;
 			sourceTree = "<group>";
@@ -328,6 +361,8 @@
 				BC688B0E18D90E670093E33B /* GraphicsBucket.m */,
 				BC688B1918DA36B40093E33B /* GraphicsLine.h */,
 				BC688B1A18DA36B40093E33B /* GraphicsLine.m */,
+				BCAA521918E023B700CAF556 /* GraphicsWarpGridLine.h */,
+				BCAA521A18E023B700CAF556 /* GraphicsWarpGridLine.m */,
 			);
 			name = GraphicsObjects;
 			path = ..;
@@ -336,6 +371,8 @@
 		BCDBAFD918CEA0BC00058B7E /* GameObjects */ = {
 			isa = PBXGroup;
 			children = (
+				BC01C1EA18DDF4D30056DB22 /* GameGrid.h */,
+				BC01C1EB18DDF4D30056DB22 /* GameGrid.m */,
 				BC1B391418CE367B004CA208 /* Particle.h */,
 				BC1B391518CE367B004CA208 /* Particle.m */,
 				BCDBAFD518CE92E000058B7E /* Rectangle.h */,
@@ -348,6 +385,10 @@
 				BC688B0118D664140093E33B /* Influencer.m */,
 				BC688B0A18D906460093E33B /* Bucket.h */,
 				BC688B0B18D906460093E33B /* Bucket.m */,
+				BC01C1F018DE4E230056DB22 /* Obstacle.h */,
+				BC01C1F118DE4E230056DB22 /* Obstacle.m */,
+				BC01C1F318DF4D300056DB22 /* Portal.h */,
+				BC01C1F418DF4D300056DB22 /* Portal.m */,
 			);
 			name = GameObjects;
 			sourceTree = "<group>";
@@ -431,9 +472,11 @@
 				BCDBB04718D25F3E00058B7E /* vblur.fsh in Resources */,
 				BC0AC37D18DA714F00EDC64A /* item_powerup_fish.png in Resources */,
 				BCDBB04518D25B7B00058B7E /* blur.vsh in Resources */,
+				BC01C1F918DF7E960056DB22 /* fire.fsh in Resources */,
 				BC688B0618D8B9950093E33B /* fastblur.fsh in Resources */,
 				BCDBB03E18D2109700058B7E /* basicTexture.vsh in Resources */,
 				BC0AC37B18DA558900EDC64A /* glow.png in Resources */,
+				BC01C1F718DF78BB0056DB22 /* nebula.fsh in Resources */,
 				BCDBB03C18D2107D00058B7E /* basicTexture.fsh in Resources */,
 				BC688B0418D8B9770093E33B /* fastblur.vsh in Resources */,
 				BCDBB03918D1758E00058B7E /* basic.vsh in Resources */,
@@ -465,21 +508,28 @@
 			files = (
 				BCDBAFDF18CEE92E00058B7E /* Simulation.m in Sources */,
 				BC688B1818D9518A0093E33B /* GameColor.m in Sources */,
+				BCAA521818DFB84A00CAF556 /* Spring.m in Sources */,
 				BCDBAFDC18CEA0FD00058B7E /* GraphicsRectangle.m in Sources */,
 				BCDBB02E18CFC59F00058B7E /* GraphicsTrace.m in Sources */,
 				BC688B0218D664140093E33B /* Influencer.m in Sources */,
+				BC01C1EC18DDF4D30056DB22 /* GameGrid.m in Sources */,
 				BC1B38F318CE2D87004CA208 /* ViewController.m in Sources */,
+				BCAA521B18E023B700CAF556 /* GraphicsWarpGridLine.m in Sources */,
 				BCDBB04118D219A400058B7E /* GraphicsQuad.m in Sources */,
 				BC1B38E918CE2D87004CA208 /* AppDelegate.m in Sources */,
 				BC688B0918D904EE0093E33B /* BackgroundGrid.m in Sources */,
 				BCDBAFD418CE928B00058B7E /* Source.m in Sources */,
 				BCDBAFD718CE92E000058B7E /* Rectangle.m in Sources */,
+				BC01C1FD18DFB60D0056DB22 /* PointMass.m in Sources */,
 				BC688B0F18D90E670093E33B /* GraphicsBucket.m in Sources */,
 				BCDBB04A18D2F26100058B7E /* Sink.m in Sources */,
 				BCDBB04D18D3955500058B7E /* GraphicsCircleOutline.m in Sources */,
+				BC01C1F518DF4D300056DB22 /* Portal.m in Sources */,
 				BCDBB02B18CFA6A200058B7E /* Camera.m in Sources */,
+				BC01C1F218DE4E230056DB22 /* Obstacle.m in Sources */,
 				BC1B391318CE34AC004CA208 /* GraphicsCircle.m in Sources */,
 				BC688B0C18D906460093E33B /* Bucket.m in Sources */,
+				BC01C1EF18DDF4FD0056DB22 /* GridWall.m in Sources */,
 				BC1B391618CE367B004CA208 /* Particle.m in Sources */,
 				BC1B391918CE3744004CA208 /* Vector2D.m in Sources */,
 				BC688B1518D950CB0093E33B /* ParticleSystem.m in Sources */,

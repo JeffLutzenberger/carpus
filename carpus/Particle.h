@@ -47,6 +47,8 @@
 
 - (void) trace;
 
+- (void) resetTrail;
+
 - (void) update:(float)dt;
 
 - (void) recycle:(float)x y:(float)y vx:(float)vx vy:(float)vy color:(ETColor)color;
@@ -58,6 +60,8 @@
 - (Vector2D*) position;
 
 - (BOOL) lineCollision:(Vector2D*)p1 p2:(Vector2D*)p2;
+
+- (Vector2D*) cicleLineCollision:(float)cx cy:(float)cy r:(float)r;
 
 - (BOOL) circleCollision:(Vector2D*)p1 p2:(Vector2D*)p2;
 

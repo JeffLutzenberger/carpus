@@ -19,7 +19,7 @@
 }
 
 - (id) initWithPositionSizeAndForce:(float)x y:(float)y radius:(float)radius force:(float)force {
-    self = [super initWithPositionAndSize:x y:y w:radius h:radius theta:0];
+    self = [super initWithPositionAndSize:x y:y w:radius h:radius theta:0 color:BLUE];
     if (self) {
         self.force = force;
         self.radius = radius;

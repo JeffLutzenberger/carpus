@@ -136,6 +136,9 @@ enum
     [trace2 updateCoordinates:trail];
 }
 
+- (void) resetTrail {
+    
+}
 - (void) update:(float)dt {
     [self move:dt];
     self.age += dt;
@@ -177,7 +180,11 @@ enum
     float dot = 2 * [Vector2D dot:self.vel v2:n];
     self.vel.x -= dot * n.x;
     self.vel.y -= dot * n.y;
-   
+    
+    //self.vel.x -= 2 * self.vel.x * n.x;
+    //self.vel.y -= 2 * self.vel.y * n.y;
+
+
 }
 
 - (void) redirect:(Vector2D*)n {
@@ -193,25 +200,110 @@ enum
 
 - (BOOL) lineCollision:(Vector2D*)p1 p2:(Vector2D*)p2 {
 
-    Vector2D* LineA1 = [[Vector2D alloc] initWithXY:self.prevx y:self.prevy];
-    Vector2D* LineA2 = [[Vector2D alloc] initWithXY:self.x y:self.y];
-    Vector2D* LineB1 = [[Vector2D alloc] initWithXY:p1.x y:p1.y];
-    Vector2D* LineB2 = [[Vector2D alloc] initWithXY:p2.x y:p2.y];
-    float denom = (LineB2.y - LineB1.y) * (LineA2.x - LineA1.x) - (LineB2.x - LineB1.x) * (LineA2.y - LineA1.y);
+    float LineA1x = self.prevx;
+    float LineA1y = self.prevy;
+    float LineA2x = self.x;
+    float LineA2y = self.y;
+    
+    float LineB1x = p1.x;
+    float LineB1y = p1.y;
+    float LineB2x = p2.x;
+    float LineB2y = p2.y;
+    
+    //Vector2D* LineA1 = [[Vector2D alloc] initWithXY:self.prevx y:self.prevy];
+    //Vector2D* LineA2 = [[Vector2D alloc] initWithXY:self.x y:self.y];
+    //Vector2D* LineB1 = [[Vector2D alloc] initWithXY:p1.x y:p1.y];
+    //Vector2D* LineB2 = [[Vector2D alloc] initWithXY:p2.x y:p2.y];
+    float denom = (LineB2y - LineB1y) * (LineA2x - LineA1x) - (LineB2x - LineB1x) * (LineA2y - LineA1y);
     
     if (denom != 0.0) {
-        float ua = ((LineB2.x - LineB1.x) * (LineA1.y - LineB1.y) - (LineB2.y - LineB1.y) * (LineA1.x - LineB1.x)) / denom;
-        float ub = ((LineA2.x - LineA1.x) * (LineA1.y - LineB1.y) - (LineA2.y - LineA1.y) * (LineA1.x - LineB1.x)) / denom;
+        float ua = ((LineB2x - LineB1x) * (LineA1y - LineB1y) - (LineB2y - LineB1y) * (LineA1x - LineB1x)) / denom;
+        float ub = ((LineA2x - LineA1x) * (LineA1y - LineB1y) - (LineA2y - LineA1y) * (LineA1x - LineB1x)) / denom;
         if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
             return false;
         }
-        self.x = LineA1.x + ua * (LineA2.x - LineA1.x);
-        self.y = LineA1.y + ua * (LineA2.y - LineA1.y);
+        self.x = LineA1x + ua * (LineA2x - LineA1x);
+        self.y = LineA1y + ua * (LineA2y - LineA1y);
         self.prevx = self.x;
         self.prevy = self.y;
+        Tracer* t = [trail objectAtIndex:0];
+        t.x = self.x;
+        t.y = self.y;
         return true;
     }
     return false;
+
+}
+
+//http://stackoverflow.com/questions/1073336/circle-line-collision-detection
+
+- (Vector2D*) cicleLineCollision:(float)cx cy:(float)cy r:(float)r {
+    
+    Vector2D* d = [[Vector2D alloc] initWithXY:self.x - self.prevx y:self.y - self.prevy];
+    Vector2D* f = [[Vector2D alloc] initWithXY:self.prevx - cx y:self.prevy - cy];
+    float a = [Vector2D dot:d v2:d];
+    float b = 2 * [Vector2D dot:f v2:d];
+    float c = [Vector2D dot:f v2:f] - r * r;
+    
+    float discriminant = b * b - 4 * a * c;
+    if( discriminant < 0 )
+    {
+        // no intersection
+        return nil;
+    }
+    else
+    {
+        // ray didn't totally miss sphere,
+        // so there is a solution to
+        // the equation.
+        
+        discriminant = sqrt( discriminant );
+        
+        // either solution may be on or off the ray so need to test both
+        // t1 is always the smaller value, because BOTH discriminant and
+        // a are nonnegative.
+        float t1 = (-b - discriminant)/(2*a);
+        //float t2 = (-b + discriminant)/(2*a);
+        
+        // 3x HIT cases:
+        //          -o->             --|-->  |            |  --|->
+        // Impale(t1 hit,t2 hit), Poke(t1 hit,t2>1), ExitWound(t1<0, t2 hit),
+        
+        // 3x MISS cases:
+        //       ->  o                     o ->              | -> |
+        // FallShort (t1>1,t2>1), Past (t1<0,t2<0), CompletelyInside(t1<0, t2>1)
+        
+        if( t1 >= 0 && t1 <= 1 )
+        {
+            // t1 is the intersection, and it's closer than t2
+            // (since t1 uses -b - discriminant)
+            // Impale, Poke
+    
+            Vector2D* intersection = [[Vector2D alloc] initWithXY:self.prevx + d.x * t1 y:self.prevy + d.y * t1];
+            Vector2D* n = [Vector2D normalize:[[Vector2D alloc] initWithXY:intersection.x - cx y:intersection.y - cy]];
+            self.x = intersection.x;
+            self.y = intersection.y;
+            self.prevx = self.x;
+            self.prevy = self.y;
+            Tracer* t = [trail objectAtIndex:0];
+            t.x = self.x;
+            t.y = self.y;
+            return n;
+        }
+        
+        /*// here t1 didn't intersect so we are either started
+        // inside the sphere or completely past it
+        if( t2 >= 0 && t2 <= 1 )
+        {
+            // ExitWound
+            return true ;
+        }
+        
+        // no intn: FallShort, Past, CompletelyInside
+        return false ;
+        */
+    }
+    return nil;
 }
 
 - (BOOL) circleCollision:(Vector2D*)p1 p2:(Vector2D*)p2 {
@@ -224,11 +316,8 @@ enum
 
 - (void) draw:(Camera*)camera {
     
-    [camera translateObject:0 y:0 z:-1];
+    [camera translateObject:0 y:0 z:-1.0];
     [trace1 draw];
-    
-    //[camera translateObject:0 y:0 z:-0.5];
-    //[trace2 draw];
     
     [camera translateObject:self.x y:self.y z:-0.5];
     [circle1 draw];

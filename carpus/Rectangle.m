@@ -11,13 +11,14 @@
 @implementation Rectangle {
 }
 
-- (id) initWithPositionAndSize:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta {
+- (id) initWithPositionAndSize:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta color:(ETColor)color {
     self = [super init];
     if (self) {
         self.x = x;
         self.y = y;
         self.w = w;
         self.h = h;
+        self.color = color;
         self.theta = theta;
         self.enabled = true;
         self.show = true;
@@ -94,7 +95,7 @@
             [p circleCollision:self.p4 p2:self.p1]);
 }
 
-- (void) draw {
+- (void) draw:(Camera*)camera {
     //
     return;
 }

@@ -10,6 +10,8 @@
 #import "Camera.h"
 #import "Simulation.h"
 #import "Bucket.h"
+#import "Obstacle.h"
+#import "Portal.h"
 #import "Source.h"
 #import "Sink.h"
 #import "GraphicsQuad.h"
@@ -27,6 +29,8 @@
     
     GraphicsQuad* quad;
     
+    GraphicsQuad* fragQuad;
+    
     ParticleSystem* particleSystem;
 }
 
@@ -39,6 +43,8 @@
 @end
 
 @implementation ViewController {
+    NSDate *startTime;
+    
     NSMutableArray *gameTouches;
     
     //UITouch* secondTouch;
@@ -101,6 +107,8 @@
 
 - (void)setupGL
 {
+    startTime = [NSDate date];
+    
     [EAGLContext setCurrentContext:self.context];
     
     floorTexture = [self setupTexture:@"tile_floor.png"];
@@ -119,6 +127,8 @@
     //NOTE: opengl context must exist before we can add objects...should add a "setupGL" method to
     // the simulation class to decouple object loading from rendering
     
+    simulation.backgroundGrid = [[BackgroundGrid alloc] initWithSizeAndSpacing:768.0 h:1024.0 gridx:768.0 / 32.0 gridy:1024.0 / 32.0];
+    
     Source* source = [[Source alloc] initWithPositionSizeAndSpeed:100 y:100 w:25 h:25 theta:0 speed:2];
     [source setSourceColor:GREEN];
     
@@ -132,14 +142,31 @@
     Sink* sink2 = [[Sink alloc] initWithPositionSizeForceAndSpeed:300 y:400 radius:15 force:5 speed:5];
     [sink2 setSinkColor:RED outColor:BLUE];
     //sink2.isSource = false;
-    
     [simulation.sinks addObject:sink2];
+    
+    Sink* sink3 = [[Sink alloc] initWithPositionSizeForceAndSpeed:600 y:600 radius:15 force:5 speed:5];
+    [sink3 setSinkColor:BLUE outColor:GREEN];
+    //sink3.isSource = false;
+    [simulation.sinks addObject:sink3];
+    
+    Obstacle* obstacle1 = [[Obstacle alloc] initWithPositionAndSize:500 y:300 w:300 h:25 theta:-M_2_PI color:ORANGE];
+    [simulation.obstacles addObject:obstacle1];
+    
+    Portal* portal1 = [[Portal alloc] initWithPositionAndSize:100 y:200 w:30 h:25 theta:0 color:GREEN];
+    [simulation.portals addObject:portal1];
+    
+    simulation.gameGrid = [[GameGrid alloc] initWithWidthHeightAndGridSpacing:768.0 h:1024.0 gridx:768.0 gridy:1024.0];
     
     //our fullscreen quad for the fbo texture
     quad = [[GraphicsQuad alloc] initWithPoints:[[Vector2D alloc] initWithXY:0 y:0]
                                              p2:[[Vector2D alloc] initWithXY:w y:0]
                                              p3:[[Vector2D alloc] initWithXY:w y:h]
                                              p4:[[Vector2D alloc] initWithXY:0 y:h]];
+    
+    fragQuad = [[GraphicsQuad alloc] initWithPoints:[[Vector2D alloc] initWithXY:0 y:0]
+                                                 p2:[[Vector2D alloc] initWithXY:w y:0]
+                                                 p3:[[Vector2D alloc] initWithXY:w y:h]
+                                                 p4:[[Vector2D alloc] initWithXY:0 y:h]];
     
     //particleSystem = [[ParticleSystem alloc] initWithCoordsAndCapacity:400 y:400 capacity:200];
     
@@ -176,81 +203,37 @@
 {
     bool bShowBlur = true;
     bool fastBlur = true;
-    if (bShowBlur) {
-        
+    bool fireShade = false;
+    if (fireShade) {
         [camera startRenderFBO1];
         
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE); //this looks really nice for untextured entities
         glDisable(GL_DEPTH_TEST); //we want everything to accumulate
-
-        glUseProgram([camera basicShader]);
+        
+        //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glUseProgram([camera basicShader]);
+        glUseProgram([camera fireShader]);
+        GLint iGlobalTime = glGetUniformLocation([camera fireShader], "iGlobalTime");
+        float time = (float)[startTime timeIntervalSinceNow];
+        glUniform1f(iGlobalTime, -time);
         [camera translateObject:0 y:0 z:0];
-        [simulation draw:camera];
+        [fragQuad draw];
+        //[camera translateObject:0 y:0 z:0];
+        //[simulation draw:camera];
         
         [camera endRenderFBO];
-    
-        //**** fast blur ****
-        if (fastBlur) {
-            
-            [camera startRenderFBO2];
-            
-            glUseProgram([camera fastBlurShader]);
-            GLint verticalPass = glGetUniformLocation([camera fastBlurShader], "verticalPass");
-            glUniform1i(verticalPass, 0);
-            [camera translateObject:0 y:0 z:0];
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, [camera fbo1Texture]);
-            [quad draw];
-            
-            [camera endRenderFBO];
-            
-            [camera startRenderFBO1];
-            
-            glUseProgram([camera fastBlurShader]);
-            glUniform1i(verticalPass, 1);
-            [camera translateObject:0 y:0 z:0];
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, [camera fbo2Texture]);
-            [quad draw];
-            
-            [camera endRenderFBO];
-            
-        } else {
         
-            //**** slower blur ****
-            [camera startRenderFBO2];
-            
-            glUseProgram([camera vBlurShader]);
-            [camera translateObject:0 y:0 z:0.0];
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, [camera fbo1Texture]);
-            [quad draw];
-        
-            [camera endRenderFBO];
-            
-            [camera startRenderFBO1];
-            
-            glUseProgram([camera hBlurShader]);
-            [camera translateObject:0 y:0 z:0.0];
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, [camera fbo2Texture]);
-            [quad draw];
-            
-            [camera endRenderFBO];
-        }
-    
         [((GLKView *) self.view) bindDrawable];
-    }
-    
-    glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE); //this looks really nice for untextured entities
-    glDisable(GL_DEPTH_TEST); //we want everything to accumulate
-    
-    if (bShowBlur) {
+        
+        glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE); //this looks really nice for untextured entities
+        glDisable(GL_DEPTH_TEST); //we want everything to accumulate
+
         glUseProgram([camera textureShader]);
         [camera translateObject:0 y:0 z:0.0];
         glActiveTexture(GL_TEXTURE0);
@@ -258,15 +241,101 @@
         //glBindTexture(GL_TEXTURE_2D, floorTexture);
         [quad draw];
         
-        glUseProgram([camera basicShader]);
-        [camera translateObject:0 y:0 z:0.0];
-        [simulation draw:camera];
-        
     } else {
-        glUseProgram([camera basicShader]);
-        [camera translateObject:0 y:0 z:-0.1];
-        [particleSystem draw:camera];
-        [simulation draw:camera];
+    
+        if (bShowBlur) {
+            
+            [camera startRenderFBO1];
+            
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE); //this looks really nice for untextured entities
+            glDisable(GL_DEPTH_TEST); //we want everything to accumulate
+
+            glUseProgram([camera basicShader]);
+            [camera translateObject:0 y:0 z:0];
+            [simulation draw:camera];
+            
+            [camera endRenderFBO];
+        
+            //**** fast blur ****
+            if (fastBlur) {
+                
+                [camera startRenderFBO2];
+                
+                //glUseProgram([camera fireShader]);
+                glUseProgram([camera fastBlurShader]);
+                GLint verticalPass = glGetUniformLocation([camera fastBlurShader], "verticalPass");
+                glUniform1i(verticalPass, 0);
+                [camera translateObject:0 y:0 z:0];
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, [camera fbo1Texture]);
+                [quad draw];
+                
+                [camera endRenderFBO];
+                
+                [camera startRenderFBO1];
+                
+                glUseProgram([camera fastBlurShader]);
+                glUniform1i(verticalPass, 1);
+                [camera translateObject:0 y:0 z:0];
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, [camera fbo2Texture]);
+                [quad draw];
+                
+                [camera endRenderFBO];
+                
+            } else {
+            
+                //**** slower blur ****
+                [camera startRenderFBO2];
+                
+                glUseProgram([camera vBlurShader]);
+                [camera translateObject:0 y:0 z:0.0];
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, [camera fbo1Texture]);
+                [quad draw];
+            
+                [camera endRenderFBO];
+                
+                [camera startRenderFBO1];
+                
+                glUseProgram([camera hBlurShader]);
+                [camera translateObject:0 y:0 z:0.0];
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, [camera fbo2Texture]);
+                [quad draw];
+                
+                [camera endRenderFBO];
+            }
+        
+            [((GLKView *) self.view) bindDrawable];
+        }
+        
+        glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE); //this looks really nice for untextured entities
+        glDisable(GL_DEPTH_TEST); //we want everything to accumulate
+        
+        if (bShowBlur) {
+            glUseProgram([camera textureShader]);
+            [camera translateObject:0 y:0 z:0.0];
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, [camera fbo1Texture]);
+            //glBindTexture(GL_TEXTURE_2D, floorTexture);
+            [quad draw];
+            
+            glUseProgram([camera basicShader]);
+            [camera translateObject:0 y:0 z:0.0];
+            [simulation draw:camera];
+            
+        } else {
+            glUseProgram([camera basicShader]);
+            [camera translateObject:0 y:0 z:-0.1];
+            [particleSystem draw:camera];
+            [simulation draw:camera];
+        }
     }
 }
 

@@ -15,7 +15,7 @@
 }
 
 - (id)initWithPositionAndSize:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta {
-    self = [super initWithPositionAndSize:x y:y w:w h:h theta:theta];
+    self = [super initWithPositionAndSize:x y:y w:w h:h theta:theta color:GREEN];
     if (self) {
         self.caught = 0;
         self.maxFill = 0;

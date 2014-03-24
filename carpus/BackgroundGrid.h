@@ -8,28 +8,31 @@
 
 #import <Foundation/Foundation.h>
 #import "Vector2D.h"
-
-@interface PointMass : NSObject
-
-@property float x;
-@property float y;
-@property Vector2D* vel;
-@property float invMass;
-@property float accel;
-@property float damping;
-
-@end
-
-@interface Spring : NSObject
-
-@property Vector2D* end1;
-@property Vector2D* end2;
-@property float stiffness;
-@property float damping;
-@property float targetLength;
-
-@end
+#import "PointMass.h"
+#import "Spring.h"
+#import "Camera.h"
 
 @interface BackgroundGrid : NSObject
+
+@property float w;
+@property float h;
+
+@property (nonatomic) NSMutableArray* springs;
+@property (nonatomic) NSMutableArray* points;
+@property (nonatomic) NSMutableArray* fixedPoints;
+
+@property float gridx;
+@property float gridy;
+@property (nonatomic) NSMutableArray* lines;
+@property (nonatomic) NSMutableArray* rows;
+@property (nonatomic) NSMutableArray* cols;
+
+- (id) initWithSizeAndSpacing:(float)w h:(float)h gridx:(float)gridx gridy:(float)gridy;
+
+- (void) applyExplosiveForce:(float)x y:(float)y force:(float)force radius:(float)radius;
+
+- (void) update:(float)dt;
+
+- (void) draw:(Camera*)camera;
 
 @end

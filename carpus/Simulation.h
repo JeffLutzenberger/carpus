@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "Camera.h"
+#import "GameGrid.h"
+#import "BackgroundGrid.h"
 
 @interface Simulation : NSObject
 
@@ -17,10 +19,14 @@
 @property int caught;
 @property NSMutableArray* buckets;
 @property NSMutableArray* influencers;
+@property NSMutableArray* obstacles;
+@property NSMutableArray* portals;
 @property NSMutableArray* sources;
 @property NSMutableArray* sinks;
 @property NSMutableArray* touches;
 @property NSMutableArray* touchObjects;
+@property GameGrid* gameGrid;
+@property BackgroundGrid* backgroundGrid;
 
 - (void) touchBegan:(UITouch*)touch;
 

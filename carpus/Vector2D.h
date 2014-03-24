@@ -15,6 +15,8 @@
 
 - (id) initWithXY:(float)x y:(float)y;
 
+- (id) initWithVector2D:(Vector2D*)v;
+
 + (float) squaredLength:(Vector2D*)v;
 
 + (float) length:(Vector2D*)v;

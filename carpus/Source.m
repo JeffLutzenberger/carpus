@@ -20,7 +20,7 @@
 }
 
 - (id) initWithPositionSizeAndSpeed:(float)x y:(float)y w:(float)w h:(float)h theta:(float)theta speed:(float)speed {
-    self = [super initWithPositionAndSize:x y:y w:w h:h theta:theta];
+    self = [super initWithPositionAndSize:x y:y w:w h:h theta:theta color:GREEN];
     if (self) {
         self.speed = speed;
         self.nparticles = 50;

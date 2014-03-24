@@ -19,6 +19,10 @@
     return self;
 }
 
+- (id) initWithVector2D:(Vector2D*)v {
+    return [self initWithXY:v.x y:v.y];
+}
+
 + (float) squaredLength: (Vector2D*)v {
     return (v.x * v.x) + (v.y * v.y);
 }

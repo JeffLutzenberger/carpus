@@ -106,10 +106,6 @@
         glBindVertexArrayOES(_vertexArray);
     }
 
-    //glGenVertexArraysOES(1, &_vertexArray);
-    //glBindVertexArrayOES(_vertexArray);
-    
-    //glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(buffer), buffer, GL_STATIC_DRAW);
     
@@ -171,9 +167,6 @@
 
 }
 - (void) draw {
-    //glColor4f(0.5f,0.5f,1.0f,1.0f);
-    //glEnable(GL_LINE_SMOOTH);
-    //glLineWidth(5);
     glBindVertexArrayOES(_vertexArray);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, vertexCount);
 }

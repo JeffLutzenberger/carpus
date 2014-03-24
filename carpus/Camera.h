@@ -23,6 +23,7 @@
 @property GLuint hBlurShader;
 @property GLuint vBlurShader;
 @property GLuint fastBlurShader;
+@property GLuint fireShader;
 
 @property GLuint fbo1Texture;
 @property GLuint fbo2Texture;

@@ -44,7 +44,7 @@
         self.force = force;
         self.radius = radius;
         self.influenceRadius = radius * 5;
-        self.influenceEquation = 1;
+        self.influenceEquation = 0;
         self.localizeInfluence = false;
         self.isSource = true;
         self.maxFill = 100;

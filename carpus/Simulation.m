@@ -70,6 +70,7 @@ typedef enum {
     //touch event can be either a grabber or an interactable object...
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
     Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
+    
     //is this a grabber
     for(Sink* s in self.sinks) {
         if ([s hitGrabber:p]) {

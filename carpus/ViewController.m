@@ -32,6 +32,7 @@
     GraphicsQuad* fragQuad;
     
     ParticleSystem* particleSystem;
+
 }
 
 @property (strong, nonatomic) EAGLContext *context;
@@ -71,6 +72,21 @@
  
     //load our simulation
     simulation = [[Simulation alloc] init];
+    
+    //gesture recognizers
+    //swipe right
+    UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeHandle:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    [swipeRecognizer setNumberOfTouchesRequired:1];
+    //add the your gestureRecognizer , where to detect the touch..
+    [view addGestureRecognizer:swipeRecognizer];
+    
+    recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
+    recognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    [recognizer setNumberOfTouchesRequired:1];
+    //add the your gestureRecognizer , where to detect the touch..
+    [view addGestureRecognizer:recognizer];
+    
     
     [self setupGL];
 }
@@ -375,6 +391,10 @@
     
     free(spriteData);        
     return texName;    
+}
+
+- (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer {
+    NSLog(@"rightSwipeHandle");
 }
 
 -(void)handlePinchGesture:(UIPinchGestureRecognizer*)recognizer {

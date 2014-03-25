@@ -14,8 +14,13 @@
 #import "Sink.h"
 #import "Bucket.h"
 
+typedef enum {
+    TOUCH_ADDS_INFLUENCER,
+    TOUCH_IS_INFLUENCER
+} ETTouchScheme;
 
 @implementation Simulation {
+    ETTouchScheme touchScheme;
 }
 
 - (id) init {
@@ -33,6 +38,7 @@
         self.sinks = [[NSMutableArray alloc] init];
         self.touches = [[NSMutableArray alloc] init];
         self.touchObjects = [[NSMutableArray alloc] init];
+        touchScheme = TOUCH_ADDS_INFLUENCER;
         //self.backgroundGrid = [[BackgroundGrid alloc] initWithSizeAndSpacing:768.0 h:1024.0 gridx:768.0 / 32.0 gridy:1024.0 / 32.0];
     }
     return self;
@@ -40,7 +46,7 @@
 
 - (void) update:(float)dt {
 
-    [self.backgroundGrid update:dt];
+    //[self.backgroundGrid update:dt];
     
     for (Source* s in self.sources) {
         [s update:dt];
@@ -50,9 +56,12 @@
         [s update:dt];
         //f = -o.force;
         //f = f < 0 ? f * 0.25 : f;
-        [self.backgroundGrid applyExplosiveForce:s.x y:s.y force:1.0 radius:s.radius * 10];
-        //self.backgroundGrid.applyExplosiveForce(1.0 * 5, new Vector(o.x, o.y), o.radius * 10);
+        //[self.backgroundGrid applyExplosiveForce:s.x y:s.y force:1.0 radius:s.radius * 10];
     }
+    
+    //for (Influencer* i in self.influencers) {
+    //    //[self.backgroundGrid applyExplosiveForce:i.x y:i.y force:1.0 radius:i.radius * 10];
+    //}
 
     [self moveParticles:dt];
 }
@@ -68,26 +77,62 @@
             return;
         }
     }
-    Influencer* influencer = nil;
-    [self.touches addObject:touch];
-    influencer = [[Influencer alloc] initWithPositionSizeAndForce:pos.x y:pos.y radius:15 force:5];
-    influencer.enabled = true;
-    [self.influencers addObject:influencer];
+    
+    if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+        //check to see if we're over an influencr
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if([influencer influencerHit:p]) {
+                return;
+            }
+        }
+        //add a new influencer
+        Influencer* influencer = [[Influencer alloc] initWithPositionSizeAndForce:pos.x y:pos.y radius:15 force:5];
+        influencer.enabled = true;
+        //[self.touches addObject:touch];
+        [self.influencers addObject:influencer];
+        return;
+
+    } else if (touchScheme == TOUCH_IS_INFLUENCER) {
+        Influencer* influencer = nil;
+        [self.touches addObject:touch];
+        influencer = [[Influencer alloc] initWithPositionSizeAndForce:pos.x y:pos.y radius:15 force:5];
+        influencer.enabled = true;
+        [self.influencers addObject:influencer];
+        return;
+    }
+    
     return;
 }
 
 - (void) touchEnded:(UITouch*)touch {
-    NSUInteger index = [self.touches indexOfObject:touch];
-    if (index != NSNotFound) {
-        id obj = [self.influencers objectAtIndex:index];
-        if (obj) {
-            [self.touches removeObjectAtIndex:index];
-            [self.influencers removeObjectAtIndex:index];
-            return;
-        }
-    }
+    
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
     Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
+    
+    if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+        //delete the influencer if this was a double tap
+        if (touch.tapCount >= 2) {
+            for(Influencer* influencer in self.influencers) {
+                p.radius = influencer.influenceRadius;
+                if([influencer influencerHit:p]) {
+                    [self.influencers removeObject:influencer];
+                    return;
+                }
+            }
+        }
+    
+    } else if (touchScheme == TOUCH_IS_INFLUENCER) {
+        NSUInteger index = [self.touches indexOfObject:touch];
+        if (index != NSNotFound) {
+            id obj = [self.influencers objectAtIndex:index];
+            if (obj) {
+                [self.touches removeObjectAtIndex:index];
+                [self.influencers removeObjectAtIndex:index];
+                return;
+            }
+        }
+    }
     //is this a grabber
     for(Sink* s in self.sinks) {
         if ([s hitGrabber:p]) {
@@ -100,16 +145,31 @@
 - (void) touchMoved:(UITouch*)touch {
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
     Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
-    NSUInteger index = [self.touches indexOfObject:touch];
-    if (index != NSNotFound) {
-        id obj = [self.influencers objectAtIndex:index];
-        if (obj && [obj class] == [Influencer class]) {
-            Influencer* influencer = (Influencer*)obj;
-            influencer.x = pos.x;
-            influencer.y = pos.y;
-            return;
+    
+    if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+        //check to see if we're over an influencer
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if([influencer influencerHit:p]) {
+                influencer.x = pos.x;
+                influencer.y = pos.y;
+                return;
+            }
+        }
+    
+    } else if (touchScheme == TOUCH_IS_INFLUENCER) {
+        NSUInteger index = [self.touches indexOfObject:touch];
+        if (index != NSNotFound) {
+            id obj = [self.influencers objectAtIndex:index];
+            if (obj && [obj class] == [Influencer class]) {
+                Influencer* influencer = (Influencer*)obj;
+                influencer.x = pos.x;
+                influencer.y = pos.y;
+                return;
+            }
         }
     }
+    
     //is this a grabber
     for(Sink* s in self.sinks) {
         if ([s hitGrabber:p]) {
@@ -302,7 +362,7 @@
     
     [self.gameGrid draw:camera];
     
-    [self.backgroundGrid draw:camera];
+    //[self.backgroundGrid draw:camera];
     
 }
 

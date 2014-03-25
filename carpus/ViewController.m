@@ -127,33 +127,36 @@
     //NOTE: opengl context must exist before we can add objects...should add a "setupGL" method to
     // the simulation class to decouple object loading from rendering
     
-    simulation.backgroundGrid = [[BackgroundGrid alloc] initWithSizeAndSpacing:768.0 h:1024.0 gridx:768.0 / 32.0 gridy:1024.0 / 32.0];
+    simulation.backgroundGrid = [[BackgroundGrid alloc] initWithSizeAndSpacing:768.0 h:1024.0 gridx:768.0 / 16.0 gridy:1024.0 / 16.0];
     
     Source* source = [[Source alloc] initWithPositionSizeAndSpeed:100 y:100 w:25 h:25 theta:0 speed:2];
     [source setSourceColor:GREEN];
     
     [simulation.sources addObject:source];
     
-    Sink* sink1 = [[Sink alloc] initWithPositionSizeForceAndSpeed:400 y:800 radius:15 force:5 speed:5];
-    [sink1 setSinkColor:GREEN outColor:RED];
+    Sink* sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:400 y:800 radius:15 force:5 speed:5];
+    [sink setSinkColor:GREEN outColor:RED];
     
-    [simulation.sinks addObject:sink1];
+    [simulation.sinks addObject:sink];
     
-    Sink* sink2 = [[Sink alloc] initWithPositionSizeForceAndSpeed:300 y:400 radius:15 force:5 speed:5];
-    [sink2 setSinkColor:RED outColor:BLUE];
+    sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:300 y:400 radius:15 force:5 speed:5];
+    [sink setSinkColor:RED outColor:BLUE];
     //sink2.isSource = false;
-    [simulation.sinks addObject:sink2];
+    [simulation.sinks addObject:sink];
     
-    Sink* sink3 = [[Sink alloc] initWithPositionSizeForceAndSpeed:600 y:600 radius:15 force:5 speed:5];
-    [sink3 setSinkColor:BLUE outColor:GREEN];
+    sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:600 y:600 radius:15 force:5 speed:5];
+    [sink setSinkColor:BLUE outColor:GREEN];
     //sink3.isSource = false;
-    [simulation.sinks addObject:sink3];
+    [simulation.sinks addObject:sink];
     
-    Obstacle* obstacle1 = [[Obstacle alloc] initWithPositionAndSize:500 y:300 w:300 h:25 theta:-M_2_PI color:ORANGE];
-    [simulation.obstacles addObject:obstacle1];
+    Obstacle* obstacle = [[Obstacle alloc] initWithPositionAndSize:500 y:300 w:300 h:25 theta:-M_2_PI color:ORANGE];
+    [simulation.obstacles addObject:obstacle];
     
-    Portal* portal1 = [[Portal alloc] initWithPositionAndSize:100 y:200 w:30 h:25 theta:0 color:GREEN];
-    [simulation.portals addObject:portal1];
+    obstacle = [[Obstacle alloc] initWithPositionAndSize:350 y:150 w:300 h:25 theta:-M_PI * 0.5 color:ORANGE];
+    [simulation.obstacles addObject:obstacle];
+    
+    Portal* portal = [[Portal alloc] initWithPositionAndSize:100 y:200 w:30 h:25 theta:0 color:GREEN];
+    [simulation.portals addObject:portal];
     
     simulation.gameGrid = [[GameGrid alloc] initWithWidthHeightAndGridSpacing:768.0 h:1024.0 gridx:768.0 gridy:1024.0];
     
@@ -372,6 +375,10 @@
     
     free(spriteData);        
     return texName;    
+}
+
+-(void)handlePinchGesture:(UIPinchGestureRecognizer*)recognizer {
+    NSLog(@"pinched...");
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

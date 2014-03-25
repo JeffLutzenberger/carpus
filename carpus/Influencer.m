@@ -24,7 +24,7 @@
         self.force = force;
         self.radius = radius;
         self.influenceRadius = radius * 5;
-        self.influenceEquation = 0;
+        self.influenceEquation = 1;
         self.localizeInfluence = false;
         self.deflectParticles = false;
         self.color = BLUE;//[[GameColor alloc] initWithRGBA:0.0 g:0.0 b:1.0 a:1.0];
@@ -62,14 +62,11 @@
     float res = 0;
     if (self.influenceEquation == 0) {
         // 1/r^2
-        res = self.force * 100 / r2;
+        res = self.force * 100 / (r2 + 10 * 10);
     } else if (self.influenceEquation == 1) {
         // 1/r smooths out influence
-        res = self.force / sqrt(r2);
+        res = self.force / sqrt(r2 + 10 * 10);
     } else if (self.influenceEquation == 2) {
-        res = maxSpeed - sqrt(r2) * maxSpeed / 1000;
-        res = MAX(0, res);
-    } else if (self.influenceEquation == 3) {
         if (r2 < self.influenceRadius * self.influenceRadius) {
             res = maxSpeed;
         }
@@ -81,6 +78,14 @@
     v2.y *= res;
     p.vel.x += v2.x;
     p.vel.y += v2.y;
+};
+
+- (BOOL) influencerHit:(Particle*)p {
+    Vector2D* v2 = [[Vector2D alloc] initWithXY:self.x - p.x y:self.y - p.y];
+    float d2 = [Vector2D squaredLength:v2];
+    BOOL hit = NO;
+    hit = (d2 <= 3 * self.radius * self.radius);
+    return hit;
 };
 
 - (Vector2D*) bounce:(Particle*)p {

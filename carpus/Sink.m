@@ -23,6 +23,7 @@
     GraphicsCircle* grabberCircle1;
     GraphicsCircleOutline* grabberCircle2;
     GraphicsCircle* grabberCircle3;
+    GraphicsCircleOutline* nozzelCircle;
     float grabberFadeDt;
     float grabberFadeLength;
     float pulseDt;
@@ -43,7 +44,7 @@
         self.force = force;
         self.radius = radius;
         self.influenceRadius = radius * 5;
-        self.influenceEquation = 0;
+        self.influenceEquation = 1;
         self.localizeInfluence = false;
         self.isSource = true;
         self.maxFill = 100;
@@ -116,12 +117,21 @@
         float grabberColor3[] = {cout[0], cout[1], cout[2], 0.25};
         float grabberColor4[] = {1.0, 1.0, 1.0, 0.7};
         float grabberColor5[] = {1.0, 1.0, 1.0, 0.0};
+        float grabberColor6[] = {cout[0], cout[1], cout[2], 1.0};
         
         grabberCircle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius innerColor:grabberColor1 outerColor:grabberColor2];
         
         grabberCircle2 = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0 y:0 radius:_radius lineWidth:_radius innerColor:grabberColor3 outerColor:grabberColor2];
         
         grabberCircle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius * 0.5 innerColor:grabberColor4 outerColor:grabberColor5];
+        
+        nozzelCircle = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0
+                                                                                  y:0
+                                                                             radius:_radius * 0.8
+                                                                          lineWidth:1
+                                                                         innerColor:grabberColor6
+                                                                         outerColor:grabberColor6];
+        
     }
     return self;
 }
@@ -197,20 +207,16 @@
     float res = 0;
     if (self.influenceEquation == 0) {
         // 1/r^2
-        res = self.force * 100 / r2;
+        res = self.force * 100 / (r2 + 10 * 10);
     } else if (self.influenceEquation == 1) {
         // 1/r smooths out influence
-        res = self.force / sqrt(r2);
+        res = self.force / sqrt(r2 + 10 * 10);
     } else if (self.influenceEquation == 2) {
-        res = maxSpeed - sqrt(r2) * maxSpeed / 1000;
-        res = MAX(0, res);
-    } else if (self.influenceEquation == 3) {
         if (r2 < self.influenceRadius * self.influenceRadius) {
             res = maxSpeed;
         }
     }
     res *= dt * 0.08;
-    res = MIN(res, maxSpeed);
     v2 =[Vector2D normalize:v2];
     v2.x *= res;
     v2.y *= res;
@@ -222,7 +228,7 @@
     Vector2D* v2 = [[Vector2D alloc] initWithXY:self.x - p.x y:self.y - p.y];
     float d2 = [Vector2D squaredLength:v2];
     BOOL hit = NO;
-    hit = (d2 <= 2 * self.radius * self.radius);
+    hit = (d2 <= 3 * self.radius * self.radius);
     if (hit && ![self checkIsFull]) {
         self.caught += 1;
         //[particleSystem burst:self.x y:self.y burstRadius:50 speed:0.5 accel:-0.0009 nparticles:10 lifetime:500];
@@ -344,7 +350,9 @@
         [grabberCircle2 draw];
         [camera translateObject:self.grabber.x y:self.grabber.y z:-0.20];
         [grabberCircle3 draw];
-    
+        [camera translateObject:self.grabber.x y:self.grabber.y z:-0.05];
+        [nozzelCircle draw];
+        
         //draw a pulsing outer ring to indicate this sink has been locked in
         //radius = this.radius;
         //alpha = this.grabberFadeDt / this.grabberFadeLength;

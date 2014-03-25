@@ -54,11 +54,12 @@
         glGenVertexArraysOES(1, &vertexArray);
         glBindVertexArrayOES(vertexArray);
         glGenBuffers(1, &vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     } else {
-        glBindVertexArrayOES(vertexArray);
+        //glBindVertexArrayOES(vertexArray);
     }
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, /*sizeof(_buffer)*/ sizeof(float) * _pointCount * 7, _buffer, GL_STATIC_DRAW);
+    //glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _pointCount * 7, _buffer, GL_STATIC_DRAW);
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 28, BUFFER_OFFSET(0));
@@ -73,6 +74,17 @@
     glLineWidth(_lineWidth);
     glBindVertexArrayOES(vertexArray);
     glDrawArrays(GL_LINE_STRIP, 0, _pointCount);
+    
+    /* just use vertex array...instead of buffers */
+    /*
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 28, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(GLKVertexAttribColor);
+    glVertexAttribPointer(GLKVertexAttribColor, 4, GL_FLOAT, GL_FALSE, 28, BUFFER_OFFSET(12));
+    
+    // then just flush your draw command
+    glDrawArrays(GL_LINE_STRIP, 0, _pointCount);
+    */
 }
 
 @end

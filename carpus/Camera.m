@@ -351,7 +351,7 @@ enum
 - (void)startRenderFBO:(GLuint)fboHandle
 {
     glBindTexture(GL_TEXTURE_2D, 0);
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
     glBindFramebuffer(GL_FRAMEBUFFER, fboHandle);
     
     glViewport(0,0, fboWidth, fboHeight);

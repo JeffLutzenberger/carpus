@@ -93,34 +93,14 @@
     for (PointMass* p in _points) {
         [p update:dt];
     }
-}
-
-- (void) applyExplosiveForce:(float)x y:(float)y force:(float)force radius:(float)radius {
-    for (PointMass* mass in _points) {
-        float dist2 = [Vector2D squaredLength:[[Vector2D alloc] initWithXY:x - mass.x y:y - mass.y]];
-        if (dist2 < radius * radius) {
-            Vector2D* f = [[Vector2D alloc] initWithXY:mass.x - x y:mass.y - y];
-            f.x *= 100 * force / (10000 + dist2);
-            f.y *= 100 * force / (10000 + dist2);
-            [mass applyForce:f.x fy:f.y];
-            [mass increaseDamping:0.6];
-        }
-    }
-}
-
-- (void) draw:(Camera*)camera {
-    //float width = [_points count];
-    //float height = [_points count];
     PointMass* p;
-    //PointMass* pright;
-    //PointMass* pdown;
     Vector2D* gridPoint;
     GraphicsWarpGridLine* row;
     GraphicsWarpGridLine* col;
-
+    
     //update the points for each grid line...
     //make the vertical lines
-
+    
     for (int y = 0; y < nrows; y++) {
         row = [graphicsRows objectAtIndex:y];
         float thickness = (y + 1) % 4 == 1 ? 2.0 : 1.0;
@@ -145,6 +125,25 @@
         }
     }
     
+
+}
+
+- (void) applyExplosiveForce:(float)x y:(float)y force:(float)force radius:(float)radius {
+    for (PointMass* mass in _points) {
+        float dist2 = [Vector2D squaredLength:[[Vector2D alloc] initWithXY:x - mass.x y:y - mass.y]];
+        if (dist2 < radius * radius) {
+            Vector2D* f = [[Vector2D alloc] initWithXY:mass.x - x y:mass.y - y];
+            f.x *= 100 * force / (10000 + dist2);
+            f.y *= 100 * force / (10000 + dist2);
+            [mass applyForce:f.x fy:f.y];
+            [mass increaseDamping:0.6];
+        }
+    }
+}
+
+- (void) draw:(Camera*)camera {
+    GraphicsWarpGridLine* row;
+    GraphicsWarpGridLine* col;
     [camera translateObject:0.0 y:0.0 z:0.0];
     for (int y = 0; y < nrows; y++) {
         row = [graphicsRows objectAtIndex:y];

@@ -26,6 +26,8 @@
 
 - (void) influence:(Particle*)p dt:(float)dt maxSpeed:(float)maxSpeed;
 
+- (BOOL) influencerHit:(Particle*)p;
+
 - (Vector2D*) bounce:(Particle*)p;
 
 //- (void) update:(float)dt;

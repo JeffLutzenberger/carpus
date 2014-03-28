@@ -23,7 +23,7 @@
     self = [super initWithPositionAndSize:x y:y w:w h:h theta:theta color:GREEN];
     if (self) {
         self.speed = speed;
-        self.nparticles = 50;
+        self.nparticles = 25;
         lastAddTime = 0;
         addPeriod = 100; //ms
         self.particles = [[NSMutableArray alloc] init];

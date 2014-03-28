@@ -205,6 +205,7 @@
 				BC0AC37A18DA558900EDC64A /* glow.png */,
 				BCDBB04218D21EB800058B7E /* tile_floor.png */,
 				BC1B38DE18CE2D87004CA208 /* carpus */,
+				BC688B1018D94F870093E33B /* GameEffects */,
 				BC1B38DF18CE2D87004CA208 /* Supporting Files */,
 				BC1B390118CE2D87004CA208 /* carpusTests */,
 				BC1B38D318CE2D87004CA208 /* Frameworks */,
@@ -237,6 +238,7 @@
 		BC1B38DE18CE2D87004CA208 /* carpus */ = {
 			isa = PBXGroup;
 			children = (
+				BC688B1218D950060093E33B /* GameShaders */,
 				BC688AFF18D63BDD0093E33B /* iPad */,
 				BC1B38E718CE2D87004CA208 /* AppDelegate.h */,
 				BC1B38E818CE2D87004CA208 /* AppDelegate.m */,
@@ -244,9 +246,7 @@
 				BC1B38F118CE2D87004CA208 /* ViewController.h */,
 				BC1B38F218CE2D87004CA208 /* ViewController.m */,
 				BC1B38F418CE2D87004CA208 /* Images.xcassets */,
-				BC688B1218D950060093E33B /* GameShaders */,
 				BC688B1118D94FBB0093E33B /* GameBase */,
-				BC688B1018D94F870093E33B /* GameEffects */,
 				BCDBAFD918CEA0BC00058B7E /* GameObjects */,
 				BCDBAFD818CEA08C00058B7E /* GraphicsObjects */,
 			);
@@ -299,25 +299,26 @@
 				BC688B1418D950CB0093E33B /* ParticleSystem.m */,
 			);
 			name = GameEffects;
+			path = carpus;
 			sourceTree = "<group>";
 		};
 		BC688B1118D94FBB0093E33B /* GameBase */ = {
 			isa = PBXGroup;
 			children = (
-				BC1B391718CE3744004CA208 /* Vector2D.h */,
-				BC1B391818CE3744004CA208 /* Vector2D.m */,
 				BCDBB02918CFA6A200058B7E /* Camera.h */,
 				BCDBB02A18CFA6A200058B7E /* Camera.m */,
-				BCDBAFDD18CEE92E00058B7E /* Simulation.h */,
-				BCDBAFDE18CEE92E00058B7E /* Simulation.m */,
 				BC688B1618D9518A0093E33B /* GameColor.h */,
 				BC688B1718D9518A0093E33B /* GameColor.m */,
 				BC01C1ED18DDF4FD0056DB22 /* GridWall.h */,
 				BC01C1EE18DDF4FD0056DB22 /* GridWall.m */,
 				BC01C1FB18DFB60D0056DB22 /* PointMass.h */,
 				BC01C1FC18DFB60D0056DB22 /* PointMass.m */,
+				BCDBAFDD18CEE92E00058B7E /* Simulation.h */,
+				BCDBAFDE18CEE92E00058B7E /* Simulation.m */,
 				BCAA521618DFB84A00CAF556 /* Spring.h */,
 				BCAA521718DFB84A00CAF556 /* Spring.m */,
+				BC1B391718CE3744004CA208 /* Vector2D.h */,
+				BC1B391818CE3744004CA208 /* Vector2D.m */,
 			);
 			name = GameBase;
 			sourceTree = "<group>";
@@ -440,6 +441,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Jeff.Lutzenberger;
 				TargetAttributes = {
+					BC1B38D018CE2D87004CA208 = {
+						DevelopmentTeam = RBK49EE84F;
+					};
 					BC1B38F918CE2D87004CA208 = {
 						TestTargetID = BC1B38D018CE2D87004CA208;
 					};
@@ -660,11 +664,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "carpus/carpus-Prefix.pch";
 				INFOPLIST_FILE = "carpus/carpus-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -675,11 +682,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "carpus/carpus-Prefix.pch";
 				INFOPLIST_FILE = "carpus/carpus-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};

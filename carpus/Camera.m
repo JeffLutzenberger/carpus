@@ -43,26 +43,46 @@ enum
     GLint defaultFBO;
     GLuint depthBuffer1;
     GLuint depthBuffer2;
+    
+    bool doTransition;
+    Vector2D* startTransitionCenter;
+    Vector2D* finalTransitionCenter;
+    float startTransitionScale;
+    float finalTransitionScale;
+    float transitionTime;
+    
 }
 
 - (id) initWithCenterAndSize:(float)x y:(float)y w:(float)w h:(float)h {
     self = [super init];
     if (self) {
-        float left = x - w * 0.5;
-        float right = x + w * 0.5;
-        float bottom = y + h * 0.5;
-        float top = y - h * 0.5;
+        float left = -w * 0.5;
+        float right = w * 0.5;
+        float bottom = h * 0.5;
+        float top = -h * 0.5;
         self.width = w;
         self.height = h;
+        self.viewRect = CGRectMake(left, top, w, h);
         self.center = [[Vector2D alloc] initWithXY:x y:y];
+        self.scale = 1.0;
+        
+        doTransition = false;
+        startTransitionCenter = [[Vector2D alloc] initWithXY:0 y:0];
+        finalTransitionCenter = [[Vector2D alloc] initWithXY:0 y:0];
+        startTransitionScale = 1.0;
+        finalTransitionScale = 1.0;
+        transitionTime = 0;
+        
         self.projectionMatrix = GLKMatrix4MakeOrtho (left, right, bottom, top, 0.1f, 100.0f);
-        self.baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.0f);
+        
+        self.baseModelViewMatrix = GLKMatrix4MakeTranslation(-self.center.x, -self.center.y, -1.0f);
         
         normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(self.baseModelViewMatrix), NULL);
         
         modelViewProjectionMatrix = GLKMatrix4Multiply(self.projectionMatrix, self.baseModelViewMatrix);
         
         [self loadShaders:@"fastblur" fshFile:@"fastblur" program:&_fastBlurShader];
+        _uiVerticalPass = glGetUniformLocation(_fastBlurShader, "verticalPass");
         [self loadShaders:@"basic" fshFile:@"basic" program:&_basicShader];
         [self loadShaders:@"basic" fshFile:@"basicTexture" program:&_textureShader];
         [self loadShaders:@"basic" fshFile:@"hblur" program:&_hBlurShader];
@@ -71,6 +91,7 @@ enum
         
         [self setupFBO:w * 0.5 height:h * 0.5 fboHandle:&fbo1Handle depthBuffer:&depthBuffer1 fboTexture:&_fbo1Texture];
         [self setupFBO:w * 0.5 height:h * 0.5 fboHandle:&fbo2Handle depthBuffer:&depthBuffer2 fboTexture:&_fbo2Texture];
+        
     }
     return self;
 }
@@ -115,6 +136,104 @@ enum
     glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, normalMatrix.m);
     
 }
+
+- (BOOL) isZoomedOut {
+    return _scale < 0.999;
+}
+
+- (void) moveTo:(float)x y:(float)y {
+    _center.x = x;
+    _center.y = y;
+}
+
+- (void) reset {
+    GLKMatrix4 transMatrix = GLKMatrix4MakeTranslation(-self.center.x, -self.center.y, -1.0f);
+    GLKMatrix4 scaleMatrix = GLKMatrix4MakeScale(self.scale, self.scale, 1.0);
+    self.baseModelViewMatrix = GLKMatrix4Multiply(transMatrix, scaleMatrix);
+    
+    //self.baseModelViewMatrix = GLKMatrix4MakeTranslation(-self.center.x, -self.center.y, -1.0f);
+    
+    modelViewProjectionMatrix = GLKMatrix4Multiply(self.projectionMatrix, self.baseModelViewMatrix);
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, modelViewProjectionMatrix.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, normalMatrix.m);
+}
+
+- (void) resetToFullScreenTextureView {
+    self.baseModelViewMatrix = GLKMatrix4MakeTranslation(-384, -512, -1.0f);
+    modelViewProjectionMatrix = GLKMatrix4Multiply(self.projectionMatrix, self.baseModelViewMatrix);
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, modelViewProjectionMatrix.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, normalMatrix.m);
+}
+
+- (void) onTransition:(float)dt {
+    float duration = 500.0;
+    float centerDeltaX = finalTransitionCenter.x - startTransitionCenter.x;
+    float centerDeltaY = finalTransitionCenter.y - startTransitionCenter.y;
+    float scaleDelta = finalTransitionScale - startTransitionScale;
+    
+    if (transitionTime > duration) {
+        transitionTime = duration;
+        doTransition = false;
+    }
+    
+    float s = transitionTime / duration;
+    
+    float x = startTransitionCenter.x + s * centerDeltaX;
+    float y = startTransitionCenter.y + s * centerDeltaY;
+    self.scale = startTransitionScale + s * scaleDelta;
+    [self moveTo:x y:y];
+    transitionTime += dt;
+}
+
+- (void) startMoveTransition:(float)dx dy:(float)dy {
+    if (!doTransition) {
+        doTransition = true;
+        transitionTime = 0;
+        startTransitionCenter.x = _center.x;
+        startTransitionCenter.y = _center.y;
+        finalTransitionCenter.x = _center.x + dx;
+        finalTransitionCenter.y = _center.y + dy;
+        startTransitionScale = self.scale;
+        finalTransitionScale = self.scale;
+    }
+}
+
+- (void) zoomAll:(float)x y:(float)y extentx:(float)extentx extenty:(float)extenty {
+    if (!doTransition) {
+        doTransition = true;
+        transitionTime = 0;
+        startTransitionCenter.x = self.center.x;
+        startTransitionCenter.y = self.center.y;
+        finalTransitionCenter.x = x;
+        finalTransitionCenter.y = y;
+        startTransitionScale = self.scale;
+        finalTransitionScale = 768.0 / extentx;
+    }
+}
+
+- (CGPoint) screenToWorld:(CGPoint)p {
+    float w = 768;
+    float h = 1024;
+    
+    //normalize screen coords 0..1
+    float xn = p.x / w;
+    float yn = p.y / h;
+    
+    float left = self.center.x / self.scale - w / self.scale * 0.5;
+    float top = self.center.y /self.scale - h / self.scale * 0.5;
+    
+    float xg = left + xn * w / self.scale;
+    float yg = top + yn * h / self.scale;
+    
+    return CGPointMake(xg, yg);
+}
+
+- (void) update:(float)dt {
+    if (doTransition) {
+        [self onTransition:dt];
+    }
+};
+
 #pragma mark -  OpenGL ES 2 shader compilation
 
 
@@ -146,7 +265,7 @@ enum
     glAttachShader(*program, fragShader);
     
     // Bind attribute locations.
-    // This needs to be done prior to linking.
+    // self needs to be done prior to linking.
     glBindAttribLocation(*program, GLKVertexAttribPosition, "position");
     glBindAttribLocation(*program, GLKVertexAttribNormal, "normal");
     glBindAttribLocation(*program, GLKVertexAttribColor, "color");
@@ -366,5 +485,6 @@ enum
 - (void)endRenderFBO {
     glBindFramebuffer(GL_FRAMEBUFFER, defaultFBO);
 }
+
 
 @end

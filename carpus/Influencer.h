@@ -28,6 +28,8 @@
 
 - (BOOL) influencerHit:(Particle*)p;
 
+- (BOOL) influencerTouchHit:(Particle*)p;
+
 - (Vector2D*) bounce:(Particle*)p;
 
 //- (void) update:(float)dt;

@@ -17,6 +17,24 @@
 #import "GraphicsQuad.h"
 #import "ParticleSystem.h"
 
+@interface MyGestureDelegate : NSObject <UIGestureRecognizerDelegate>
+@end
+
+@implementation MyGestureDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+    return YES;
+}
+
+@end
+
 @interface ViewController () {
     GLuint _program;
     GLuint cameraProg;
@@ -32,6 +50,9 @@
     GraphicsQuad* fragQuad;
     
     ParticleSystem* particleSystem;
+    
+    BOOL interacting;
+    BOOL zoomedOut;
 
 }
 
@@ -48,6 +69,10 @@
     
     NSMutableArray *gameTouches;
     
+    MyGestureDelegate *deleg;
+    
+    //CAKeyframeAnimation* swipeAnimation;
+    
     //UITouch* secondTouch;
     //UITouch* thirdTouch;
     //UITouch* fourthTouch;
@@ -56,6 +81,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES
+                                            withAnimation:UIStatusBarAnimationFade];
     
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
@@ -66,7 +94,11 @@
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    view.multipleTouchEnabled = true;
+    view.multipleTouchEnabled = YES;
+    view.enableSetNeedsDisplay = YES;
+    
+    interacting = NO;
+    zoomedOut = NO;
     
     gameTouches = [[NSMutableArray alloc] init];
  
@@ -78,16 +110,58 @@
     UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeHandle:)];
     swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     [swipeRecognizer setNumberOfTouchesRequired:1];
-    //add the your gestureRecognizer , where to detect the touch..
+    [swipeRecognizer setCancelsTouchesInView:NO];
+    deleg = [[MyGestureDelegate alloc] init];
+    [swipeRecognizer setDelegate:deleg];
     [view addGestureRecognizer:swipeRecognizer];
+
+    //left swipe
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeHandle:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    [swipeRecognizer setNumberOfTouchesRequired:1];
+    [swipeRecognizer setCancelsTouchesInView:NO];
+    [swipeRecognizer setDelegate:deleg];
+    [view addGestureRecognizer:swipeRecognizer];
+
+    //up swipe
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(upSwipeHandle:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+    [swipeRecognizer setNumberOfTouchesRequired:1];
+    [swipeRecognizer setCancelsTouchesInView:NO];
+    [swipeRecognizer setDelegate:deleg];
+    [view addGestureRecognizer:swipeRecognizer];
+
+    //down swipe
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(downSwipeHandle:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+    [swipeRecognizer setNumberOfTouchesRequired:1];
+    [swipeRecognizer setCancelsTouchesInView:NO];
+    [swipeRecognizer setDelegate:deleg];
+    [view addGestureRecognizer:swipeRecognizer];
+
+    //pinch
+    //UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
+    //[pinchRecognizer setCancelsTouchesInView:NO];
+    //[pinchRecognizer setDelegate:deleg];
+    //[view addGestureRecognizer:pinchRecognizer];
+
+    //double tap
+    UITapGestureRecognizer* doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapHandle:)];
+    [doubleTapRecognizer setNumberOfTapsRequired:2];
+    [doubleTapRecognizer setNumberOfTouchesRequired:1];
     
-    recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
-    recognizer.direction = UISwipeGestureRecognizerDirectionRight;
-    [recognizer setNumberOfTouchesRequired:1];
-    //add the your gestureRecognizer , where to detect the touch..
-    [view addGestureRecognizer:recognizer];
+    //single tap
+    UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
+    [tapRecognizer setNumberOfTapsRequired:1];
+    [tapRecognizer setNumberOfTouchesRequired:1];
+    [tapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
+    [view addGestureRecognizer:doubleTapRecognizer];
+    [view addGestureRecognizer:tapRecognizer];
     
-    
+    UIPanGestureRecognizer* panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHandle:)];
+    [panGesture setCancelsTouchesInView:NO];
+    [view addGestureRecognizer:panGesture];
+
     [self setupGL];
 }
 
@@ -121,6 +195,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (void)setupGL
 {
     startTime = [NSDate date];
@@ -145,24 +223,48 @@
     
     simulation.backgroundGrid = [[BackgroundGrid alloc] initWithSizeAndSpacing:768.0 h:1024.0 gridx:768.0 / 16.0 gridy:1024.0 / 16.0];
     
-    Source* source = [[Source alloc] initWithPositionSizeAndSpeed:100 y:100 w:25 h:25 theta:0 speed:2];
+    /***
+     Sources
+     ***/
+    Source* source = [[Source alloc] initWithPositionSizeAndSpeed:100 y:150 w:20 h:25 theta:0 speed:2];
     [source setSourceColor:GREEN];
-    
     [simulation.sources addObject:source];
     
+    source = [[Source alloc] initWithPositionSizeAndSpeed:300 + 2 * 768 y:200 w:24 h:25 theta:0 speed:2];
+    [source setSourceColor:BLUE];
+    [simulation.sources addObject:source];
+    
+    /***
+     Sinks
+     ***/
     Sink* sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:400 y:800 radius:15 force:5 speed:5];
     [sink setSinkColor:GREEN outColor:RED];
-    
     [simulation.sinks addObject:sink];
     
     sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:300 y:400 radius:15 force:5 speed:5];
     [sink setSinkColor:RED outColor:BLUE];
-    //sink2.isSource = false;
     [simulation.sinks addObject:sink];
     
     sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:600 y:600 radius:15 force:5 speed:5];
     [sink setSinkColor:BLUE outColor:GREEN];
-    //sink3.isSource = false;
+    [simulation.sinks addObject:sink];
+    
+    sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:400 + 2 * 768 y:600 radius:15 force:5 speed:5];
+    [sink setSinkColor:BLUE outColor:RED];
+    [simulation.sinks addObject:sink];
+    
+    sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:500 + 768 y:600 radius:15 force:5 speed:5];
+    [sink setSinkColor:RED outColor:GREEN];
+    [simulation.sinks addObject:sink];
+    
+    sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:300 + 768 y:600 radius:15 force:5 speed:5];
+    [sink setSinkColor:GREEN outColor:GREEN];
+    [simulation.sinks addObject:sink];
+    
+    sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:768 * 1.5 y:1024 * 1.5 radius:35 force:10 speed:5];
+    [sink setSinkColor:GREEN outColor:GREEN];
+    sink.isSource = false;
+    sink.isGoal = true;
     [simulation.sinks addObject:sink];
     
     Obstacle* obstacle = [[Obstacle alloc] initWithPositionAndSize:500 y:300 w:300 h:25 theta:-M_2_PI color:ORANGE];
@@ -171,10 +273,13 @@
     obstacle = [[Obstacle alloc] initWithPositionAndSize:350 y:150 w:300 h:25 theta:-M_PI * 0.5 color:ORANGE];
     [simulation.obstacles addObject:obstacle];
     
-    Portal* portal = [[Portal alloc] initWithPositionAndSize:100 y:200 w:30 h:25 theta:0 color:GREEN];
-    [simulation.portals addObject:portal];
+    //Portal* portal = [[Portal alloc] initWithPositionAndSize:100 y:200 w:30 h:25 theta:0 color:GREEN];
+    //[simulation.portals addObject:portal];
     
-    simulation.gameGrid = [[GameGrid alloc] initWithWidthHeightAndGridSpacing:768.0 h:1024.0 gridx:768.0 gridy:1024.0];
+    simulation.gameGrid = [[GameGrid alloc] initWithWidthHeightAndGridSpacing:768.0 * 3 h:1024.0 * 3 gridx:768.0 gridy:1024.0];
+    [simulation.gameGrid addDoor:0 tileColIndex:0 wallIndex:3 s1:0.5 s2:0.75];
+    [simulation.gameGrid addDoor:0 tileColIndex:1 wallIndex:1 s1:0.33 s2:0.66];
+    [simulation.gameGrid addDoor:0 tileColIndex:2 wallIndex:2 s1:0.5 s2:0.75];
     
     //our fullscreen quad for the fbo texture
     quad = [[GraphicsQuad alloc] initWithPoints:[[Vector2D alloc] initWithXY:0 y:0]
@@ -212,6 +317,8 @@
 {
     NSTimeInterval dt = self.timeSinceLastUpdate * 1000;
     
+    [camera update:dt];
+    
     [particleSystem update:dt];
     
     [simulation update:dt];
@@ -230,9 +337,6 @@
         glBlendFunc(GL_SRC_ALPHA, GL_ONE); //this looks really nice for untextured entities
         glDisable(GL_DEPTH_TEST); //we want everything to accumulate
         
-        //glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //glUseProgram([camera basicShader]);
         glUseProgram([camera fireShader]);
         GLint iGlobalTime = glGetUniformLocation([camera fireShader], "iGlobalTime");
         float time = (float)[startTime timeIntervalSinceNow];
@@ -271,6 +375,7 @@
             glDisable(GL_DEPTH_TEST); //we want everything to accumulate
 
             glUseProgram([camera basicShader]);
+            [camera reset];
             [camera translateObject:0 y:0 z:0];
             [simulation draw:camera];
             
@@ -281,10 +386,9 @@
                 
                 [camera startRenderFBO2];
                 
-                //glUseProgram([camera fireShader]);
                 glUseProgram([camera fastBlurShader]);
-                GLint verticalPass = glGetUniformLocation([camera fastBlurShader], "verticalPass");
-                glUniform1i(verticalPass, 0);
+                glUniform1i(camera.uiVerticalPass, 0);
+                [camera resetToFullScreenTextureView];
                 [camera translateObject:0 y:0 z:0];
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, [camera fbo1Texture]);
@@ -295,8 +399,9 @@
                 [camera startRenderFBO1];
                 
                 glUseProgram([camera fastBlurShader]);
-                glUniform1i(verticalPass, 1);
-                [camera translateObject:0 y:0 z:0];
+                glUniform1i(camera.uiVerticalPass, 1);
+                //[camera resetToFullScreenTextureView];
+                //[camera translateObject:0 y:0 z:0];
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, [camera fbo2Texture]);
                 [quad draw];
@@ -339,13 +444,18 @@
         
         if (bShowBlur) {
             glUseProgram([camera textureShader]);
-            [camera translateObject:0 y:0 z:0.0];
+            //[camera translateCamera:0 y:0];
+            [camera resetToFullScreenTextureView];
+            //[camera translateObject:0 y:0 z:0.0];
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, [camera fbo1Texture]);
             //glBindTexture(GL_TEXTURE_2D, floorTexture);
             [quad draw];
             
             glUseProgram([camera basicShader]);
+            [camera reset];
+            //[camera setXYCenter:camera.viewRect.origin.x y:camera.viewRect.origin.y];
+            //[camera translateCamera:100 y:100];
             [camera translateObject:0 y:0 z:0.0];
             [simulation draw:camera];
             
@@ -393,30 +503,105 @@
     return texName;    
 }
 
+- (void)tapHandle:(UITapGestureRecognizer*)gestureRecognizer {
+    NSLog(@"tapHandle");
+    if (![camera isZoomedOut]) {
+        CGPoint p = [camera screenToWorld:[gestureRecognizer locationInView:self.view]];
+        [simulation singleTap:p];
+    }
+}
+
+- (void)doubleTapHandle:(UITapGestureRecognizer*)gestureRecognizer {
+    NSLog(@"doublTapHandle");
+    CGPoint p = [camera screenToWorld:[gestureRecognizer locationInView:self.view]];
+    if ([camera isZoomedOut]) {
+        //zoom in on the tile we just clicked on...
+        CGPoint center = [simulation.gameGrid centerOfTouchedTile:p];
+        [camera zoomAll:center.x y:center.y extentx:768 extenty:1024];
+        zoomedOut = NO;
+        return;
+    } else if([simulation doubleTap:p]) {
+        return;
+    } else {
+        [camera zoomAll:768 * 0.5 y:1024 * 0.5 extentx:768 * 3 extenty:1024 * 3];
+        zoomedOut = YES;
+    }
+}
+
+- (void)panHandle:(UIPanGestureRecognizer*)gestureRecognizer {
+    //NSLog(@"panHandle");
+    CGPoint p = [camera screenToWorld:[gestureRecognizer locationInView:self.view]];
+    [simulation panGesture:p];
+}
+
+- (void)leftSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer {
+    NSLog(@"swipe");
+    if (!interacting && ![camera isZoomedOut] /* && not at right edge */) {
+        [camera startMoveTransition:768 dy:0];
+    }
+}
+
 - (void)rightSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer {
-    NSLog(@"rightSwipeHandle");
+    NSLog(@"swipe");
+    if (!interacting && ![camera isZoomedOut]) {
+        [camera startMoveTransition:-768 dy:0];
+    }
+}
+
+- (void)upSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer {
+    NSLog(@"swipe");
+    if (!interacting && ![camera isZoomedOut]) {
+        [camera startMoveTransition:0 dy:1024];
+    }
+}
+
+- (void)downSwipeHandle:(UISwipeGestureRecognizer*)gestureRecognizer {
+    NSLog(@"swipe");
+    if (!interacting && ![camera isZoomedOut]) {
+        [camera startMoveTransition:0 dy:-1024];
+    }
 }
 
 -(void)handlePinchGesture:(UIPinchGestureRecognizer*)recognizer {
     NSLog(@"pinched...");
+    //if (!interacting) {
+        //get center of grid
+        //and zoom out
+        if (recognizer.velocity > 0) {
+            //get grid center
+            [camera zoomAll:768 * 0.5 y:1024 * 0.5 extentx:768 extenty:1024];
+            zoomedOut = NO;
+        } else {
+            //we should detect which tile we're on and zoom there...
+            [camera zoomAll:768 * 0.5 y:1024 * 0.5 extentx:768 * 3 extenty:1024 * 3];
+            zoomedOut = YES;
+        }
+    //}
 }
 
+// we use this to prevent panning when we're moving a grabber
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    interacting = NO;
     for (UITouch *touch in touches) {
-        [simulation touchBegan:touch];
-        //[particleSystem burst:400 y:400 burstRadius:50 speed:0.5 accel:-0.0009 nparticles:20 lifetime:500];
+        CGPoint pos = [camera screenToWorld:[touch locationInView: [UIApplication sharedApplication].keyWindow]];
+        if ([simulation hitInteractable:pos]) {
+        //if ([simulation touchBegan:pos]) {
+            interacting = YES;
+        }
     }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    interacting = NO;
+    //[simulation touchEnded:<#(UITouch *)#>]
     for (UITouch *touch in touches) {
         [simulation touchEnded:touch];
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    for (UITouch *touch in touches) {
-        [simulation touchMoved:touch];
-    }
+    //for (UITouch *touch in touches) {
+    //    [simulation touchMoved:touch];
+    //}
 }
 @end

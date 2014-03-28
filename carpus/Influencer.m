@@ -29,7 +29,8 @@
         self.deflectParticles = false;
         self.color = BLUE;//[[GameColor alloc] initWithRGBA:0.0 g:0.0 b:1.0 a:1.0];
         
-        float color1[] = {0.0, 0.0, 1.0, 0.8};
+        const float* c = gGameColors[self.color];
+        float color1[] = {c[0], c[1], c[2], 0.8};
         
         influenceCircle1 = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0
                                                                                   y:0
@@ -85,6 +86,14 @@
     float d2 = [Vector2D squaredLength:v2];
     BOOL hit = NO;
     hit = (d2 <= 3 * self.radius * self.radius);
+    return hit;
+};
+
+- (BOOL) influencerTouchHit:(Particle*)p {
+    Vector2D* v2 = [[Vector2D alloc] initWithXY:self.x - p.x y:self.y - p.y];
+    float d2 = [Vector2D squaredLength:v2];
+    BOOL hit = NO;
+    hit = (d2 <= 3 * self.influenceRadius * self.influenceRadius);
     return hit;
 };
 

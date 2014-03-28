@@ -15,8 +15,10 @@
 @property float width;
 @property float height;
 @property Vector2D* center;
+@property float scale;
 @property GLKMatrix4 projectionMatrix;
 @property GLKMatrix4 baseModelViewMatrix;
+@property CGRect viewRect;
 
 @property GLuint basicShader;
 @property GLuint textureShader;
@@ -25,16 +27,34 @@
 @property GLuint fastBlurShader;
 @property GLuint fireShader;
 
+@property GLint uiVerticalPass;
+
 @property GLuint fbo1Texture;
 @property GLuint fbo2Texture;
 
 - (id) initWithCenterAndSize:(float)x y:(float)y w:(float)w h:(float)h;
 
-- (void)multiplyModelViewMatrix:(GLKMatrix4)modelView;
+- (void) multiplyModelViewMatrix:(GLKMatrix4)modelView;
 
-- (void)translateObject:(float)x y:(float)y z:(float)z;
+- (void) moveTo:(float)x y:(float)y;
 
-- (void)rotateAndTranslateObject:(float)theta x:(float)x y:(float)y z:(float)z;
+- (void) startMoveTransition:(float)dx dy:(float)dy;
+
+- (void) zoomAll:(float)x y:(float)y extentx:(float)x extenty:(float)y;
+
+- (void) translateObject:(float)x y:(float)y z:(float)z;
+
+- (void) rotateAndTranslateObject:(float)theta x:(float)x y:(float)y z:(float)z;
+
+- (void) reset;
+
+- (void) resetToFullScreenTextureView;
+
+- (BOOL) isZoomedOut;
+
+- (CGPoint) screenToWorld:(CGPoint)p;
+
+- (void) update:(float)dt;
 
 - (BOOL)loadShaders:(NSString*)vshFile fshFile:(NSString*)fshFile program:(GLuint*)program;
 

@@ -28,11 +28,19 @@
 @property GameGrid* gameGrid;
 @property BackgroundGrid* backgroundGrid;
 
-- (void) touchBegan:(UITouch*)touch;
+- (void) singleTap:(CGPoint)pos;
+
+- (BOOL) doubleTap:(CGPoint)pos;
+
+- (void) panGesture:(CGPoint)pos;
+
+- (BOOL) touchBegan:(UITouch*)touch;
 
 - (void) touchEnded:(UITouch*)touch;
 
 - (void) touchMoved:(UITouch*)touch;
+
+- (BOOL) hitInteractable:(CGPoint)pos;
 
 - (void) update:(float)dt;
 

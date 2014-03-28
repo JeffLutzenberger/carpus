@@ -47,10 +47,10 @@
         self.influenceEquation = 0;
         self.localizeInfluence = false;
         self.isSource = true;
-        self.maxFill = 100;
+        self.maxFill = 50;
         self.inColor = GREEN;
         self.outColor = GREEN;
-        self.grabber = [[Rectangle alloc] initWithPositionAndSize:x + cos(self.theta) * self.influenceRadius y:y + sin(self.theta) * self.influenceRadius w:40 h:40 theta:0 color:GREEN];
+        self.grabber = [[Rectangle alloc] initWithPositionAndSize:x + cos(self.theta) * self.influenceRadius y:y + sin(self.theta) * self.influenceRadius w:50 h:50 theta:0 color:GREEN];
         grabberFadeDt = 0;
         grabberFadeLength = 0;
         pulseDt = 0;
@@ -119,16 +119,16 @@
         float grabberColor5[] = {1.0, 1.0, 1.0, 0.0};
         float grabberColor6[] = {cout[0], cout[1], cout[2], 1.0};
         
-        grabberCircle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius innerColor:grabberColor1 outerColor:grabberColor2];
+        grabberCircle1 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius * 2 innerColor:grabberColor1 outerColor:grabberColor2];
         
-        grabberCircle2 = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0 y:0 radius:_radius lineWidth:_radius innerColor:grabberColor3 outerColor:grabberColor2];
+        grabberCircle2 = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0 y:0 radius:_radius * 2 lineWidth:_radius innerColor:grabberColor3 outerColor:grabberColor2];
         
-        grabberCircle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius * 0.5 innerColor:grabberColor4 outerColor:grabberColor5];
+        grabberCircle3 = [[GraphicsCircle alloc] initWithPositionAndRadius:0 y:0 radius:_radius innerColor:grabberColor4 outerColor:grabberColor5];
         
         nozzelCircle = [[GraphicsCircleOutline alloc] initWithPositionAndRadius:0
                                                                                   y:0
-                                                                             radius:_radius * 0.8
-                                                                          lineWidth:1
+                                                                             radius:_radius * 1.8
+                                                                          lineWidth:2
                                                                          innerColor:grabberColor6
                                                                          outerColor:grabberColor6];
         
@@ -178,6 +178,7 @@
     float grabberColor3[] = {cout[0], cout[1], cout[2], 0.25};
     float grabberColor4[] = {1.0, 1.0, 1.0, 0.7};
     float grabberColor5[] = {1.0, 1.0, 1.0, 0.0};
+    float grabberColor6[] = {cout[0], cout[1], cout[2], 1.0};
     
     [grabberCircle1 setColor:grabberColor1 outerColor:grabberColor2];
     [grabberCircle1 updateCircle];
@@ -185,6 +186,8 @@
     [grabberCircle2 updateCircle];
     [grabberCircle3 setColor:grabberColor4 outerColor:grabberColor5];
     [grabberCircle3 updateCircle];
+    [nozzelCircle setColor:grabberColor6 outerColor:grabberColor6];
+    [nozzelCircle updateCircle];
     
 }
 

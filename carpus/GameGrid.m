@@ -38,19 +38,19 @@
     [cols removeAllObjects];
     self.h = nrows * self.gridy;
     self.w = ncols * self.gridx;
-    for (int i = 0; i < nrows + 1; i ++) {
-        [rows addObject:[[NSNumber alloc] initWithFloat:i * self.gridy]];
-        for (int j = 0; j < ncols; j ++) {
-            Vector2D* p1 = [[Vector2D alloc] initWithXY:self.gridx * j y:self.gridy * i];
-            Vector2D* p2 = [[Vector2D alloc] initWithXY:self.gridx * (j + 1) y:self.gridy * i];
+    for (int iRow = 0; iRow < nrows + 1; iRow ++) {
+        [rows addObject:[[NSNumber alloc] initWithFloat:iRow * self.gridy]];
+        for (int jCol = 0; jCol < ncols; jCol ++) {
+            Vector2D* p1 = [[Vector2D alloc] initWithXY:self.gridx * jCol y:self.gridy * iRow];
+            Vector2D* p2 = [[Vector2D alloc] initWithXY:self.gridx * (jCol + 1) y:self.gridy * iRow];
             [lines addObject:[[GridWall alloc] initWithPoints:p1 p2:p2]];
         }
     }
-    for (int i = 0; i < ncols + 1; i ++) {
-        [cols addObject:[[NSNumber alloc] initWithFloat:i * self.gridx]];
-        for (int j = 0; j < nrows; j ++) {
-            Vector2D* p1 = [[Vector2D alloc] initWithXY:self.gridx * i y:self.gridy * j];
-            Vector2D* p2 = [[Vector2D alloc] initWithXY:self.gridx * i y:self.gridy * (j + 1)];
+    for (int iCol = 0; iCol < ncols + 1; iCol ++) {
+        [cols addObject:[[NSNumber alloc] initWithFloat:iCol * self.gridx]];
+        for (int iRow = 0; iRow < nrows; iRow ++) {
+            Vector2D* p1 = [[Vector2D alloc] initWithXY:self.gridx * iCol y:self.gridy * iRow];
+            Vector2D* p2 = [[Vector2D alloc] initWithXY:self.gridx * iCol y:self.gridy * (iRow + 1)];
             [lines addObject:[[GridWall alloc] initWithPoints:p1 p2:p2]];
         }
     }
@@ -78,6 +78,60 @@
 
 - (Vector2D*) center {
     return [[Vector2D alloc] initWithXY:self.w * 0.5 y:self.h * 0.5];
+}
+
+- (CGPoint) centerOfTouchedTile:(CGPoint)pos {
+    CGPoint p = CGPointMake(768 * 0.5, 1024 * 0.5);
+    int tile = -1;
+    NSNumber* x = [[NSNumber alloc] initWithFloat:pos.x];
+    NSNumber* y = [[NSNumber alloc] initWithFloat:pos.y];
+    NSNumber* t1;
+    NSNumber* t2;
+    for (int i = 0; i < [cols count] - 1; i++) {
+        t1 = (NSNumber*)[cols objectAtIndex:i];
+        t2 = (NSNumber*)[cols objectAtIndex:i + 1];
+        if ([x doubleValue] > [t1 doubleValue] && [x doubleValue] < [t2 doubleValue]) {
+            tile = i + 1;
+            p.x = i * 768 + 768 * 0.5;
+            break;
+        }
+    }
+    for (int i = 0; i < [rows count] - 1; i ++) {
+        t1 = (NSNumber*)[rows objectAtIndex:i];
+        t2 = (NSNumber*)[rows objectAtIndex:i + 1];
+        if ([y doubleValue] > [t1 doubleValue] && [y doubleValue] < [t2 doubleValue]) {
+            tile *= i + 1;
+            p.y = i * 1024 + 1024 * 0.5;
+            break;
+        }
+    }
+    return p;
+}
+
+/* returns top, bottom, left, right */
+- (NSMutableArray*) getGridWallsForTile:(int)rowIndex colIndex:(int)colIndex {
+    NSMutableArray* walls = [[NSMutableArray alloc] init];
+    
+    //top
+    [walls addObject:[lines objectAtIndex:colIndex + rowIndex * [self nCols]]];
+    //bottom
+    [walls addObject:[lines objectAtIndex:colIndex + (rowIndex + 1) * [self nCols]]];
+    int offset = ([self nRows] + 1) * [self nCols];
+    //left
+    [walls addObject:[lines objectAtIndex:offset + rowIndex + colIndex * [self nRows]]];
+    //right
+    [walls addObject:[lines objectAtIndex:offset + rowIndex + (colIndex + 1) * [self nRows]]];
+    
+    return walls;
+}
+
+/* wall index order: top, bottom, left, right */
+- (void) addDoor:(int)tileRowIndex tileColIndex:(int)tileColIndex wallIndex:(int)wallIndex s1:(float)s1 s2:(float)s2 {
+    NSMutableArray* walls = [self getGridWallsForTile:tileRowIndex colIndex:tileColIndex];
+    
+    GridWall* wall = (GridWall*)[walls objectAtIndex:wallIndex];
+    [wall setDoor:s1 s2:s2];
+    
 }
 
 - (BOOL) sameTile:(Vector2D*)p1 p2:(Vector2D*)p2 {

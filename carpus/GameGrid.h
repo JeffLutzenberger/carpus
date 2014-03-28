@@ -33,9 +33,17 @@
 
 - (Vector2D*) center;
 
+/* returns top, bottom, left, right */
+- (NSMutableArray*) getGridWallsForTile:(int)rowIndex colIndex:(int)colIndex;
+
+/* wall index order: top, bottom, left, right */
+- (void) addDoor:(int)tileRowIndex tileColIndex:(int)tileColIndex wallIndex:(int)wallIndex s1:(float)s1 s2:(float)s2;
+
 - (BOOL) sameTile:(Vector2D*)p1 p2:(Vector2D*)p2;
 
 - (int) tileNumber:(Vector2D*)p;
+
+- (CGPoint) centerOfTouchedTile:(CGPoint)pos;
 
 /*update: function (dt) {
  var i = 0;

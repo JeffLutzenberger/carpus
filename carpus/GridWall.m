@@ -28,17 +28,17 @@
         self.hasDoor = false;
         self.doorEnabled = true;
         doorPoints = [[NSMutableArray alloc] init];
-        const float* c = gGameColors[ORANGE];
+        const float* c = gGameColors[GRAY1];
         float color[] = {c[0], c[1], c[2], 1.0};
         line1 = [[GraphicsQuadLine alloc] initWithCoordsAndColor:self.p1 end:self.p4 lineWidth:5 color:color];
         line2 = [[GraphicsQuadLine alloc] initWithCoordsAndColor:self.p1 end:self.p4 lineWidth:5 color:color];
-        [self setDoor:0.5 s2:0.75];
+        //[self setDoor:0.5 s2:0.75];
     }
     return self;
 }
 
 - (Vector2D*) hit:(Particle*)p {
-    if (self.hasDoor && self.doorEnabled && self.doorColor == p.color) {
+    if (self.hasDoor && self.doorEnabled /*&& self.doorColor == p.color*/) {
         if ([p lineCollision:self.p1 p2:self.p2]) {
             return self.n;//[Vector2D normalize:[[Vector2D alloc] initWithXY:-(self.p2.y - self.p1.y) y:self.p2.x - self.p1.x]];
         }
@@ -73,7 +73,7 @@
     self.hasDoor = true;
     [self setS1:s1];
     [self setS2:s2];
-    const float* c = gGameColors[ORANGE];
+    const float* c = gGameColors[GRAY1];
     float color[] = {c[0], c[1], c[2], 1.0};
     [line1 updateCoordinates:self.p1 end:self.p2 lineWidth:5 color:color];
     [line2 updateCoordinates:self.p3 end:self.p4 lineWidth:5 color:color];

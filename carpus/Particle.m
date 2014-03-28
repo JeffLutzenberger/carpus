@@ -70,7 +70,7 @@ enum
         self.dir = [[Vector2D alloc] initWithXY:1 y:0];
         self.vel = [[Vector2D alloc] initWithXY:0 y:0.1];
         self.numTracers = 30;
-        self.traceWidth = 2;
+        self.traceWidth = 3;
         self.accel = -0.0003;
         trail = [[NSMutableArray alloc] initWithCapacity:self.numTracers];
         self.source = nil;

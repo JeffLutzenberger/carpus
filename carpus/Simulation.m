@@ -21,6 +21,7 @@ typedef enum {
 
 @implementation Simulation {
     ETTouchScheme touchScheme;
+    Rectangle* interactionObject;
 }
 
 - (id) init {
@@ -66,24 +67,14 @@ typedef enum {
     [self moveParticles:dt];
 }
 
-- (void) touchBegan:(UITouch*)touch {
-    //touch event can be either a grabber or an interactable object...
-    CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
+- (void) singleTap:(CGPoint)pos {
     Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
-    
-    //is this a grabber
-    for(Sink* s in self.sinks) {
-        if ([s hitGrabber:p]) {
-            s.grabberSelected = true;
-            return;
-        }
-    }
     
     if (touchScheme == TOUCH_ADDS_INFLUENCER) {
         //check to see if we're over an influencr
         for(Influencer* influencer in self.influencers) {
             p.radius = influencer.influenceRadius;
-            if([influencer influencerHit:p]) {
+            if([influencer influencerTouchHit:p]) {
                 return;
             }
         }
@@ -93,6 +84,126 @@ typedef enum {
         //[self.touches addObject:touch];
         [self.influencers addObject:influencer];
         return;
+    }
+}
+
+- (BOOL) doubleTap:(CGPoint)pos {
+    Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
+    
+    if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+        //delete the influencer if this was a double tap
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if([influencer influencerTouchHit:p]) {
+                [self.influencers removeObject:influencer];
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+- (void) panGesture:(CGPoint)pos {
+    Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
+    
+    if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+        //check to see if we're over an influencer
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if([influencer influencerTouchHit:p]) {
+                influencer.x = pos.x;
+                influencer.y = pos.y;
+                return;
+            }
+        }
+    }
+    //is this a grabber
+    for(Sink* s in self.sinks) {
+        /*if ([s hitGrabber:p]) {
+         s.grabberSelected = true;
+         Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
+         [s moveGrabber:v];
+         return;
+         }*/
+        if (s.selected && s.grabber.selected) {
+            //s.grabberSelected = true;
+            Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
+            [s moveGrabber:v];
+            return;
+        }
+    }
+}
+
+- (BOOL) hitInteractable:(CGPoint)pos {
+    Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
+    
+    //is this a grabber
+    for(Sink* s in self.sinks) {
+        if ([s hitGrabber:p]) {
+            interactionObject = s;
+            s.selected = YES;
+            s.grabber.selected = YES;
+            s.grabberSelected = true;
+            return YES;
+        }
+    }
+    
+    //hit an existing influencer
+    for(Influencer* influencer in self.influencers) {
+        p.radius = influencer.influenceRadius;
+        if([influencer influencerTouchHit:p]) {
+            interactionObject = influencer;
+            influencer.selected = YES;
+            return YES;
+        }
+    }
+    
+    return NO;
+
+}
+
+- (BOOL) touchBegan:(UITouch*)touch {
+    //touch event can be either a grabber or an interactable object...
+    CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
+    Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
+    
+    //is this a grabber
+    for(Sink* s in self.sinks) {
+        if ([s hitGrabber:p]) {
+            interactionObject = s;
+            s.selected = YES;
+            s.grabber.selected = YES;
+            s.grabberSelected = true;
+            return YES;
+        }
+    }
+    
+    //hit an existing influencer
+    for(Influencer* influencer in self.influencers) {
+        p.radius = influencer.influenceRadius;
+        if([influencer influencerTouchHit:p]) {
+            interactionObject = influencer;
+            influencer.selected = YES;
+            return YES;
+        }
+    }
+    
+    return NO;
+    
+    /*if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+        //check to see if we're over an influencr
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if([influencer influencerHit:p]) {
+                return YES;
+            }
+        }
+        //add a new influencer
+        Influencer* influencer = [[Influencer alloc] initWithPositionSizeAndForce:pos.x y:pos.y radius:15 force:5];
+        influencer.enabled = true;
+        //[self.touches addObject:touch];
+        [self.influencers addObject:influencer];
+        return YES;
 
     } else if (touchScheme == TOUCH_IS_INFLUENCER) {
         Influencer* influencer = nil;
@@ -100,10 +211,10 @@ typedef enum {
         influencer = [[Influencer alloc] initWithPositionSizeAndForce:pos.x y:pos.y radius:15 force:5];
         influencer.enabled = true;
         [self.influencers addObject:influencer];
-        return;
+        return YES;
     }
     
-    return;
+    return NO;*/
 }
 
 - (void) touchEnded:(UITouch*)touch {
@@ -111,12 +222,33 @@ typedef enum {
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
     Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
     
-    if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+    if (touch.tapCount >= 2) {
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if([influencer influencerTouchHit:p]) {
+                influencer.selected = NO;
+                interactionObject = nil;
+                [self.influencers removeObject:influencer];
+                return;
+            }
+        }
+    }
+    
+    for(Sink* s in self.sinks) {
+        if (s.selected) {
+            s.grabberSelected = NO;
+            s.grabber.selected = NO;
+            s.selected = NO;
+            interactionObject = nil;
+        }
+    }
+
+    /*if (touchScheme == TOUCH_ADDS_INFLUENCER) {
         //delete the influencer if this was a double tap
         if (touch.tapCount >= 2) {
             for(Influencer* influencer in self.influencers) {
                 p.radius = influencer.influenceRadius;
-                if([influencer influencerHit:p]) {
+                if([influencer influencerTouchHit:p]) {
                     [self.influencers removeObject:influencer];
                     return;
                 }
@@ -140,7 +272,7 @@ typedef enum {
             s.grabberSelected = false;
             return;
         }
-    }
+    }*/
 }
 
 - (void) touchMoved:(UITouch*)touch {
@@ -151,7 +283,7 @@ typedef enum {
         //check to see if we're over an influencer
         for(Influencer* influencer in self.influencers) {
             p.radius = influencer.influenceRadius;
-            if([influencer influencerHit:p]) {
+            if([influencer influencerTouchHit:p]) {
                 influencer.x = pos.x;
                 influencer.y = pos.y;
                 return;
@@ -173,8 +305,14 @@ typedef enum {
     
     //is this a grabber
     for(Sink* s in self.sinks) {
-        if ([s hitGrabber:p]) {
+        /*if ([s hitGrabber:p]) {
             s.grabberSelected = true;
+            Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
+            [s moveGrabber:v];
+            return;
+        }*/
+        if (s.selected && s.grabber.selected) {
+            //s.grabberSelected = true;
             Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
             [s moveGrabber:v];
             return;

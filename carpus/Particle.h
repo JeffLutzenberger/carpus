@@ -10,6 +10,7 @@
 #import "Vector2D.h"
 #import "Camera.h"
 #import "GameColor.h"
+
 @interface Tracer : NSObject
 
 @property float x;
@@ -58,6 +59,8 @@
 - (void) redirect:(Vector2D*)n;
 
 - (Vector2D*) position;
+
+- (void) setFirstSink:(int)sinkIndex;
 
 - (BOOL) lineCollision:(Vector2D*)p1 p2:(Vector2D*)p2;
 

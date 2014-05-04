@@ -7,6 +7,7 @@
 //
 
 #import "Camera.h"
+#import "ShaderLoader.h"
 
 // Uniform index.
 enum
@@ -87,7 +88,10 @@ enum
         [self loadShaders:@"basic" fshFile:@"basicTexture" program:&_textureShader];
         [self loadShaders:@"basic" fshFile:@"hblur" program:&_hBlurShader];
         [self loadShaders:@"basic" fshFile:@"vblur" program:&_vBlurShader];
-        [self loadShaders:@"basic" fshFile:@"fire" program:&_fireShader];
+        //[self loadShaders:@"basic" fshFile:@"fire" program:&_fireShader];
+        
+        self.particleShader = [[ParticleShader alloc] init];
+        self.parametricShader = [[ParametricShader alloc] init];
         
         [self setupFBO:w * 0.5 height:h * 0.5 fboHandle:&fbo1Handle depthBuffer:&depthBuffer1 fboTexture:&_fbo1Texture];
         [self setupFBO:w * 0.5 height:h * 0.5 fboHandle:&fbo2Handle depthBuffer:&depthBuffer2 fboTexture:&_fbo2Texture];

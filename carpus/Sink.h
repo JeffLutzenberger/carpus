@@ -12,6 +12,7 @@
 #import "Particle.h"
 #import "Camera.h"
 #import "GameColor.h"
+#import "ShaderParticleSystem.h"
 
 @interface Sink : Rectangle
 
@@ -29,8 +30,10 @@
 @property int maxFill;
 @property int caught;
 @property Rectangle* grabber;
+@property ShaderParticleSystem* shaderParticleSystem;
 
-- (id) initWithPositionSizeForceAndSpeed:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed;
+
+- (id) initWithPositionSizeForceSpeedAndColor:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed inColor:(ETColor)inColor outColor:(ETColor)outColor;
 
 - (void) setSinkColor:(ETColor)inColor outColor:(ETColor)outColor;
 

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <GLKit/GLKit.h>
 #import "Vector2D.h"
+#import "ParticleShader.h"
+#import "ParametricShader.h"
 
 @interface Camera : NSObject
 
@@ -26,6 +28,9 @@
 @property GLuint vBlurShader;
 @property GLuint fastBlurShader;
 @property GLuint fireShader;
+
+@property ParticleShader* particleShader;
+@property ParametricShader* parametricShader;
 
 @property GLint uiVerticalPass;
 

@@ -11,6 +11,7 @@
 #import "GraphicsCircle.h"
 #import "GraphicsCircleOutline.h"
 #import "GraphicsArc.h"
+#import "GraphicsTriangle.h"
 
 @implementation Sink {
     GraphicsCircleOutline* influenceCircle1;
@@ -24,6 +25,8 @@
     GraphicsCircleOutline* grabberCircle2;
     GraphicsCircle* grabberCircle3;
     GraphicsCircleOutline* nozzelCircle;
+    GraphicsTriangle* grabberTri1;
+    GraphicsTriangle* grabberTri2;
     float grabberFadeDt;
     float grabberFadeLength;
     float pulseDt;
@@ -34,11 +37,11 @@
     float ringPulseLength;
     ParticleSystem* particleSystem;
     ParticleSystem* spiralParticleSystem;
+    BOOL shaderParticlesLoaded;
 }
 
-
-- (id) initWithPositionSizeForceAndSpeed:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed {
-    self = [super initWithPositionAndSize:x y:y w:radius h:radius theta:0 color:GREEN];
+- (id) initWithPositionSizeForceSpeedAndColor:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed inColor:(ETColor)inColor outColor:(ETColor)outColor {
+    self = [super initWithPositionAndSize:x y:y w:radius h:radius theta:0 color:inColor];
     if (self) {
         self.speed = speed;
         self.force = force;
@@ -48,8 +51,8 @@
         self.localizeInfluence = false;
         self.isSource = true;
         self.maxFill = 50;
-        self.inColor = GREEN;
-        self.outColor = GREEN;
+        self.inColor = inColor;
+        self.outColor = outColor;
         self.grabber = [[Rectangle alloc] initWithPositionAndSize:x + cos(self.theta) * self.influenceRadius y:y + sin(self.theta) * self.influenceRadius w:50 h:50 theta:0 color:GREEN];
         grabberFadeDt = 0;
         grabberFadeLength = 0;
@@ -61,6 +64,8 @@
         ringPulseLength = 0;
         particleSystem = [[ParticleSystem alloc] initWithCoordsAndCapacity:self.x y:self.y capacity:300];
         spiralParticleSystem = [[ParticleSystem alloc] initWithCoordsAndCapacity:self.x y:self.y capacity:300];
+        _shaderParticleSystem = [[ShaderParticleSystem alloc] initWithPositionAndColor:x y:y color:self.inColor];
+        shaderParticlesLoaded = NO;
         //[spiralParticleSystem burst:self.x y:self.y burstRadius:100 speed:0.005 accel:-0.0009 nparticles:10 lifetime:50000];
         
         const float* c = gGameColors[self.inColor];
@@ -110,6 +115,8 @@
                                                                 innerColor:color5
                                                                 outerColor:color6];
         arc = [[GraphicsArc alloc] initWithPositionAndRadius:0 y:0 radius:self.influenceRadius lineWidth:14 startTheta:0 endTheta:3.14 * 0.5 color:color2];
+        //float r = 0.5*(self.influenceRadius + self.radius) + 7;
+        //arc = [[GraphicsArc alloc] initWithPositionAndRadius:0 y:0 radius:r lineWidth:r + 7 startTheta:0 endTheta:3.14 * 0.5 color:color2];
         
         const float* cout = gGameColors[self.outColor];
         float grabberColor1[] = {cout[0], cout[1], cout[2], 0.8};
@@ -131,7 +138,19 @@
                                                                           lineWidth:2
                                                                          innerColor:grabberColor6
                                                                          outerColor:grabberColor6];
+        grabberTri1 = [[GraphicsTriangle alloc] initWithPoints:[[Vector2D alloc] initWithXY:  0.0 y:self.radius + 10.0 + 10]
+                                                            p2:[[Vector2D alloc] initWithXY:-10.0 y:self.radius + 10.0]
+                                                            p3:[[Vector2D alloc] initWithXY: 10.0 y:self.radius + 10.0]];
+        grabberTri1.fanEffect = YES;
+        [grabberTri1 setColor:grabberColor6];
         
+        grabberTri2 = [[GraphicsTriangle alloc] initWithPoints:[[Vector2D alloc] initWithXY:  0.0 y:-(self.radius + 10.0 + 10)]
+                                                            p2:[[Vector2D alloc] initWithXY:-10.0 y:-(self.radius + 10.0)]
+                                                            p3:[[Vector2D alloc] initWithXY: 10.0 y:-(self.radius + 10.0)]];
+        grabberTri2.fanEffect = YES;
+        [grabberTri2 setColor:grabberColor6];
+
+
     }
     return self;
 }
@@ -197,10 +216,15 @@
 
 - (void) recycleParticle:(Particle*)p {
     float dt = (float)drand48() * 0.2 - 0.1;
+    p.x = self.x;
+    p.y = self.y;
+    [p trace];
     p.x = self.x + cos(self.theta + dt) * (self.influenceRadius + 10);
     p.y = self.y + sin(self.theta + dt) * (self.influenceRadius + 10);
     p.vel.x = cos(self.theta) * self.speed;
     p.vel.y = sin(self.theta) * self.speed;
+    p.prevx = self.x;
+    p.prevy = self.y;
     [p setParticleColor:self.outColor];
 }
 
@@ -231,9 +255,15 @@
     Vector2D* v2 = [[Vector2D alloc] initWithXY:self.x - p.x y:self.y - p.y];
     float d2 = [Vector2D squaredLength:v2];
     BOOL hit = NO;
-    hit = (d2 <= 3 * self.radius * self.radius);
-    if (hit && ![self checkIsFull]) {
-        self.caught += 1;
+    //hit = (d2 <= 3 * self.radius * self.radius);
+    hit = (d2 <= self.influenceRadius * self.influenceRadius);
+    if (hit) {
+        p.x = self.x;
+        p.y = self.y;
+        [p trace];
+        if (![self checkIsFull]) {
+            self.caught += 1;
+        }
         //[particleSystem burst:self.x y:self.y burstRadius:50 speed:0.5 accel:-0.0009 nparticles:10 lifetime:500];
         
     }
@@ -296,14 +326,14 @@
 
 - (void) update:(float)dt {
     
-    if (self.isSource && [self checkIsFull]) {
+    /*if (self.isSource && [self checkIsFull]) {
         //start grabber fade
         if (grabberFadeDt < grabberFadeLength) {
             grabberFadeDt += dt;
         } else {
             grabberFadeDt = grabberFadeLength;
         }
-    }
+    }*/
     
     pulseDt += dt;
     
@@ -324,6 +354,7 @@
     
     [particleSystem update:dt];
     [spiralParticleSystem spiralUpdate:dt s:[self position]];
+    [_shaderParticleSystem update:dt];
 }
 
 - (void) draw:(Camera*)camera {
@@ -333,12 +364,19 @@
 
     [particleSystem draw:camera];
     [spiralParticleSystem draw:camera];
+    if (!shaderParticlesLoaded) {
+        shaderParticlesLoaded = YES;
+        [_shaderParticleSystem loadParticleSystem:camera.particleShader];
+    }
+    //[shaderParticleSystem draw:camera];
     
     [camera translateObject:self.x y:self.y z:-1];
     [gradient1 draw];
     [influenceCircle1 draw];
-    [influenceCircle2 draw];
-    [arc draw];
+    if(self.isGoal) {
+        [influenceCircle2 draw];
+        [arc draw];
+    }
     [camera translateObject:self.x y:self.y z:-0.5];
     [innerCircle1 draw];
     //[camera translateObject:self.x y:self.y z:-0.4];
@@ -355,6 +393,9 @@
         [grabberCircle3 draw];
         [camera translateObject:self.grabber.x y:self.grabber.y z:-0.05];
         [nozzelCircle draw];
+        [camera rotateAndTranslateObject:self.theta x:self.grabber.x y:self.grabber.y z:-0.25];
+        [grabberTri1 draw];
+        [grabberTri2 draw];
         
         //draw a pulsing outer ring to indicate this sink has been locked in
         //radius = this.radius;

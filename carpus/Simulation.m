@@ -16,12 +16,17 @@
 
 typedef enum {
     TOUCH_ADDS_INFLUENCER,
-    TOUCH_IS_INFLUENCER
+    TOUCH_IS_INFLUENCER,
+    TOUCH_MOVES_INFLUENCER
 } ETTouchScheme;
 
 @implementation Simulation {
     ETTouchScheme touchScheme;
     Rectangle* interactionObject;
+    NSString* currentPath;
+    BOOL checkingPath;
+    BOOL pathCheckStarted;
+    Particle* pathParticle;
 }
 
 - (id) init {
@@ -39,7 +44,13 @@ typedef enum {
         self.sinks = [[NSMutableArray alloc] init];
         self.touches = [[NSMutableArray alloc] init];
         self.touchObjects = [[NSMutableArray alloc] init];
-        touchScheme = TOUCH_ADDS_INFLUENCER;
+        touchScheme = TOUCH_MOVES_INFLUENCER;
+        self.paths = [[NSMutableArray alloc] init];
+        currentPath = @"";
+        checkingPath = NO;
+        pathCheckStarted = NO;
+        pathParticle = nil;
+        
         //self.backgroundGrid = [[BackgroundGrid alloc] initWithSizeAndSpacing:768.0 h:1024.0 gridx:768.0 / 32.0 gridy:1024.0 / 32.0];
     }
     return self;
@@ -178,19 +189,16 @@ typedef enum {
         }
     }
     
-    //hit an existing influencer
-    for(Influencer* influencer in self.influencers) {
-        p.radius = influencer.influenceRadius;
-        if([influencer influencerTouchHit:p]) {
-            interactionObject = influencer;
-            influencer.selected = YES;
-            return YES;
+    if (touchScheme == TOUCH_MOVES_INFLUENCER) {
+        //check to see if we're over an influencer
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if([influencer influencerHit:p]) {
+                influencer.selected = YES;
+                return YES;
+            }
         }
-    }
-    
-    return NO;
-    
-    /*if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+    } else if (touchScheme == TOUCH_ADDS_INFLUENCER) {
         //check to see if we're over an influencr
         for(Influencer* influencer in self.influencers) {
             p.radius = influencer.influenceRadius;
@@ -214,25 +222,13 @@ typedef enum {
         return YES;
     }
     
-    return NO;*/
+    return NO;
 }
 
 - (void) touchEnded:(UITouch*)touch {
     
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
     Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
-    
-    if (touch.tapCount >= 2) {
-        for(Influencer* influencer in self.influencers) {
-            p.radius = influencer.influenceRadius;
-            if([influencer influencerTouchHit:p]) {
-                influencer.selected = NO;
-                interactionObject = nil;
-                [self.influencers removeObject:influencer];
-                return;
-            }
-        }
-    }
     
     for(Sink* s in self.sinks) {
         if (s.selected) {
@@ -243,7 +239,11 @@ typedef enum {
         }
     }
 
-    /*if (touchScheme == TOUCH_ADDS_INFLUENCER) {
+    if (touchScheme == TOUCH_MOVES_INFLUENCER) {
+        for(Influencer* i in self.influencers) {
+            i.selected = NO;
+        }
+    } else if (touchScheme == TOUCH_ADDS_INFLUENCER) {
         //delete the influencer if this was a double tap
         if (touch.tapCount >= 2) {
             for(Influencer* influencer in self.influencers) {
@@ -266,19 +266,36 @@ typedef enum {
             }
         }
     }
-    //is this a grabber
+    
     for(Sink* s in self.sinks) {
-        if ([s hitGrabber:p]) {
-            s.grabberSelected = false;
-            return;
+        if (s.selected) {
+            s.grabberSelected = NO;
+            s.grabber.selected = NO;
+            s.selected = NO;
+            interactionObject = nil;
         }
-    }*/
+    }
+    
 }
 
 - (void) touchMoved:(UITouch*)touch {
     CGPoint pos = [touch locationInView: [UIApplication sharedApplication].keyWindow];
     Particle* p = [[Particle alloc] initWithPositionAndColor:pos.x y:pos.y r:20 color:BLACK];
     
+    if (touchScheme == TOUCH_MOVES_INFLUENCER) {
+        for(Influencer* influencer in self.influencers) {
+            p.radius = influencer.influenceRadius;
+            if(influencer.selected) {
+                if(influencer.dragDirection == OMNI || influencer.dragDirection == EASTWEST) {
+                    influencer.x = pos.x;
+                }
+                if(influencer.dragDirection == OMNI || influencer.dragDirection == NORTHSOUTH) {
+                    influencer.y = pos.y;
+                }
+                return;
+            }
+        }
+    }
     if (touchScheme == TOUCH_ADDS_INFLUENCER) {
         //check to see if we're over an influencer
         for(Influencer* influencer in self.influencers) {
@@ -303,14 +320,13 @@ typedef enum {
         }
     }
     
-    //is this a grabber
     for(Sink* s in self.sinks) {
         /*if ([s hitGrabber:p]) {
-            s.grabberSelected = true;
-            Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
-            [s moveGrabber:v];
-            return;
-        }*/
+         s.grabberSelected = true;
+         Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
+         [s moveGrabber:v];
+         return;
+         }*/
         if (s.selected && s.grabber.selected) {
             //s.grabberSelected = true;
             Vector2D* v = [[Vector2D alloc] initWithXY:pos.x y:pos.y];
@@ -455,10 +471,17 @@ typedef enum {
         }
         
         if ([s sinkHit:p]) {
-            if (s.isSource && [s checkIsFull]) {
+            if (s.isSource) {
                 [s recycleParticle:p];
                 //p.brightness += 0.1;
                 p.age = 0;
+                if (checkingPath && p == pathParticle) {
+                    //wait until the particle gets to our "origin" sink
+                    if (!pathCheckStarted && s == [self.sinks objectAtIndex:0]) {
+                        pathCheckStarted = YES;
+                        //start the path string -> S0 (ie. sink 0)
+                    }
+                }
                 return;
             } else {
                 [p.source recycleParticle:p];
@@ -467,8 +490,8 @@ typedef enum {
                 return;
             }
         }
-        [s influence:p dt:dt maxSpeed:[self maxParticleSpeed]];
-        //s.influence(p, dt, this.maxParticleSpeed);
+        //Note: removing sink's ability to influence
+        //[s influence:p dt:dt maxSpeed:[self maxParticleSpeed]];
     }
 };
 
@@ -482,6 +505,15 @@ typedef enum {
         [p trace];
     }
 }
+
+- (void) startPathCheck {
+    //clear current path and start following a particle
+    currentPath = @"";
+    checkingPath = YES;
+    Source* s = [self.sources objectAtIndex:0];
+    pathParticle = [s.particles objectAtIndex:0];
+}
+
 
 - (void) draw:(Camera*)camera {
 
@@ -547,6 +579,12 @@ typedef enum {
 - (void) drawSinks:(Camera*)camera {
     for (Sink* s in self.sinks) {
         [s draw:camera];
+    }
+}
+
+- (void) drawShaderParticles:(Camera*)camera {
+    for (Sink* s in self.sinks) {
+        [s.shaderParticleSystem draw:camera];
     }
 }
 

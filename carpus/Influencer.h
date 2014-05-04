@@ -12,6 +12,13 @@
 #import "Particle.h"
 #import "Camera.h"
 
+typedef enum {
+    EASTWEST,
+    NORTHSOUTH,
+    OMNI,
+    NINFLUENCEDIRS,
+} ETInfluenceDirection;
+
 @interface Influencer : Rectangle
 
 @property float radius;
@@ -21,6 +28,7 @@
 @property bool influenceBound;
 @property bool localizeInfluence;
 @property bool deflectParticles;
+@property ETInfluenceDirection dragDirection;
 
 - (id) initWithPositionSizeAndForce:(float)x y:(float)y radius:(float)radius force:(float)force;
 

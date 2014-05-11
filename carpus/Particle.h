@@ -30,6 +30,7 @@
 @property float prevx;
 @property float prevy;
 @property float age;
+@property float length;
 @property Vector2D* dir;
 @property Vector2D* vel;
 @property float radius;
@@ -39,6 +40,7 @@
 @property float traceWidth;
 @property float accel;
 @property id source;
+@property int completeCycles;
 
 - (id) initWithPositionAndColor:(float)x y:(float)y r:(float)r color:(ETColor)color;
 
@@ -60,7 +62,7 @@
 
 - (Vector2D*) position;
 
-- (void) setFirstSink:(int)sinkIndex;
+//- (void) setFirstSink:(int)sinkIndex;
 
 - (BOOL) lineCollision:(Vector2D*)p1 p2:(Vector2D*)p2;
 

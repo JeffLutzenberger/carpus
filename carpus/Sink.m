@@ -14,6 +14,8 @@
 #import "GraphicsTriangle.h"
 
 @implementation Sink {
+    float lastAddTime;
+    float addPeriod; //ms per particle
     GraphicsCircleOutline* influenceCircle1;
     GraphicsCircleOutline* influenceCircle2;
     GraphicsCircle* gradient1;
@@ -43,13 +45,18 @@
 - (id) initWithPositionSizeForceSpeedAndColor:(float)x y:(float)y radius:(float)radius force:(float)force speed:(float)speed inColor:(ETColor)inColor outColor:(ETColor)outColor {
     self = [super initWithPositionAndSize:x y:y w:radius h:radius theta:0 color:inColor];
     if (self) {
+        lastAddTime = 0.0;
+        addPeriod = 100;
+        self.nparticles = 25;
+        self.particles = [[NSMutableArray alloc] init];
         self.speed = speed;
         self.force = force;
         self.radius = radius;
         self.influenceRadius = radius * 5;
-        self.influenceEquation = 0;
-        self.localizeInfluence = false;
-        self.isSource = true;
+        self.influenceEquation = 1;
+        self.localizeInfluence = NO;
+        self.isSource = NO;
+        self.deflectsParticles = NO;
         self.maxFill = 50;
         self.inColor = inColor;
         self.outColor = outColor;
@@ -215,8 +222,14 @@
 }
 
 - (void) recycleParticle:(Particle*)p {
-    float dt = (float)drand48() * 0.2 - 0.1;
-    p.x = self.x;
+    float dt = (float)drand48() * 0.1 - 0.05;
+    float x = self.x + cos(self.theta + dt) * (self.influenceRadius + 10);
+    float y = self.y + sin(self.theta + dt) * (self.influenceRadius + 10);
+    float vx = cos(self.theta) * self.speed;
+    float vy = sin(self.theta) * self.speed;
+    [p recycle:x y:y vx:vx vy:vy color:self.outColor];
+    
+    /*p.x = self.x;
     p.y = self.y;
     [p trace];
     p.x = self.x + cos(self.theta + dt) * (self.influenceRadius + 10);
@@ -225,7 +238,7 @@
     p.vel.y = sin(self.theta) * self.speed;
     p.prevx = self.x;
     p.prevy = self.y;
-    [p setParticleColor:self.outColor];
+    [p setParticleColor:self.outColor];*/
 }
 
 - (void) influence:(Particle*)p dt:(float)dt maxSpeed:(float)maxSpeed {
@@ -255,8 +268,8 @@
     Vector2D* v2 = [[Vector2D alloc] initWithXY:self.x - p.x y:self.y - p.y];
     float d2 = [Vector2D squaredLength:v2];
     BOOL hit = NO;
-    //hit = (d2 <= 3 * self.radius * self.radius);
-    hit = (d2 <= self.influenceRadius * self.influenceRadius);
+    hit = (d2 <= 4 * self.radius * self.radius);
+    //hit = (d2 <= self.influenceRadius * self.influenceRadius);
     if (hit) {
         p.x = self.x;
         p.y = self.y;
@@ -334,6 +347,22 @@
             grabberFadeDt = grabberFadeLength;
         }
     }*/
+    
+    lastAddTime += dt;
+    if (self.isSource && [self.particles count] < self.nparticles && lastAddTime > addPeriod) {
+        lastAddTime = 0;
+        Vector2D* p1 = self.p3;
+        Vector2D* p2 = self.p4;
+        Vector2D* v = [[Vector2D alloc] initWithXY:p2.x - p1.x y:p2.y - p1.y];
+        float x = p1.x + (float)drand48() * v.x;
+        float y = p1.y + (float)drand48() * v.y;
+        float vx = self.speed * self.n3.x;
+        float vy = self.speed * self.n3.y;
+        Particle* p = [[Particle alloc] initWithPositionAndColor:x y:y r:4 color:RED];
+        p.source = self;
+        [p recycle:x y:y vx:vx vy:vy color:self.color];
+        [self.particles addObject:p];
+    }
     
     pulseDt += dt;
     

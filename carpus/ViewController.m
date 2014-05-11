@@ -174,36 +174,34 @@
     /***
      Sources
      ***/
-    Source* source = [[Source alloc] initWithPositionSizeAndSpeed:100 y:150 w:20 h:25 theta:0 speed:2];
-    [source setSourceColor:GREEN];
-    [simulation.sources addObject:source];
+    //Source* source = [[Source alloc] initWithPositionSizeAndSpeed:100 y:150 w:20 h:25 theta:0 speed:2];
+    //[source setSourceColor:GREEN];
+    //[simulation.sources addObject:source];
     
     //source = [[Source alloc] initWithPositionSizeAndSpeed:300 + 2 * 768 y:200 w:24 h:25 theta:0 speed:2];
     //[source setSourceColor:BLUE];
     //[simulation.sources addObject:source];
     
+    float fm = 3.0;
+    float sm = 1.6;
     /***
      Influencers
      ***/
-    Influencer* influencer = [[Influencer alloc] initWithPositionSizeAndForce:100 y:900 radius:15 force:5];
+    Influencer* influencer = [[Influencer alloc] initWithPositionSizeAndForce:100 y:900 radius:15 force:2.5 * fm];
     [simulation.influencers addObject:influencer];
     
     /***
      Sinks
      ***/
-    Sink* sink = [[Sink alloc] initWithPositionSizeForceSpeedAndColor:400 y:600 radius:15 force:5 speed:5 inColor:GREEN outColor:RED];
-    //[sink setSinkColor:GREEN outColor:RED];
+    Sink* sink = [[Sink alloc] initWithPositionSizeForceSpeedAndColor:400 y:600 radius:15 force:5 * fm speed:5 * sm inColor:GREEN outColor:GREEN];
+    sink.isSource = YES;
     [simulation.sinks addObject:sink];
     
-    sink = [[Sink alloc] initWithPositionSizeForceSpeedAndColor:600 y:900 radius:15 force:5 speed:5 inColor:RED outColor:BLUE];
-    //[sink setSinkColor:RED outColor:BLUE];
+    sink = [[Sink alloc] initWithPositionSizeForceSpeedAndColor:200 y:300 radius:15 force:5 * fm speed:0 inColor:RED outColor:BLUE];
     [simulation.sinks addObject:sink];
     
-    sink = [[Sink alloc] initWithPositionSizeForceSpeedAndColor:600 y:200 radius:15 force:5 speed:5 inColor:BLUE outColor:GREEN];
-    //[sink setSinkColor:BLUE outColor:GREEN];
-    sink.isSource = false;
-    sink.isGoal = true;
-    [simulation.sinks addObject:sink];
+    //sink = [[Sink alloc] initWithPositionSizeForceSpeedAndColor:500 y:400 radius:15 force:5 * fm speed:0 inColor:BLUE outColor:GREEN];
+    //[simulation.sinks addObject:sink];
     
     /*sink = [[Sink alloc] initWithPositionSizeForceAndSpeed:400 + 2 * 768 y:600 radius:15 force:5 speed:5];
     [sink setSinkColor:BLUE outColor:RED];

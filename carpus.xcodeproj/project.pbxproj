@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F13F4F319203F2200C1E548 /* Default@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F13F4F219203F2200C1E548 /* Default@2x~ipad.png */; };
 		1FDE0A6E190C3B6500A135C5 /* GraphicsTriangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FDE0A6D190C3B6500A135C5 /* GraphicsTriangle.m */; };
 		BC01C1EC18DDF4D30056DB22 /* GameGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = BC01C1EB18DDF4D30056DB22 /* GameGrid.m */; };
 		BC01C1EF18DDF4FD0056DB22 /* GridWall.m in Sources */ = {isa = PBXBuildFile; fileRef = BC01C1EE18DDF4FD0056DB22 /* GridWall.m */; };
@@ -89,6 +90,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1F13F4F219203F2200C1E548 /* Default@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~ipad.png"; sourceTree = "<group>"; };
 		1FDE0A6C190C3B6500A135C5 /* GraphicsTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphicsTriangle.h; sourceTree = "<group>"; };
 		1FDE0A6D190C3B6500A135C5 /* GraphicsTriangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GraphicsTriangle.m; sourceTree = "<group>"; };
 		BC01C1EA18DDF4D30056DB22 /* GameGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameGrid.h; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 		BC1B38C818CE2D87004CA208 = {
 			isa = PBXGroup;
 			children = (
+				1F13F4F219203F2200C1E548 /* Default@2x~ipad.png */,
 				BC0AC37C18DA714F00EDC64A /* item_powerup_fish.png */,
 				BC0AC37A18DA558900EDC64A /* glow.png */,
 				BCDBB04218D21EB800058B7E /* tile_floor.png */,
@@ -523,6 +526,7 @@
 				BC688B0618D8B9950093E33B /* fastblur.fsh in Resources */,
 				BCDBB03E18D2109700058B7E /* basicTexture.vsh in Resources */,
 				BC0AC37B18DA558900EDC64A /* glow.png in Resources */,
+				1F13F4F319203F2200C1E548 /* Default@2x~ipad.png in Resources */,
 				BC01C1F718DF78BB0056DB22 /* nebula.fsh in Resources */,
 				BCDBB03C18D2107D00058B7E /* basicTexture.fsh in Resources */,
 				BC688B0418D8B9770093E33B /* fastblur.vsh in Resources */,

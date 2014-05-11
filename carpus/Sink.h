@@ -16,6 +16,9 @@
 
 @interface Sink : Rectangle
 
+@property int nparticles;
+@property NSMutableArray* particles;
+
 @property float radius;
 @property float force;
 @property float influenceRadius;
@@ -24,6 +27,7 @@
 @property ETColor outColor;
 @property bool isSource;
 @property bool isGoal;
+@property bool deflectsParticles;
 @property int influenceEquation;
 @property bool influenceBound;
 @property bool localizeInfluence;

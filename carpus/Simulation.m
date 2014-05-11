@@ -27,15 +27,28 @@ typedef enum {
     BOOL checkingPath;
     BOOL pathCheckStarted;
     Particle* pathParticle;
+    
+    //length of path measurements
+    float pathSampleRate;
+    float pathSampleDt;
+    float pathSamples;
+    float pathLength;
 }
 
 - (id) init {
     self = [super init];
     if (self) {
-        self.maxParticleAge = 5000; //ms
+        self.maxParticleAge = 7500; //ms
         self.maxParticleSpeed = 2;
         self.missed = 0;
         self.caught = 0;
+        self.maxLength = 0.0;
+        
+        pathSampleRate = 2000;
+        pathSampleDt = 0.0;
+        pathSamples = 1.0;
+        pathLength = 0.0;
+        
         self.influencers = [[NSMutableArray alloc] init];
         self.obstacles = [[NSMutableArray alloc] init];
         self.portals = [[NSMutableArray alloc] init];
@@ -60,6 +73,29 @@ typedef enum {
 
     //[self.backgroundGrid update:dt];
     
+    pathSampleDt += dt;
+    if (pathSampleDt > pathSampleRate) {
+        pathSampleDt = 0.0;
+        //check to see if all particles have compeleted at least one cycle
+        BOOL cycleComplete = YES;
+        pathSamples = 1.0;
+        pathLength = 0.0;
+        for (Sink *s in self.sinks) {
+            for (Particle *p in s.particles) {
+                if (p.completeCycles <= 0) {
+                    cycleComplete = NO;
+                    break;
+                } else {
+                    pathLength += sqrt(p.length);
+                    pathSamples += 1.0;
+                }
+            }
+        }
+        if (cycleComplete) {
+            pathLength = pathLength / pathSamples;
+        }
+        NSLog(@"path length: %0.1f", pathLength);
+    }
     for (Source* s in self.sources) {
         [s update:dt];
     }
@@ -338,8 +374,13 @@ typedef enum {
 
 - (void) moveParticles:(float)dt {
     for (Source* s in self.sources) {
-    //for (int i = 0; i < [self.sources count]; i++) {
-        //Source* s = [self.sources objectAtIndex:i];
+        for (int j = 0; j < [s.particles count]; j += 1) {
+            Particle* p = [s.particles objectAtIndex:j];
+            [self moveParticle:p dt:dt];
+        }
+    }
+    
+    for (Sink* s in self.sinks) {
         for (int j = 0; j < [s.particles count]; j += 1) {
             Particle* p = [s.particles objectAtIndex:j];
             [self moveParticle:p dt:dt];
@@ -371,6 +412,7 @@ typedef enum {
     
     if (particle.age > self.maxParticleAge) {
         self.missed += 1;
+        particle.completeCycles = 0;
         [particle.source recycleParticle:particle];
     }
 
@@ -458,7 +500,7 @@ typedef enum {
             continue;
         }
         
-        if ([p color] != [s inColor]) {
+        if (s.deflectsParticles && [p color] != [s inColor]) {
             Vector2D* n = [p cicleLineCollision:s.x cy:s.y r:s.influenceRadius + 8];
             //Vector2D* n = [s bounce:p];
             if (n) {
@@ -470,9 +512,15 @@ typedef enum {
             }
         }
         
-        if ([s sinkHit:p]) {
+        if ([p color] == [s inColor] && s.isSource && [s sinkHit:p] ) {
             if (s.isSource) {
+                //lengthSamples += 1.0;
+                //self.maxLength += p.length
+                p.completeCycles += 1;
+                //pathSamples += 1.0;
+                //pathCummulativeLength += p.length;
                 [s recycleParticle:p];
+
                 //p.brightness += 0.1;
                 p.age = 0;
                 if (checkingPath && p == pathParticle) {
@@ -484,14 +532,22 @@ typedef enum {
                 }
                 return;
             } else {
+                p.completeCycles += 1;
+                //pathSamples += 1.0;
+                //pathCummulativeLength += p.length;
                 [p.source recycleParticle:p];
                 self.caught += 1;
                 //NSLog(@"%d", self.caught);
                 return;
             }
         }
+        
         //Note: removing sink's ability to influence
-        //[s influence:p dt:dt maxSpeed:[self maxParticleSpeed]];
+        [s influence:p dt:dt maxSpeed:[self maxParticleSpeed]];
+        
+        if ([s insideInfluenceRing:p]) {
+            [p setParticleColor:s.color];
+        }
     }
 };
 
@@ -544,6 +600,18 @@ typedef enum {
             [[s.particles objectAtIndex:j] draw:camera];
         }
     }
+    
+    for (Sink *s in self.sinks) {
+        for (int j = 0; j < [s.particles count]; j++) {
+            [[s.particles objectAtIndex:j] draw:camera];
+        }
+    }
+    /*for (int i = 0; i < [self.sources count]; i++) {
+        Source* s = [self.sources objectAtIndex:i];
+        for (int j = 0; j < [s.particles count]; j++) {
+            [[s.particles objectAtIndex:j] draw:camera];
+        }
+    }*/
 }
 
 - (void) drawBuckets:(Camera*)camera {

@@ -66,7 +66,9 @@ enum
         self.prevy = y;
         self.radius = r;
         self.color = color;
+        self.length = 0.0;
         self.age = 0;
+        self.completeCycles = 0;
         self.dir = [[Vector2D alloc] initWithXY:1 y:0];
         self.vel = [[Vector2D alloc] initWithXY:0 y:0.1];
         self.numTracers = 30;
@@ -112,6 +114,7 @@ enum
     self.prevy = self.y;
     self.x += self.vel.x * dt * 0.08;
     self.y += self.vel.y * dt * 0.08;
+    self.length += (self.x - self.prevx) * (self.x - self.prevx) + (self.y - self.prevy) * (self.y - self.prevy);
     //NSLog(@"%0.2f", self.vel.y);
     self.age += dt;
 }
@@ -164,6 +167,7 @@ enum
     self.prevx = x;
     self.prevy = y;
     self.age = 0;
+    self.length = 0.0;
     self.vel.x = vx;
     self.vel.y = vy;
     [self setParticleColor:color];
@@ -180,18 +184,12 @@ enum
     float dot = 2 * [Vector2D dot:self.vel v2:n];
     self.vel.x -= dot * n.x;
     self.vel.y -= dot * n.y;
-    
-    //self.vel.x -= 2 * self.vel.x * n.x;
-    //self.vel.y -= 2 * self.vel.y * n.y;
-
-
 }
 
 - (void) redirect:(Vector2D*)n {
     float speed = [Vector2D length:self.vel];
     self.vel.x = speed * n.x;
     self.vel.y = speed * n.y;
-
 }
 
 - (Vector2D*) position {

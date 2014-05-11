@@ -33,6 +33,7 @@ typedef enum {
 @property float maxParticleSpeed;
 @property int missed;
 @property int caught;
+@property float maxLength;
 @property NSMutableArray* buckets;
 @property NSMutableArray* influencers;
 @property NSMutableArray* obstacles;
